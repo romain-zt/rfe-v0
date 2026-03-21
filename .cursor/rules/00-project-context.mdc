@@ -1,0 +1,21 @@
+---
+description: Project context and folder layout
+globs: ["**/*.ts"]
+alwaysApply: true
+---
+
+# od-pdp: NestJS + Hexagonal + Event-Driven
+
+## Folder layout
+- `src/domain/**` — Pure domain logic. Ports (`*.port.ts`), services, types, errors. No Nest, no IO.
+- `src/driving/**` — Inbound: Nest HTTP (`driving/nest/http/`), SQS consumers (`driving/nest/sqs/`), DTOs.
+- `src/driven/**` — Outbound: Drizzle (`driven/drizzle/`), HTTP clients (`driven/http/`), EventBridge (`driven/eventbridge/`).
+- `src/adapters/datadog/**` — Cross-cutting tracing/telemetry.
+- `src/component-tests/**` — Higher-level tests (MSW, test-launcher, real DB).
+- `src/test-utils/**`, `src/shared/**` — Fixtures, builders, utilities.
+
+## Tech stack
+- NestJS 11, Fastify, Vitest, Drizzle ORM, SQS, EventBridge, MSW.
+
+## Path aliases
+- `@domain/*`, `@driving/*`, `@driven/*`, `@shared/*`, `@test-utils/*`.

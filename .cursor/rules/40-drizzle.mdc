@@ -1,0 +1,20 @@
+---
+description: Drizzle schema and migrations
+globs: ["src/driven/drizzle/**/*.ts"]
+alwaysApply: true
+---
+
+# Drizzle rules
+
+## Schema
+- Schema in `src/driven/drizzle/schema/schema.ts`. Use `odPdpSchema` from `schema-name.ts`.
+- Domain enums (e.g. `Platform`) imported from `@domain/*` for consistency.
+
+## Migrations
+- Migrations in `src/driven/drizzle/schema/migrations/`.
+- Config: `drizzle.config.ts`, `drizzle-test.config.ts`.
+- Create: `pnpm migration:create <name>`. Check: `pnpm migration:check`.
+
+## Repositories
+- Implement `*RepositoryPort` from domain. Map DB rows → domain types.
+- Repository tests: `src/driven/drizzle/*.repository.test.ts`. Use `test-db.fixtures.ts`, `uniquePostgresDatabase`.

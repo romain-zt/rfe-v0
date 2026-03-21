@@ -1,0 +1,22 @@
+---
+description: Event-driven and messaging rules
+globs: ["src/driving/nest/sqs/**", "src/driven/eventbridge/**", "src/domain/**/*.dispatcher*.ts"]
+alwaysApply: true
+---
+
+# Eventing rules
+
+## EventBridge (outbound)
+- Dispatchers in `src/driven/eventbridge/`. Base: `base/event-bridge-dispatcher.ts`.
+- Detail types: `od-pdp.<event-name>` (e.g. `od-pdp.enrollment-updated`).
+- Payloads: backward-compatible by default. Add fields only; avoid removing/renaming.
+- Version payload if breaking (e.g. `detailVersion: 2`).
+
+## SQS consumers (inbound)
+- Consumers in `src/driving/nest/sqs/`. Extend `SqsConsumer`, implement `messageHandler`.
+- DTOs in `src/driving/nest/sqs/dto/`. Use `parseAndValidate` (Zod/class-validator).
+- Retry-safe: design for at-least-once. Consider idempotency keys.
+- No PII in logs. Log `messageId`, not payload content.
+
+## Event payloads
+- Prefer additive changes. Document breaking changes and version.

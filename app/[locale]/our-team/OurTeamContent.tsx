@@ -1,5 +1,6 @@
 'use client'
 
+import { PageCinematicHero } from '@/components/PageCinematicHero'
 import { useReveal } from '@/hooks/useReveal'
 import Image from 'next/image'
 
@@ -23,76 +24,15 @@ const team = [
 ]
 
 function TeamHero() {
-  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
-
   return (
-    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-      {/* Background — mosaic of team portraits, deeply darkened */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/assets/team/liz-rohm-5.jpg"
-          alt=""
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-          style={{ filter: 'grayscale(0.8) brightness(0.2) contrast(1.1)' }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 65% 55% at 50% 50%, transparent 0%, rgba(7, 7, 8, 0.5) 50%, rgba(7, 7, 8, 0.95) 100%),
-              linear-gradient(to bottom, rgba(7, 7, 8, 0.5) 0%, transparent 30%, transparent 60%, rgba(7, 7, 8, 1) 100%)
-            `,
-          }}
-          aria-hidden="true"
-        />
-      </div>
-
-      <div ref={ref} className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-32">
-        <span
-          className="block text-[9px] uppercase mb-8 font-light"
-          style={{
-            color: 'var(--rfe-gold-dim)',
-            letterSpacing: isVisible ? '0.42em' : '0.08em',
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
-          }}
-        >
-          our team
-        </span>
-
-        <div style={{ overflow: 'hidden', paddingBottom: '6px' }}>
-          <h1
-            className="font-serif font-light"
-            style={{
-              fontSize: 'clamp(2rem, 6vw, 4.5rem)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.01em',
-              color: 'var(--foreground)',
-              transform: isVisible ? 'translateY(0)' : 'translateY(110%)',
-              transition: 'transform 1.5s var(--ease-emerge) 0.2s',
-            }}
-          >
-            the voices behind <span style={{ color: 'var(--rfe-rose)' }}>the gaze.</span>
-          </h1>
-        </div>
-
-        <p
-          className="mt-8 text-sm font-light leading-[2]"
-          style={{
-            color: 'rgba(245, 240, 235, 0.4)',
-            maxWidth: '44ch',
-            margin: '2rem auto 0',
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 2.5s var(--ease-quiet) 0.5s',
-          }}
-        >
-          Women who chose to stop waiting for permission. Who built the table instead of asking for a seat.
-        </p>
-      </div>
-    </section>
+    <PageCinematicHero
+      imageSrc="/assets/team/liz-rohm-5.jpg"
+      imagePosition="center center"
+      label="our team"
+      subtitle="Women who chose to stop waiting for permission. Who built the table instead of asking for a seat."
+    >
+      the voices behind <span style={{ color: 'var(--rfe-rose)' }}>the gaze.</span>
+    </PageCinematicHero>
   )
 }
 
@@ -288,11 +228,13 @@ export default function OurTeamContent() {
     <main className="relative">
       <TeamHero />
 
-      {team.map((member, i) => (
-        <TeamMemberSection key={member.name} member={member} index={i} />
-      ))}
+      <div className="relative z-10" style={{ backgroundColor: 'var(--background)' }}>
+        {team.map((member, i) => (
+          <TeamMemberSection key={member.name} member={member} index={i} />
+        ))}
 
-      <ClosingVoice />
+        <ClosingVoice />
+      </div>
     </main>
   )
 }

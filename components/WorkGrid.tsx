@@ -8,7 +8,7 @@ import type { WorkItem } from '@/lib/i18n/types'
 import { useReveal, useStaggeredReveal } from '@/hooks/useReveal'
 import { getWorkSlug } from '@/lib/works'
 
-type FilterType = 'restoration' | 'documentaryProduction'
+type FilterType = 'drama' | 'thriller'
 
 // ============================================
 // UTILITY: Extract YouTube Video ID
@@ -333,7 +333,7 @@ function WorkCard({
 // ============================================
 export function WorkGrid() {
   const { lang, t, content } = useLanguage()
-  const [filter, setFilter] = useState<FilterType>('restoration')
+  const [filter, setFilter] = useState<FilterType>('drama')
   const [activePreviewId, setActivePreviewId] = useState<number | null>(null)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
   
@@ -357,10 +357,10 @@ export function WorkGrid() {
   // Filter works based on selected filter - use useMemo for better performance
   const filteredWorks = useMemo(() => {
     return posters.filter((work) => {
-      const restorationTags = ['Restoration', 'Restauration', 'Colorization', 'Colorisation']
-      const documentaryProductionTags = ['Documentary', 'Documentaire', 'Documentary Production', 'Production Documentaire']
-      if (filter === 'restoration') return work.tags.some(tag => restorationTags.includes(tag))
-      if (filter === 'documentaryProduction') return work.tags.some(tag => documentaryProductionTags.includes(tag))
+      const dramaTags = ['Drama', 'Drame']
+      const thrillerTags = ['Thriller']
+      if (filter === 'drama') return work.tags.some(tag => dramaTags.includes(tag))
+      if (filter === 'thriller') return work.tags.some(tag => thrillerTags.includes(tag))
       return false
     })
   }, [filter, posters])
@@ -467,15 +467,15 @@ export function WorkGrid() {
   }, [])
 
   const filterLabels: Record<FilterType, string> = {
-    restoration: t.work.restoration,
-    documentaryProduction: t.work.documentaryProduction,
+    drama: t.work.drama,
+    thriller: t.work.thriller,
   }
 
   return (
     <>
       {/* Filters */}
       <div className="flex justify-center gap-6 sm:gap-8 mb-14 sm:mb-16">
-        {(['restoration', 'documentaryProduction'] as FilterType[]).map((f) => (
+        {(['drama', 'thriller'] as FilterType[]).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}

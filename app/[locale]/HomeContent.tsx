@@ -30,73 +30,128 @@ function ArcDivider({ flip = false }: { flip?: boolean }) {
   )
 }
 
-function ManifestoBlock({
+function ManifestoCard({
+  index,
   label,
   headline,
   body,
-  delay = 0,
-  accent = false,
+  accent,
+  align,
+  glow,
 }: {
+  index: string
   label: string
   headline: string
   body: string
-  delay?: number
-  accent?: boolean
+  accent: 'gold' | 'rose' | 'red'
+  align: 'left' | 'right' | 'center'
+  glow: string
 }) {
-  const { ref: labelRef, isVisible: labelVisible } = useReveal<HTMLDivElement>({ threshold: 0.15 })
-  const { ref: headlineRef, isVisible: headlineVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
-  const { ref: bodyRef, isVisible: bodyVisible } = useReveal<HTMLDivElement>({ threshold: 0.25 })
+  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.18 })
+
+  const accentColor = {
+    gold: 'var(--rfe-gold)',
+    rose: 'var(--rfe-rose-dim)',
+    red: 'var(--rfe-red)',
+  }[accent]
+
+  const alignClass = {
+    left: 'md:mr-auto md:ml-0',
+    right: 'md:ml-auto md:mr-0',
+    center: 'md:mx-auto',
+  }[align]
 
   return (
     <div
-      className="py-16 md:py-20 border-t"
-      style={{ borderColor: 'rgba(245, 240, 235, 0.05)' }}
+      ref={ref}
+      className={`relative max-w-xl w-full ${alignClass}`}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(40px)',
+        transition: 'opacity 1.6s var(--ease-quiet), transform 1.8s var(--ease-emerge)',
+      }}
     >
-      <div className="max-w-3xl">
-        <div ref={labelRef}>
-          <p
-            className="text-[10px] uppercase mb-6 font-light"
-            style={{
-              color: accent ? 'var(--rfe-gold)' : 'var(--rfe-rose-dim)',
-              letterSpacing: labelVisible ? '0.38em' : '0.08em',
-              opacity: labelVisible ? 1 : 0,
-              transition: `opacity 1.5s var(--ease-quiet) ${delay}ms, letter-spacing 2.2s var(--ease-quiet) ${delay}ms`,
-            }}
-          >
-            {label}
-          </p>
-        </div>
+      {/* Ambient glow per card */}
+      <div
+        className="absolute pointer-events-none -inset-20"
+        style={{ background: glow, opacity: isVisible ? 1 : 0, transition: 'opacity 3s var(--ease-quiet)' }}
+        aria-hidden="true"
+      />
 
-        <div ref={headlineRef} style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '2rem' }}>
+      <div className="relative px-6 py-10 md:px-10 md:py-14">
+        {/* Large index number as background texture */}
+        <span
+          className="absolute font-serif font-light pointer-events-none select-none"
+          style={{
+            fontSize: 'clamp(6rem, 14vw, 11rem)',
+            lineHeight: 1,
+            top: '-0.15em',
+            right: align === 'right' ? 'auto' : '-0.05em',
+            left: align === 'right' ? '-0.05em' : 'auto',
+            color: accentColor,
+            opacity: isVisible ? 0.04 : 0,
+            transition: 'opacity 3s var(--ease-quiet)',
+          }}
+          aria-hidden="true"
+        >
+          {index}
+        </span>
+
+        {/* Label */}
+        <p
+          className="text-[10px] uppercase mb-5 font-light"
+          style={{
+            color: accentColor,
+            letterSpacing: isVisible ? '0.38em' : '0.08em',
+            opacity: isVisible ? 0.7 : 0,
+            transition: 'opacity 1.5s var(--ease-quiet) 0.15s, letter-spacing 2.2s var(--ease-quiet) 0.15s',
+          }}
+        >
+          {label}
+        </p>
+
+        {/* Headline */}
+        <div style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '1.5rem' }}>
           <h2
             className="font-serif font-light text-balance"
             style={{
-              fontSize: 'clamp(1.6rem, 4vw, 2.6rem)',
+              fontSize: 'clamp(1.5rem, 3.5vw, 2.4rem)',
               lineHeight: 1.2,
               letterSpacing: '-0.01em',
               color: 'var(--foreground)',
-              transform: headlineVisible ? 'translateY(0)' : 'translateY(110%)',
-              transition: `transform 1.6s var(--ease-emerge) ${delay + 80}ms`,
+              transform: isVisible ? 'translateY(0)' : 'translateY(110%)',
+              transition: 'transform 1.6s var(--ease-emerge) 0.1s',
             }}
           >
             {headline}
           </h2>
         </div>
 
-        <div ref={bodyRef}>
-          <p
-            className="text-sm leading-[2.1] font-light"
-            style={{
-              color: 'rgba(245, 240, 235, 0.42)',
-              letterSpacing: '0.025em',
-              maxWidth: '56ch',
-              opacity: bodyVisible ? 1 : 0,
-              transition: `opacity 2.8s var(--ease-quiet) ${delay + 350}ms`,
-            }}
-          >
-            {body}
-          </p>
-        </div>
+        {/* Body */}
+        <p
+          className="text-sm leading-[2.1] font-light"
+          style={{
+            color: 'rgba(245, 240, 235, 0.42)',
+            letterSpacing: '0.025em',
+            maxWidth: '48ch',
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 2.8s var(--ease-quiet) 0.4s',
+          }}
+        >
+          {body}
+        </p>
+
+        {/* Accent border line */}
+        <div
+          className="absolute top-0 h-full w-px"
+          style={{
+            [align === 'right' ? 'right' : 'left']: 0,
+            background: `linear-gradient(to bottom, transparent, ${accentColor}, transparent)`,
+            opacity: isVisible ? 0.15 : 0,
+            transition: 'opacity 2s var(--ease-quiet) 0.3s',
+          }}
+          aria-hidden="true"
+        />
       </div>
     </div>
   )
@@ -106,19 +161,12 @@ function ManifestoSection() {
   const { ref: headerRef, isVisible: headerVisible } = useReveal<HTMLDivElement>({ threshold: 0.3 })
 
   return (
-    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse 55% 45% at 15% 55%, rgba(181, 151, 90, 0.035) 0%, transparent 60%)`,
-        }}
-        aria-hidden="true"
-      />
-
-      <div className="relative max-w-5xl mx-auto">
+    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden">
+      <div className="relative max-w-6xl mx-auto">
+        {/* Section header */}
         <div
           ref={headerRef}
-          className="mb-4"
+          className="mb-20 lg:mb-28 text-center"
           style={{
             letterSpacing: headerVisible ? '0.42em' : '0.08em',
             opacity: headerVisible ? 1 : 0,
@@ -133,28 +181,114 @@ function ManifestoSection() {
           </span>
         </div>
 
-        <ManifestoBlock
-          label="why we exist"
-          headline="Because women's stories have always existed."
-          body="They kept getting cut, softened, explained away. Told through someone else's eyes. We exist to let them breathe — raw, incomplete, refusing resolution."
-          delay={0}
-          accent
-        />
+        {/* Staggered cards — each offset to a different side */}
+        <div className="flex flex-col gap-20 md:gap-28 lg:gap-36">
+          <ManifestoCard
+            index="01"
+            label="why we exist"
+            headline="Because women's stories have always existed."
+            body="They kept getting cut, softened, explained away. Told through someone else's eyes. We exist to let them breathe — raw, incomplete, refusing resolution."
+            accent="gold"
+            align="left"
+            glow="radial-gradient(ellipse 70% 60% at 20% 50%, rgba(181, 151, 90, 0.04) 0%, transparent 70%)"
+          />
 
-        <ManifestoBlock
-          label="what we refuse"
-          headline="Comfort. Compliance. The polished performance of femininity."
-          body="Stories that end before they begin. Heroines who exist to be saved. The camera that looks at women instead of looking with them."
-          delay={80}
-        />
+          <ManifestoCard
+            index="02"
+            label="what we refuse"
+            headline="Comfort. Compliance. The polished performance of femininity."
+            body="Stories that end before they begin. Heroines who exist to be saved. The camera that looks at women instead of looking with them."
+            accent="rose"
+            align="right"
+            glow="radial-gradient(ellipse 70% 60% at 80% 50%, rgba(196, 160, 160, 0.04) 0%, transparent 70%)"
+          />
 
-        <ManifestoBlock
-          label="what we chase"
-          headline="The moment before the scream."
-          body="The silence that holds everything. A gaze that doesn't look away. Fragility turning into something you can't name but can't stop feeling."
-          delay={160}
-          accent
-        />
+          <ManifestoCard
+            index="03"
+            label="what we chase"
+            headline="The moment before the scream."
+            body="The silence that holds everything. A gaze that doesn't look away. Fragility turning into something you can't name but can't stop feeling."
+            accent="red"
+            align="center"
+            glow="radial-gradient(ellipse 60% 60% at 50% 50%, rgba(139, 26, 26, 0.045) 0%, transparent 65%)"
+          />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ProjectsFilmStrip() {
+  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 })
+
+  const projects = [
+    { src: '/assets/works/murder-your-darlings.jpg', title: 'Murder Your Darlings' },
+    { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer' },
+    { src: '/assets/works/lobotomist-wife.png', title: 'The Lobotomist\'s Wife' },
+    { src: '/assets/works/diamonds-and-deadlines.png', title: 'Diamonds and Deadlines' },
+    { src: '/assets/works/ruby-falls.png', title: 'Ruby Falls' },
+  ]
+
+  return (
+    <section className="relative py-16 lg:py-28 overflow-hidden">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.02) 0%, transparent 60%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div ref={ref} className="relative">
+        <div
+          className="flex gap-4 md:gap-6 px-6 lg:px-16"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateX(0)' : 'translateX(40px)',
+            transition: 'opacity 2s var(--ease-quiet), transform 2.5s var(--ease-quiet)',
+          }}
+        >
+          {projects.map((project, i) => (
+            <div
+              key={project.title}
+              className="relative flex-shrink-0 overflow-hidden"
+              style={{
+                width: 'clamp(160px, 22vw, 280px)',
+                aspectRatio: '2/3',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : `translateY(${20 + i * 8}px)`,
+                transition: `opacity 2s var(--ease-quiet) ${i * 150}ms, transform 2s var(--ease-quiet) ${i * 150}ms`,
+              }}
+            >
+              <Image
+                src={project.src}
+                alt={project.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 40vw, 22vw"
+                style={{
+                  filter: isVisible ? 'grayscale(0.4) brightness(0.85)' : 'grayscale(1) brightness(0.5)',
+                  transition: 'filter 3s var(--ease-quiet)',
+                }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(to top, rgba(7, 7, 8, 0.6) 0%, transparent 40%, rgba(7, 7, 8, 0.2) 100%)',
+                }}
+                aria-hidden="true"
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-3">
+                <p
+                  className="font-serif text-[11px] font-light tracking-wide"
+                  style={{ color: 'rgba(245, 240, 235, 0.55)' }}
+                >
+                  {project.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )
@@ -323,7 +457,6 @@ function FeaturedWorkSection() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-start">
-          {/* Visual — poster with cinematic treatment */}
           <div
             ref={cardRef}
             className="relative"
@@ -337,8 +470,8 @@ function FeaturedWorkSection() {
               style={{ aspectRatio: '3/4', background: '#090809' }}
             >
               <Image
-                src="/assets/works/affiches-documentary/2.VERONIQUE CINEMA/veronique.jpg"
-                alt="Véronique"
+                src="/assets/works/margret-stevie.png"
+                alt="Margret & Stevie"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -356,7 +489,6 @@ function FeaturedWorkSection() {
                 aria-hidden="true"
               />
 
-              {/* Film grain */}
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
@@ -372,11 +504,10 @@ function FeaturedWorkSection() {
               className="mt-3 text-[10px] tracking-[0.25em] uppercase"
               style={{ color: 'var(--rfe-gold-dim)' }}
             >
-              2026 — documentary
+              2026 — drama
             </p>
           </div>
 
-          {/* Info */}
           <div ref={infoRef} className="lg:pt-6">
             <div style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '1.5rem' }}>
               <h2
@@ -390,7 +521,7 @@ function FeaturedWorkSection() {
                   transition: 'transform 1.6s var(--ease-emerge)',
                 }}
               >
-                Véronique
+                Margret &amp; Stevie
               </h2>
             </div>
 
@@ -404,11 +535,11 @@ function FeaturedWorkSection() {
                 transition: 'opacity 2.5s var(--ease-quiet) 0.3s',
               }}
             >
-              An intimate documentary portrait — the kind of story that doesn&apos;t
-              ask permission. A woman seen not through anyone else&apos;s lens, but her own.
+              A sharp-edged friendship that becomes a lifeline — two women
+              reigniting resolve in each other. The kind of bond you feel
+              before you understand.
             </p>
 
-            {/* Margret & Stevie card */}
             <div
               className="border-l-2 pl-5 mb-10"
               style={{
@@ -436,7 +567,6 @@ function FeaturedWorkSection() {
               </a>
             </div>
 
-            {/* Tags */}
             <div
               className="flex flex-wrap gap-3 mb-10"
               style={{
@@ -444,7 +574,7 @@ function FeaturedWorkSection() {
                 transition: 'opacity 2s var(--ease-quiet) 0.7s',
               }}
             >
-              {['Feature Film', 'Documentary', 'Female Gaze'].map((tag) => (
+              {['Feature Film', 'Drama', 'Female Gaze'].map((tag) => (
                 <span
                   key={tag}
                   className="text-[9px] tracking-[0.2em] uppercase px-3 py-1.5"
@@ -759,29 +889,44 @@ export default function HomeContent() {
     <main className="relative">
       <CinematicHero />
 
-      <ArcDivider />
+      {/* Content shell — sits above the fixed hero image */}
+      <div className="relative z-10" style={{ background: 'var(--background)' }}>
+        {/* Soft dissolve from fixed hero into content */}
+        <div
+          className="absolute top-0 left-0 right-0 -translate-y-full pointer-events-none"
+          style={{
+            height: '40vh',
+            background: 'linear-gradient(to top, var(--background) 0%, rgba(7, 7, 8, 0.85) 30%, rgba(7, 7, 8, 0.4) 65%, transparent 100%)',
+          }}
+          aria-hidden="true"
+        />
+
+        <ArcDivider />
 
       <ManifestoSection />
+
+      <ProjectsFilmStrip />
 
       <ArcDivider flip />
 
       <CinematicImageSection />
 
-      <ArcDivider />
+        <ArcDivider />
 
-      <FeaturedWorkSection />
+        <FeaturedWorkSection />
 
-      <ArcDivider flip />
+        <ArcDivider flip />
 
-      <TeamTeaser />
+        <TeamTeaser />
 
-      <ArcDivider />
+        <ArcDivider />
 
-      <PressSection />
+        <PressSection />
 
-      <ArcDivider flip />
+        <ArcDivider flip />
 
-      <ContactSection />
+        <ContactSection />
+      </div>
     </main>
   )
 }

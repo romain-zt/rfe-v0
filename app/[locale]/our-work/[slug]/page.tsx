@@ -39,21 +39,17 @@ export async function generateStaticParams() {
 }
 
 function getWorkTagLabel(work: { tags: string[] }, locale: Language): string {
-  const isRestoration = work.tags.some(tag =>
-    ['Colorization', 'Colorisation', 'Restoration', 'Restauration'].includes(tag)
-  )
-  const isDocumentary = work.tags.some(tag =>
-    ['Documentary Production', 'Production Documentaire'].includes(tag)
-  )
+  const isDrama = work.tags.some(tag => ['Drama', 'Drame'].includes(tag))
+  const isThriller = work.tags.some(tag => ['Thriller'].includes(tag))
 
   if (locale === 'fr') {
-    if (isRestoration) return 'Film Restauration'
-    if (isDocumentary) return 'Film Documentaire'
+    if (isDrama) return 'Drame'
+    if (isThriller) return 'Thriller'
     return 'Film'
   }
 
-  if (isRestoration) return 'Film Restoration'
-  if (isDocumentary) return 'Film Documentary'
+  if (isDrama) return 'Drama'
+  if (isThriller) return 'Thriller'
   return 'Film'
 }
 

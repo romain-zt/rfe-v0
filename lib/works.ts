@@ -61,8 +61,8 @@ export function extractYouTubeId(url: string): string | null {
  */
 export function generateWorkKeywords(work: WorkItem, locale: Language): string[] {
   const baseKeywords = locale === 'fr'
-    ? ['restauration de film', 'colorisation', 'production documentaire', 'Composite Films']
-    : ['film restoration', 'colorization', 'documentary production', 'Composite Films']
+    ? ['film', 'production cinématographique', 'regard féminin', 'RFE']
+    : ['film', 'film production', 'female gaze', 'RFE']
 
   const titleKeywords = work.title.split(/\s+/).filter(word => word.length > 2)
   const tagKeywords = work.tags || []
@@ -82,28 +82,24 @@ export function generateWorkSeoDescription(work: WorkItem, locale: Language): st
     return work.description
   }
 
-  const isRestoration = work.tags.some(tag =>
-    ['Colorization', 'Colorisation', 'Restoration', 'Restauration'].includes(tag)
-  )
-  const isDocumentary = work.tags.some(tag =>
-    ['Documentary Production', 'Production Documentaire'].includes(tag)
-  )
+  const isDrama = work.tags.some(tag => ['Drama', 'Drame'].includes(tag))
+  const isThriller = work.tags.some(tag => ['Thriller'].includes(tag))
 
   if (locale === 'fr') {
-    if (isRestoration) {
-      return `Découvrez ${work.title} (${work.year}), un projet de colorisation et restauration par Composite Films.`
+    if (isDrama) {
+      return `Découvrez ${work.title} (${work.year}), un drame produit par RFE.`
     }
-    if (isDocumentary) {
-      return `Découvrez ${work.title} (${work.year}), une production documentaire par Composite Films.`
+    if (isThriller) {
+      return `Découvrez ${work.title} (${work.year}), un thriller produit par RFE.`
     }
-    return `${work.title} (${work.year}) - Un projet par Composite Films.`
+    return `${work.title} (${work.year}) — Une production RFE.`
   }
 
-  if (isRestoration) {
-    return `Discover ${work.title} (${work.year}), a colorization and restoration project by Composite Films.`
+  if (isDrama) {
+    return `Discover ${work.title} (${work.year}), a drama produced by RFE.`
   }
-  if (isDocumentary) {
-    return `Discover ${work.title} (${work.year}), a documentary production by Composite Films.`
+  if (isThriller) {
+    return `Discover ${work.title} (${work.year}), a thriller produced by RFE.`
   }
-  return `${work.title} (${work.year}) - A project by Composite Films.`
+  return `${work.title} (${work.year}) — An RFE production.`
 }

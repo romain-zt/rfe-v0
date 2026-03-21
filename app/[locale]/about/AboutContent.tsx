@@ -1,68 +1,19 @@
 'use client'
 
+import { PageCinematicHero } from '@/components/PageCinematicHero'
 import { useReveal } from '@/hooks/useReveal'
 import Image from 'next/image'
 
 function ManifestoHero() {
-  const { ref: titleRef, isVisible: titleVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
-
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-      {/* Background image — atmospheric, cropped, intimate */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/assets/team/liz-rohm-2.jpg"
-          alt=""
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-          style={{ filter: 'grayscale(0.7) brightness(0.25) contrast(1.1)' }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 60% 50% at 50% 50%, transparent 0%, rgba(7, 7, 8, 0.5) 50%, rgba(7, 7, 8, 0.95) 100%),
-              linear-gradient(to bottom, rgba(7, 7, 8, 0.6) 0%, transparent 30%, transparent 50%, rgba(7, 7, 8, 1) 100%)
-            `,
-          }}
-          aria-hidden="true"
-        />
-      </div>
-
-      <div ref={titleRef} className="relative z-10 text-center px-6 max-w-4xl mx-auto pt-32">
-        <span
-          className="block text-[9px] uppercase mb-8 font-light"
-          style={{
-            color: 'var(--rfe-gold-dim)',
-            letterSpacing: titleVisible ? '0.42em' : '0.08em',
-            opacity: titleVisible ? 1 : 0,
-            transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
-          }}
-        >
-          about
-        </span>
-
-        <div style={{ overflow: 'hidden', paddingBottom: '6px' }}>
-          <h1
-            className="font-serif font-light"
-            style={{
-              fontSize: 'clamp(2rem, 6vw, 4.5rem)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.01em',
-              color: 'var(--foreground)',
-              transform: titleVisible ? 'translateY(0)' : 'translateY(110%)',
-              transition: 'transform 1.5s var(--ease-emerge) 0.2s',
-            }}
-          >
-            not a production company.
-            <br />
-            <span style={{ color: 'var(--rfe-rose)' }}>a voice.</span>
-          </h1>
-        </div>
-      </div>
-    </section>
+    <PageCinematicHero
+      imageSrc="/assets/team/liz-rohm-2.jpg"
+      imagePosition="center center"
+      label="about"
+    >
+      not a production company.<br />
+      <span style={{ color: 'var(--rfe-rose)' }}>a voice.</span>
+    </PageCinematicHero>
   )
 }
 
@@ -328,45 +279,47 @@ export default function AboutContent() {
     <main className="relative">
       <ManifestoHero />
 
-      <section className="relative px-6 lg:px-16 xl:px-24 py-8 lg:py-16">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `radial-gradient(ellipse 55% 45% at 15% 55%, rgba(181, 151, 90, 0.03) 0%, transparent 60%)`,
-          }}
-          aria-hidden="true"
-        />
-
-        <div className="relative max-w-5xl mx-auto">
-          <ManifestoBlock
-            label="why we exist"
-            headline="Because women's stories have always existed. They just kept getting silenced."
-            body="Cut, softened, explained away. Told through someone else's eyes, someone else's camera, someone else's version of what a woman should be. We exist to let them breathe — raw, incomplete, refusing resolution. Because the most powerful stories are the ones that won't be contained."
-            accent
+      <div className="relative z-10" style={{ backgroundColor: 'var(--background)' }}>
+        <section className="relative px-6 lg:px-16 xl:px-24 py-8 lg:py-16">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(ellipse 55% 45% at 15% 55%, rgba(181, 151, 90, 0.03) 0%, transparent 60%)`,
+            }}
+            aria-hidden="true"
           />
 
-          <ManifestoBlock
-            label="what we refuse"
-            headline="Comfort. Compliance. The polished performance of femininity."
-            body="Stories that end before they begin. Heroines who exist to be saved. The camera that looks at women instead of looking with them. We refuse the lie that women's anger is ugly, that feminine stories are small, that silence means consent. Every frame we make is a refusal."
-            delay={80}
-          />
+          <div className="relative max-w-5xl mx-auto">
+            <ManifestoBlock
+              label="why we exist"
+              headline="Because women's stories have always existed. They just kept getting silenced."
+              body="Cut, softened, explained away. Told through someone else's eyes, someone else's camera, someone else's version of what a woman should be. We exist to let them breathe — raw, incomplete, refusing resolution. Because the most powerful stories are the ones that won't be contained."
+              accent
+            />
 
-          <ManifestoBlock
-            label="what we chase"
-            headline="The moment before the scream. The silence that holds everything."
-            body="A gaze that doesn't look away. Fragility turning into something you can't name but can't stop feeling. We chase the tension between tenderness and rage, the stories that live in the body before they reach the mouth. Cinema that doesn't explain — it moves through you."
-            accent
-            delay={160}
-          />
-        </div>
-      </section>
+            <ManifestoBlock
+              label="what we refuse"
+              headline="Comfort. Compliance. The polished performance of femininity."
+              body="Stories that end before they begin. Heroines who exist to be saved. The camera that looks at women instead of looking with them. We refuse the lie that women's anger is ugly, that feminine stories are small, that silence means consent. Every frame we make is a refusal."
+              delay={80}
+            />
 
-      <ImageBreak />
+            <ManifestoBlock
+              label="what we chase"
+              headline="The moment before the scream. The silence that holds everything."
+              body="A gaze that doesn't look away. Fragility turning into something you can't name but can't stop feeling. We chase the tension between tenderness and rage, the stories that live in the body before they reach the mouth. Cinema that doesn't explain — it moves through you."
+              accent
+              delay={160}
+            />
+          </div>
+        </section>
 
-      <DualitySection />
+        <ImageBreak />
 
-      <ClosingStatement />
+        <DualitySection />
+
+        <ClosingStatement />
+      </div>
     </main>
   )
 }

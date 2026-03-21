@@ -637,16 +637,19 @@ function TeamTeaser() {
   ]
 
   return (
-    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36">
+    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 section-tone-cool section-bleed-top section-bleed-bottom">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 50% 45% at 50% 40%, rgba(196, 160, 160, 0.03) 0%, transparent 55%)`,
+          background: `
+            radial-gradient(ellipse 50% 45% at 50% 40%, rgba(196, 160, 160, 0.045) 0%, transparent 55%),
+            radial-gradient(ellipse 35% 35% at 80% 75%, rgba(181, 151, 90, 0.02) 0%, transparent 50%)
+          `,
         }}
         aria-hidden="true"
       />
 
-      <div ref={sectionRef} className="relative max-w-6xl mx-auto">
+      <div ref={sectionRef} className="relative max-w-6xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
         <span
           className="block text-[9px] uppercase mb-16 font-light"
           style={{
@@ -739,16 +742,19 @@ function PressSection() {
   const { ref: cardRef, isVisible: cardVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
 
   return (
-    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36">
+    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 section-tone-warm section-bleed-top section-bleed-bottom">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 45% 50% at 82% 28%, rgba(139, 26, 26, 0.03) 0%, transparent 55%)`,
+          background: `
+            radial-gradient(ellipse 45% 50% at 82% 28%, rgba(139, 26, 26, 0.04) 0%, transparent 55%),
+            radial-gradient(ellipse 40% 40% at 10% 70%, rgba(181, 151, 90, 0.02) 0%, transparent 50%)
+          `,
         }}
         aria-hidden="true"
       />
 
-      <div className="relative max-w-5xl mx-auto">
+      <div className="relative max-w-5xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
         <div ref={headingRef} className="mb-16">
           <span
             className="text-[9px] uppercase block mb-6 font-light"
@@ -827,14 +833,14 @@ function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative px-6 py-36 lg:py-52 flex flex-col items-center justify-center text-center"
+      className="relative px-6 py-36 lg:py-52 flex flex-col items-center justify-center text-center section-tone-deep section-bleed-top"
     >
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: `
-            radial-gradient(ellipse 55% 50% at 50% 85%, rgba(196, 160, 160, 0.04) 0%, transparent 60%),
-            radial-gradient(ellipse 30% 30% at 50% 100%, rgba(139, 26, 26, 0.03) 0%, transparent 55%)
+            radial-gradient(ellipse 55% 50% at 50% 85%, rgba(196, 160, 160, 0.05) 0%, transparent 60%),
+            radial-gradient(ellipse 30% 30% at 50% 100%, rgba(139, 26, 26, 0.04) 0%, transparent 55%)
           `,
         }}
         aria-hidden="true"

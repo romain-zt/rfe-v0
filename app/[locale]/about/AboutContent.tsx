@@ -93,16 +93,19 @@ function DualitySection() {
   ]
 
   return (
-    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36">
+    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 section-tone-dusk section-bleed-top section-bleed-bottom">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 50% 50% at 50% 50%, rgba(139, 26, 26, 0.03) 0%, transparent 60%)`,
+          background: `
+            radial-gradient(ellipse 50% 50% at 50% 50%, rgba(139, 26, 26, 0.04) 0%, transparent 60%),
+            radial-gradient(ellipse 35% 35% at 20% 20%, rgba(181, 151, 90, 0.02) 0%, transparent 50%)
+          `,
         }}
         aria-hidden="true"
       />
 
-      <div ref={sectionRef} className="relative max-w-4xl mx-auto text-center">
+      <div ref={sectionRef} className="relative max-w-4xl mx-auto text-center" style={{ position: 'relative', zIndex: 2 }}>
         <span
           className="block text-[9px] uppercase mb-16 font-light"
           style={{
@@ -222,16 +225,19 @@ function ClosingStatement() {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.3 })
 
   return (
-    <section className="relative px-6 py-32 lg:py-44 flex items-center justify-center">
+    <section className="relative px-6 py-32 lg:py-44 flex items-center justify-center section-tone-deep section-bleed-top">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 50% 50% at 50% 80%, rgba(196, 160, 160, 0.04) 0%, transparent 55%)`,
+          background: `
+            radial-gradient(ellipse 50% 50% at 50% 80%, rgba(196, 160, 160, 0.05) 0%, transparent 55%),
+            radial-gradient(ellipse 35% 35% at 50% 20%, rgba(181, 151, 90, 0.02) 0%, transparent 50%)
+          `,
         }}
         aria-hidden="true"
       />
 
-      <div ref={ref} className="relative text-center max-w-2xl mx-auto">
+      <div ref={ref} className="relative text-center max-w-2xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
         <div style={{ overflow: 'hidden', paddingBottom: '6px', marginBottom: '2rem' }}>
           <p
             className="font-serif font-light"
@@ -280,16 +286,19 @@ export default function AboutContent() {
       <ManifestoHero />
 
       <div className="relative z-10" style={{ backgroundColor: 'var(--background)' }}>
-        <section className="relative px-6 lg:px-16 xl:px-24 py-8 lg:py-16">
+        <section className="relative px-6 lg:px-16 xl:px-24 py-8 lg:py-16 section-tone-charcoal section-bleed-top section-bleed-bottom">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: `radial-gradient(ellipse 55% 45% at 15% 55%, rgba(181, 151, 90, 0.03) 0%, transparent 60%)`,
+              background: `
+                radial-gradient(ellipse 55% 45% at 15% 35%, rgba(181, 151, 90, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 85% 75%, rgba(196, 160, 160, 0.025) 0%, transparent 55%)
+              `,
             }}
             aria-hidden="true"
           />
 
-          <div className="relative max-w-5xl mx-auto">
+          <div className="relative max-w-5xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
             <ManifestoBlock
               label="why we exist"
               headline="Because women's stories have always existed. They just kept getting silenced."

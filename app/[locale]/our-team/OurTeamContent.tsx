@@ -49,19 +49,25 @@ function TeamMemberSection({
   return (
     <section
       ref={sectionRef}
-      className="relative px-6 lg:px-16 xl:px-24 py-20 lg:py-32"
+      className={`relative px-6 lg:px-16 xl:px-24 py-20 lg:py-32 ${isEven ? 'section-tone-warm' : 'section-tone-cool'} section-bleed-top section-bleed-bottom`}
     >
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: isEven
-            ? `radial-gradient(ellipse 55% 45% at 20% 50%, rgba(181, 151, 90, 0.03) 0%, transparent 60%)`
-            : `radial-gradient(ellipse 55% 45% at 80% 50%, rgba(196, 160, 160, 0.03) 0%, transparent 60%)`,
+            ? `
+              radial-gradient(ellipse 55% 45% at 20% 50%, rgba(181, 151, 90, 0.05) 0%, transparent 60%),
+              radial-gradient(ellipse 30% 30% at 75% 80%, rgba(139, 26, 26, 0.02) 0%, transparent 50%)
+            `
+            : `
+              radial-gradient(ellipse 55% 45% at 80% 50%, rgba(196, 160, 160, 0.05) 0%, transparent 60%),
+              radial-gradient(ellipse 30% 30% at 25% 20%, rgba(181, 151, 90, 0.02) 0%, transparent 50%)
+            `,
         }}
         aria-hidden="true"
       />
 
-      <div className={`relative max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${!isEven ? 'lg:[direction:rtl]' : ''}`}>
+      <div className={`relative max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center ${!isEven ? 'lg:[direction:rtl]' : ''}`} style={{ position: 'relative', zIndex: 2 }}>
         {/* Image composition */}
         <div className={!isEven ? 'lg:[direction:ltr]' : ''}>
           <div
@@ -192,16 +198,19 @@ function ClosingVoice() {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.3 })
 
   return (
-    <section className="relative px-6 py-32 lg:py-44 flex items-center justify-center">
+    <section className="relative px-6 py-32 lg:py-44 flex items-center justify-center section-tone-deep section-bleed-top">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 50% 50% at 50% 80%, rgba(139, 26, 26, 0.03) 0%, transparent 55%)`,
+          background: `
+            radial-gradient(ellipse 50% 50% at 50% 80%, rgba(139, 26, 26, 0.04) 0%, transparent 55%),
+            radial-gradient(ellipse 40% 35% at 50% 20%, rgba(196, 160, 160, 0.025) 0%, transparent 50%)
+          `,
         }}
         aria-hidden="true"
       />
 
-      <div ref={ref} className="relative text-center max-w-2xl mx-auto">
+      <div ref={ref} className="relative text-center max-w-2xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
         <div style={{ overflow: 'hidden', paddingBottom: '6px' }}>
           <p
             className="font-serif font-light italic"

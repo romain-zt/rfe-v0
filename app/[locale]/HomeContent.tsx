@@ -161,8 +161,8 @@ function ManifestoSection() {
   const { ref: headerRef, isVisible: headerVisible } = useReveal<HTMLDivElement>({ threshold: 0.3 })
 
   return (
-    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden">
-      <div className="relative max-w-6xl mx-auto">
+    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden section-tone-charcoal section-bleed-top section-bleed-bottom">
+      <div className="relative max-w-6xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
         {/* Section header */}
         <div
           ref={headerRef}
@@ -230,11 +230,11 @@ function ProjectsFilmStrip() {
   ]
 
   return (
-    <section className="relative py-16 lg:py-28 overflow-hidden">
+    <section className="relative py-16 lg:py-28 overflow-hidden section-tone-warm section-bleed-top section-bleed-bottom">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.02) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.035) 0%, transparent 60%)',
         }}
         aria-hidden="true"
       />
@@ -299,8 +299,15 @@ function CinematicImageSection() {
   const { ref: quoteRef, isVisible: quoteVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
 
   return (
-    <section className="relative py-24 lg:py-40 overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-16 xl:px-24">
+    <section className="relative py-24 lg:py-40 overflow-hidden section-tone-dusk section-bleed-top section-bleed-bottom">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 60% 50% at 30% 50%, rgba(196, 160, 160, 0.035) 0%, transparent 55%)',
+        }}
+        aria-hidden="true"
+      />
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-16 xl:px-24" style={{ position: 'relative', zIndex: 2 }}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           {/* Image composition — two overlapping portraits */}
           <div ref={imgRef} className="relative">
@@ -429,16 +436,19 @@ function FeaturedWorkSection() {
   const { lang } = useLanguage()
 
   return (
-    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden">
+    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden section-tone-ember section-bleed-top section-bleed-bottom">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 75% 60% at 72% 38%, rgba(181, 151, 90, 0.04) 0%, transparent 55%)`,
+          background: `
+            radial-gradient(ellipse 75% 60% at 72% 38%, rgba(181, 151, 90, 0.06) 0%, transparent 55%),
+            radial-gradient(ellipse 40% 40% at 15% 80%, rgba(139, 26, 26, 0.025) 0%, transparent 50%)
+          `,
         }}
         aria-hidden="true"
       />
 
-      <div className="relative max-w-6xl mx-auto">
+      <div className="relative max-w-6xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
         <div
           ref={titleRef}
           className="mb-16 lg:mb-20"

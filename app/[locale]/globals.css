@@ -38,12 +38,14 @@
   --ease-quiet: cubic-bezier(0.87, 0, 0.13, 1);      /* slow in/out — contemplative breath */
   --ease-sharp: cubic-bezier(0.76, 0, 0.24, 1);      /* decisive — refuses comfort */
 
-  /* Section tone palette */
+  /* Section tone palette — near-blacks with personality */
   --tone-deep: #050506;
   --tone-charcoal: #0a0a0c;
   --tone-slate: #0c0d10;
   --tone-warm: #0b0908;
   --tone-cool: #080a0d;
+  --tone-ember: #0d0907;
+  --tone-dusk: #090810;
 
   /* Shadcn/ui default variables (added, if not conflicting with user's defined colors) */
   --chart-1: oklch(0.646 0.222 41.116);
@@ -307,6 +309,41 @@
   .section-tone-cool {
     background: var(--tone-cool);
     position: relative;
+  }
+
+  .section-tone-ember {
+    background: var(--tone-ember);
+    position: relative;
+  }
+
+  .section-tone-dusk {
+    background: var(--tone-dusk);
+    position: relative;
+  }
+
+  /* Gradient bleed — soft dissolve at section boundaries */
+  .section-bleed-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, var(--background) 0%, transparent 100%);
+    z-index: 1;
+  }
+
+  .section-bleed-bottom::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    pointer-events: none;
+    background: linear-gradient(to top, var(--background) 0%, transparent 100%);
+    z-index: 1;
   }
 
   /* Section fade transitions */

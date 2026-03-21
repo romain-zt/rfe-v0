@@ -11,7 +11,7 @@ export function BottomLogoReveal() {
       <img
         src="/assets/logos/logo-rfe-blackgold.png"
         alt=""
-        className="w-auto max-w-[160px] md:max-w-[240px]"
+        className="w-auto max-w-[260px] md:max-w-[400px]"
         style={{ opacity: 0.45 }}
       />
     </div>

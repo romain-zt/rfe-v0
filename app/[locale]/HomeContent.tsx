@@ -104,17 +104,17 @@ function ManifestoCard({
       />
 
       <div className="relative px-6 py-10 md:px-10 md:py-14">
-        {/* Large index number */}
+        {/* Large index number — positioned above content, not overlapping */}
         <span
           className="absolute font-serif font-light pointer-events-none select-none"
           style={{
-            fontSize: 'clamp(6rem, 14vw, 11rem)',
+            fontSize: 'clamp(5rem, 12vw, 9rem)',
             lineHeight: 1,
-            top: '-0.15em',
-            right: align === 'right' ? 'auto' : '-0.05em',
-            left: align === 'right' ? '-0.05em' : 'auto',
+            top: '-0.7em',
+            right: align === 'right' ? 'auto' : '0',
+            left: align === 'right' ? '0' : 'auto',
             color: accentColor,
-            opacity: isVisible ? 0.12 : 0,
+            opacity: isVisible ? 0.22 : 0,
             transition: 'opacity 3s var(--ease-quiet)',
           }}
           aria-hidden="true"

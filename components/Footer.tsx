@@ -9,7 +9,7 @@ export function Footer() {
   return (
     <footer
       className="relative border-t px-6 lg:px-10 py-14"
-      style={{ borderColor: 'rgba(245, 240, 235, 0.06)' }}
+      style={{ borderColor: 'rgba(245, 240, 235, 0.06)', background: 'var(--background)' }}
     >
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-10">

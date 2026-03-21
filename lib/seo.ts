@@ -230,12 +230,8 @@ export function generateRootMetadata(lang: Language = 'en'): Metadata {
       },
     },
     icons: {
-      icon: [
-        { url: '/favicon-32x32.png', type: 'image/png' },
-        { url: '/favicon.ico', type: 'image/x-icon' },
-      ],
-      apple: '/apple-icon.png',
+      icon: { url: '/icon.svg', type: 'image/svg+xml' },
+      apple: { url: '/icon.svg', type: 'image/svg+xml' },
     },
-    manifest: '/site.webmanifest',
   }
 }

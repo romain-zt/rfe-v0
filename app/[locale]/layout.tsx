@@ -5,6 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/components/LanguageContext'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
+import { BottomLogoReveal } from '@/components/BottomLogoReveal'
 import { GrainOverlay } from '@/components/GrainOverlay'
 import { RootJsonLd } from '@/components/JsonLd'
 import { generateRootMetadata } from '@/lib/seo'
@@ -78,11 +79,15 @@ export default async function RootLayout({
           {/* Grain overlay */}
           <GrainOverlay />
 
+          <BottomLogoReveal />
           <Header />
-          <div className="relative z-10">
+          <div
+            className="relative z-10"
+            style={{ background: 'var(--background)', marginBottom: '70vh' }}
+          >
             {children}
+            <Footer />
           </div>
-          <Footer />
         </LanguageProvider>
         <Analytics />
       </body>

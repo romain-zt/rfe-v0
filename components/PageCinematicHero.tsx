@@ -79,7 +79,7 @@ export function PageCinematicHero({
     <section
       ref={sectionRef}
       className="relative w-full"
-      style={{ height: '140vh' }}
+      style={{ height: '140vh', clipPath: 'inset(0)' }}
       aria-label="Hero"
     >
       <div className="fixed inset-0 z-0" style={{ willChange: 'auto' }}>

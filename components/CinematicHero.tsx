@@ -69,7 +69,7 @@ export function CinematicHero() {
     <section
       ref={sectionRef}
       className="relative w-full"
-      style={{ height: '180vh' }}
+      style={{ height: '180vh', clipPath: 'inset(0)' }}
       aria-label="Hero"
     >
       {/* Fixed background — stays pinned while page scrolls over it */}

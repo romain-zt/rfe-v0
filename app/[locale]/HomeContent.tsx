@@ -38,6 +38,7 @@ function ManifestoCard({
   accent,
   align,
   glow,
+  projectorSide,
 }: {
   index: string
   label: string
@@ -46,6 +47,7 @@ function ManifestoCard({
   accent: 'gold' | 'rose' | 'red'
   align: 'left' | 'right' | 'center'
   glow: string
+  projectorSide: 'left' | 'right' | 'center'
 }) {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.18 })
 
@@ -55,11 +57,23 @@ function ManifestoCard({
     red: 'var(--rfe-red)',
   }[accent]
 
+  const accentRgb = {
+    gold: '181, 151, 90',
+    rose: '196, 160, 160',
+    red: '139, 26, 26',
+  }[accent]
+
   const alignClass = {
     left: 'md:mr-auto md:ml-0',
     right: 'md:ml-auto md:mr-0',
     center: 'md:mx-auto',
   }[align]
+
+  const projectorGradient = {
+    left: `linear-gradient(105deg, rgba(${accentRgb}, 0.07) 0%, rgba(${accentRgb}, 0.02) 35%, transparent 65%)`,
+    right: `linear-gradient(255deg, rgba(${accentRgb}, 0.07) 0%, rgba(${accentRgb}, 0.02) 35%, transparent 65%)`,
+    center: `radial-gradient(ellipse 70% 80% at 50% 40%, rgba(${accentRgb}, 0.05) 0%, transparent 60%)`,
+  }[projectorSide]
 
   return (
     <div
@@ -78,8 +92,19 @@ function ManifestoCard({
         aria-hidden="true"
       />
 
+      {/* Projector light-leak — directional wash */}
+      <div
+        className="absolute pointer-events-none -inset-10 md:-inset-16"
+        style={{
+          background: projectorGradient,
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 3.5s var(--ease-quiet) 0.3s',
+        }}
+        aria-hidden="true"
+      />
+
       <div className="relative px-6 py-10 md:px-10 md:py-14">
-        {/* Large index number as background texture */}
+        {/* Large index number */}
         <span
           className="absolute font-serif font-light pointer-events-none select-none"
           style={{
@@ -89,7 +114,7 @@ function ManifestoCard({
             right: align === 'right' ? 'auto' : '-0.05em',
             left: align === 'right' ? '-0.05em' : 'auto',
             color: accentColor,
-            opacity: isVisible ? 0.04 : 0,
+            opacity: isVisible ? 0.12 : 0,
             transition: 'opacity 3s var(--ease-quiet)',
           }}
           aria-hidden="true"
@@ -147,7 +172,7 @@ function ManifestoCard({
           style={{
             [align === 'right' ? 'right' : 'left']: 0,
             background: `linear-gradient(to bottom, transparent, ${accentColor}, transparent)`,
-            opacity: isVisible ? 0.15 : 0,
+            opacity: isVisible ? 0.2 : 0,
             transition: 'opacity 2s var(--ease-quiet) 0.3s',
           }}
           aria-hidden="true"
@@ -190,6 +215,7 @@ function ManifestoSection() {
             body="They kept getting cut, softened, explained away. Told through someone else's eyes. We exist to let them breathe — raw, incomplete, refusing resolution."
             accent="gold"
             align="left"
+            projectorSide="left"
             glow="radial-gradient(ellipse 70% 60% at 20% 50%, rgba(181, 151, 90, 0.04) 0%, transparent 70%)"
           />
 
@@ -200,6 +226,7 @@ function ManifestoSection() {
             body="Stories that end before they begin. Heroines who exist to be saved. The camera that looks at women instead of looking with them."
             accent="rose"
             align="right"
+            projectorSide="right"
             glow="radial-gradient(ellipse 70% 60% at 80% 50%, rgba(196, 160, 160, 0.04) 0%, transparent 70%)"
           />
 
@@ -210,6 +237,7 @@ function ManifestoSection() {
             body="The silence that holds everything. A gaze that doesn't look away. Fragility turning into something you can't name but can't stop feeling."
             accent="red"
             align="center"
+            projectorSide="center"
             glow="radial-gradient(ellipse 60% 60% at 50% 50%, rgba(139, 26, 26, 0.045) 0%, transparent 65%)"
           />
         </div>

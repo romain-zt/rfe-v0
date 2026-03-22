@@ -569,6 +569,15 @@
 
   /* (Removed: before/after reveal system — restoration-specific artifacts) */
 
+  /* Hide scrollbar for horizontal scroll sections */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
   /* ============================================
    * ORGANIC RING & PULSE SYSTEM
    * Circles that live, breathe, feel — not decorate

@@ -76,19 +76,17 @@ export function OrganizationJsonLd({ lang = 'en' }: OrganizationJsonLdProps) {
       SITE_CONFIG.social.instagram,
     ].filter(Boolean),
     knowsAbout: isFr ? [
-      'Production Documentaire',
-      'Restauration de Films',
-      'Colorisation de Films',
-      'Préservation de Films',
-      'Patrimoine Cinématographique',
-      'Archives Cinématographiques',
+      'Cinéma au regard féminin',
+      'Production cinématographique féministe',
+      'Studio indépendant',
+      'Films dirigés par des femmes',
+      'Narration cinématographique',
     ] : [
-      'Documentary Production',
-      'Film Restoration',
-      'Film Colorization',
-      'Film Preservation',
-      'Cinema Heritage',
-      'Archive Preservation',
+      'Female Gaze Cinema',
+      'Feminist Film Production',
+      'Independent Film Studio',
+      'Female-Led Films',
+      'Cinematic Storytelling',
     ],
   }
 
@@ -337,7 +335,7 @@ export function WorkPageJsonLd({ work, lang, slug }: WorkPageJsonLdProps) {
     '@type': 'ItemPage',
     '@id': `${workUrl}/#webpage`,
     url: workUrl,
-    name: `${work.title} (${work.year}) — Composite Films`,
+    name: `${work.title} (${work.year}) — ${SITE_CONFIG.name}`,
     description: description,
     isPartOf: {
       '@id': `${SITE_CONFIG.url}/#website`,

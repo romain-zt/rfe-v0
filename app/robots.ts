@@ -7,8 +7,8 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
     },
     sitemap: [
-      'https://compositefilms.fr/sitemap.xml',
-      'https://compositefilms.fr/video-sitemap.xml',
+      'https://www.rfe.studio/sitemap.xml',
+      'https://www.rfe.studio/video-sitemap.xml',
     ],
   };
 }

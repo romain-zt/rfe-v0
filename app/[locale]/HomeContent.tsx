@@ -5,30 +5,11 @@ import { useReveal } from '@/hooks/useReveal'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from '@/components/LanguageContext'
+import { useRef, useEffect, useState, useCallback } from 'react'
 
-function ArcDivider({ flip = false }: { flip?: boolean }) {
-  return (
-    <div
-      className="relative w-full overflow-hidden pointer-events-none"
-      style={{ height: '40px' }}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 1440 40"
-        fill="none"
-        className="absolute inset-0 w-full h-full"
-        preserveAspectRatio="none"
-      >
-        <path
-          d={flip ? 'M0 25 Q720 38 1440 25' : 'M0 15 Q720 2 1440 15'}
-          stroke="rgba(245, 240, 235, 0.06)"
-          strokeWidth="1"
-          fill="none"
-        />
-      </svg>
-    </div>
-  )
-}
+// ============================================
+// MANIFESTO
+// ============================================
 
 function ManifestoCard({
   index,
@@ -85,14 +66,12 @@ function ManifestoCard({
         transition: 'opacity 1.6s var(--ease-quiet), transform 1.8s var(--ease-emerge)',
       }}
     >
-      {/* Ambient glow per card */}
       <div
         className="absolute pointer-events-none -inset-20"
         style={{ background: glow, opacity: isVisible ? 1 : 0, transition: 'opacity 3s var(--ease-quiet)' }}
         aria-hidden="true"
       />
 
-      {/* Projector light-leak — directional wash */}
       <div
         className="absolute pointer-events-none -inset-10 md:-inset-16"
         style={{
@@ -104,7 +83,6 @@ function ManifestoCard({
       />
 
       <div className="relative px-6 py-10 md:px-10 md:py-14">
-        {/* Large index number — positioned above content, not overlapping */}
         <span
           className="absolute font-serif font-light pointer-events-none select-none"
           style={{
@@ -122,7 +100,6 @@ function ManifestoCard({
           {index}
         </span>
 
-        {/* Label */}
         <p
           className="text-[10px] uppercase mb-5 font-light"
           style={{
@@ -135,7 +112,6 @@ function ManifestoCard({
           {label}
         </p>
 
-        {/* Headline */}
         <div style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '1.5rem' }}>
           <h2
             className="font-serif font-light text-balance"
@@ -152,7 +128,6 @@ function ManifestoCard({
           </h2>
         </div>
 
-        {/* Body */}
         <p
           className="text-sm leading-[2.1] font-light"
           style={{
@@ -166,7 +141,6 @@ function ManifestoCard({
           {body}
         </p>
 
-        {/* Accent border line */}
         <div
           className="absolute top-0 h-full w-px"
           style={{
@@ -188,7 +162,6 @@ function ManifestoSection() {
   return (
     <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden section-tone-charcoal section-bleed-top section-bleed-bottom">
       <div className="relative max-w-6xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
-        {/* Section header */}
         <div
           ref={headerRef}
           className="mb-20 lg:mb-28 text-center"
@@ -206,7 +179,6 @@ function ManifestoSection() {
           </span>
         </div>
 
-        {/* Staggered cards — each offset to a different side */}
         <div className="flex flex-col gap-20 md:gap-28 lg:gap-36">
           <ManifestoCard
             index="01"
@@ -246,19 +218,43 @@ function ManifestoSection() {
   )
 }
 
-function ProjectsFilmStrip() {
-  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 })
+// ============================================
+// HORIZONTAL SCROLL WORK SECTION
+// ============================================
+
+function WorkHorizontalScroll() {
+  const { ref: titleRef, isVisible: titleVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const { lang } = useLanguage()
 
   const projects = [
-    { src: '/assets/works/murder-your-darlings.jpg', title: 'Murder Your Darlings' },
-    { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer' },
-    { src: '/assets/works/lobotomist-wife.png', title: 'The Lobotomist\'s Wife' },
-    { src: '/assets/works/diamonds-and-deadlines.png', title: 'Diamonds and Deadlines' },
-    { src: '/assets/works/ruby-falls.png', title: 'Ruby Falls' },
+    { src: '/assets/works/margret-stevie.png', title: 'Margret & Stevie', year: '2026', size: 'large' },
+    { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer', year: '2026', size: 'small' },
+    { src: '/assets/works/lobotomist-wife.png', title: "The Lobotomist's Wife", year: '2026', size: 'medium' },
+    { src: '/assets/works/diamonds-and-deadlines.png', title: 'Diamonds and Deadlines', year: '2026', size: 'large' },
+    { src: '/assets/works/ruby-falls.png', title: 'Ruby Falls', year: '2026', size: 'small' },
+    { src: '/assets/works/murder-your-darlings.jpg', title: 'Murder Your Darlings', year: '2026', size: 'medium' },
   ]
 
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return
+    const el = scrollRef.current
+    const maxScroll = el.scrollWidth - el.clientWidth
+    if (maxScroll > 0) {
+      setScrollProgress(el.scrollLeft / maxScroll)
+    }
+  }, [])
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    el.addEventListener('scroll', handleScroll, { passive: true })
+    return () => el.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
+
   return (
-    <section className="relative py-16 lg:py-28 overflow-hidden section-tone-warm section-bleed-top section-bleed-bottom">
+    <section className="relative py-20 lg:py-32 overflow-hidden section-tone-warm section-bleed-top section-bleed-bottom">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -267,62 +263,131 @@ function ProjectsFilmStrip() {
         aria-hidden="true"
       />
 
-      <div ref={ref} className="relative">
-        <div
-          className="flex gap-4 md:gap-6 px-6 lg:px-16"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateX(0)' : 'translateX(40px)',
-            transition: 'opacity 2s var(--ease-quiet), transform 2.5s var(--ease-quiet)',
-          }}
-        >
-          {projects.map((project, i) => (
-            <div
-              key={project.title}
-              className="relative flex-shrink-0 overflow-hidden"
+      <div className="relative">
+        <div ref={titleRef} className="px-6 lg:px-16 mb-12 flex items-end justify-between">
+          <div
+            style={{
+              opacity: titleVisible ? 1 : 0,
+              transition: 'opacity 1.5s var(--ease-quiet)',
+            }}
+          >
+            <span
+              className="text-[9px] uppercase block mb-4 font-light"
               style={{
-                width: 'clamp(160px, 22vw, 280px)',
-                aspectRatio: '2/3',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : `translateY(${20 + i * 8}px)`,
-                transition: `opacity 2s var(--ease-quiet) ${i * 150}ms, transform 2s var(--ease-quiet) ${i * 150}ms`,
+                color: 'var(--rfe-gold-dim)',
+                letterSpacing: titleVisible ? '0.42em' : '0.08em',
+                transition: 'letter-spacing 2.2s var(--ease-quiet)',
               }}
             >
-              <Image
-                src={project.src}
-                alt={project.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 40vw, 22vw"
-                style={{
-                  filter: isVisible ? 'grayscale(0.4) brightness(0.85)' : 'grayscale(1) brightness(0.5)',
-                  transition: 'filter 3s var(--ease-quiet)',
-                }}
-              />
+              what keeps us up
+            </span>
+          </div>
+          <Link
+            href={`/${lang}/our-work`}
+            className="text-[10px] tracking-[0.25em] uppercase pb-0.5 border-b transition-colors duration-500 hidden sm:inline-block"
+            style={{ color: 'var(--rfe-gold-dim)', borderColor: 'rgba(181, 151, 90, 0.15)' }}
+          >
+            see all ↗
+          </Link>
+        </div>
+
+        {/* Horizontal scroll container */}
+        <div
+          ref={scrollRef}
+          className="flex gap-4 md:gap-6 overflow-x-auto overflow-y-hidden px-6 lg:px-16 pb-4 snap-x snap-mandatory"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {projects.map((project, i) => {
+            const width = project.size === 'large'
+              ? 'clamp(280px, 35vw, 420px)'
+              : project.size === 'medium'
+                ? 'clamp(200px, 25vw, 320px)'
+                : 'clamp(150px, 18vw, 220px)'
+
+            const aspect = project.size === 'large'
+              ? '3/4'
+              : project.size === 'medium'
+                ? '2/3'
+                : '4/5'
+
+            return (
               <div
-                className="absolute inset-0"
+                key={project.title}
+                className="relative flex-shrink-0 snap-start group"
                 style={{
-                  background: 'linear-gradient(to top, rgba(7, 7, 8, 0.6) 0%, transparent 40%, rgba(7, 7, 8, 0.2) 100%)',
+                  width,
+                  marginTop: i % 2 === 0 ? '0' : '2rem',
                 }}
-                aria-hidden="true"
-              />
-              <div className="absolute bottom-0 left-0 right-0 p-3">
-                <p
-                  className="font-serif text-[11px] font-light tracking-wide"
-                  style={{ color: 'rgba(245, 240, 235, 0.55)' }}
+              >
+                <div
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: aspect }}
                 >
-                  {project.title}
-                </p>
+                  <Image
+                    src={project.src}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-all duration-[1.5s] group-hover:scale-[1.03]"
+                    sizes="(max-width: 768px) 60vw, 35vw"
+                    style={{
+                      filter: 'grayscale(0.4) brightness(0.85)',
+                      transition: 'filter 1.5s var(--ease-quiet)',
+                    }}
+                  />
+                  <div
+                    className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-0"
+                    style={{
+                      background: 'linear-gradient(to top, rgba(7, 7, 8, 0.55) 0%, transparent 50%)',
+                    }}
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="mt-3">
+                  <p
+                    className="font-serif text-[12px] md:text-sm font-light tracking-wide"
+                    style={{ color: 'rgba(245, 240, 235, 0.55)' }}
+                  >
+                    {project.title}
+                  </p>
+                  <p
+                    className="text-[9px] tracking-[0.2em] mt-1"
+                    style={{ color: 'rgba(245, 240, 235, 0.2)' }}
+                  >
+                    {project.year}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
+        </div>
+
+        {/* Scroll progress indicator */}
+        <div className="px-6 lg:px-16 mt-6">
+          <div className="h-px w-full max-w-xs mx-auto" style={{ background: 'rgba(245, 240, 235, 0.06)' }}>
+            <div
+              className="h-full transition-all duration-150"
+              style={{
+                width: `${Math.max(20, scrollProgress * 100)}%`,
+                background: 'var(--rfe-gold-dim)',
+                opacity: 0.4,
+              }}
+            />
+          </div>
         </div>
       </div>
     </section>
   )
 }
 
-function CinematicImageSection() {
+// ============================================
+// OVERLAPPING IMAGE + QUOTE (images bleed into text)
+// ============================================
+
+function OverlappingImageSection() {
   const { ref: imgRef, isVisible: imgVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 })
   const { ref: quoteRef, isVisible: quoteVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
 
@@ -336,9 +401,9 @@ function CinematicImageSection() {
         aria-hidden="true"
       />
       <div className="relative max-w-7xl mx-auto px-6 lg:px-16 xl:px-24" style={{ position: 'relative', zIndex: 2 }}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
-          {/* Image composition — two overlapping portraits */}
-          <div ref={imgRef} className="relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-0 items-center">
+          {/* Image — bleeds into text column */}
+          <div ref={imgRef} className="lg:col-span-7 relative">
             <div
               className="relative"
               style={{
@@ -347,14 +412,13 @@ function CinematicImageSection() {
                 transition: 'opacity 2s var(--ease-quiet), transform 2s var(--ease-quiet)',
               }}
             >
-              {/* Main portrait */}
-              <div className="relative aspect-[3/4] overflow-hidden">
+              <div className="relative aspect-[3/4] overflow-hidden lg:-mr-20">
                 <Image
                   src="/assets/team/elisabeth-rohm-1.jpg"
                   alt="Elisabeth Röhm"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 1024px) 100vw, 58vw"
                   style={{
                     filter: imgVisible ? 'grayscale(0.3) brightness(0.95)' : 'grayscale(1) brightness(0.7)',
                     transition: 'filter 3s var(--ease-quiet)',
@@ -369,9 +433,9 @@ function CinematicImageSection() {
                 />
               </div>
 
-              {/* Second image — offset, smaller */}
+              {/* Offset second image */}
               <div
-                className="absolute -bottom-8 -right-6 lg:-right-12 w-[45%] aspect-[4/5] overflow-hidden"
+                className="absolute -bottom-8 -right-6 lg:right-0 w-[40%] aspect-[4/5] overflow-hidden"
                 style={{
                   opacity: imgVisible ? 1 : 0,
                   transition: 'opacity 2.5s var(--ease-quiet) 0.5s',
@@ -384,78 +448,71 @@ function CinematicImageSection() {
                   fill
                   className="object-cover"
                   sizes="25vw"
-                  style={{
-                    filter: 'grayscale(0.5) brightness(0.9)',
-                  }}
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(to top, rgba(7, 7, 8, 0.4), transparent)',
-                  }}
-                  aria-hidden="true"
+                  style={{ filter: 'grayscale(0.5) brightness(0.9)' }}
                 />
               </div>
             </div>
           </div>
 
-          {/* Quote */}
-          <div ref={quoteRef} className="lg:pl-8">
-            <div style={{ overflow: 'hidden', paddingBottom: '4px', marginBottom: '2rem' }}>
-              <blockquote
-                className="font-serif font-light italic"
+          {/* Quote — overlaps image on desktop */}
+          <div ref={quoteRef} className="lg:col-span-5 relative lg:-ml-12 mt-12 lg:mt-0">
+            <div
+              className="relative bg-background/80 lg:bg-background/60 lg:backdrop-blur-sm p-6 lg:p-10"
+              style={{ position: 'relative', zIndex: 3 }}
+            >
+              <div style={{ overflow: 'hidden', paddingBottom: '4px', marginBottom: '2rem' }}>
+                <blockquote
+                  className="font-serif font-light italic"
+                  style={{
+                    fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+                    lineHeight: 1.5,
+                    color: 'rgba(245, 240, 235, 0.7)',
+                    transform: quoteVisible ? 'translateY(0)' : 'translateY(110%)',
+                    transition: 'transform 1.6s var(--ease-emerge) 0.2s',
+                  }}
+                >
+                  &ldquo;A whisper that becomes a scream.&rdquo;
+                </blockquote>
+              </div>
+              <p
+                className="text-sm leading-[2.1] font-light"
                 style={{
-                  fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-                  lineHeight: 1.5,
-                  color: 'rgba(245, 240, 235, 0.7)',
-                  transform: quoteVisible ? 'translateY(0)' : 'translateY(110%)',
-                  transition: 'transform 1.6s var(--ease-emerge) 0.2s',
+                  color: 'rgba(245, 240, 235, 0.35)',
+                  letterSpacing: '0.02em',
+                  maxWidth: '44ch',
+                  opacity: quoteVisible ? 1 : 0,
+                  transition: 'opacity 2.5s var(--ease-quiet) 0.6s',
                 }}
               >
-                &ldquo;A whisper that becomes a scream.&rdquo;
-              </blockquote>
-            </div>
-            <p
-              className="text-sm leading-[2.1] font-light"
-              style={{
-                color: 'rgba(245, 240, 235, 0.35)',
-                letterSpacing: '0.02em',
-                maxWidth: '44ch',
-                opacity: quoteVisible ? 1 : 0,
-                transition: 'opacity 2.5s var(--ease-quiet) 0.6s',
-              }}
-            >
-              RFE is where feminine emotion becomes cinematic power.
-              Not about films — about what women feel, reclaim, and express through cinema.
-              Intimate. Poetic. Radical.
-            </p>
+                RFE is where feminine emotion becomes cinematic power.
+                Not about films — about what women feel, reclaim, and express through cinema.
+              </p>
 
-            <Link
-              href="/en/about"
-              className="inline-block mt-10 text-[10px] tracking-[0.3em] uppercase pb-1 border-b transition-all duration-700"
-              style={{
-                color: 'var(--rfe-gold-dim)',
-                borderColor: 'rgba(181, 151, 90, 0.2)',
-                opacity: quoteVisible ? 1 : 0,
-                transition: 'opacity 2s var(--ease-quiet) 0.8s, color 500ms, border-color 500ms',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = 'var(--rfe-gold)'
-                e.currentTarget.style.borderColor = 'var(--rfe-gold)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'var(--rfe-gold-dim)'
-                e.currentTarget.style.borderColor = 'rgba(181, 151, 90, 0.2)'
-              }}
-            >
-              discover our story
-            </Link>
+              {/* Inline contact — woven in, not relegated */}
+              <a
+                href="mailto:contact@rfe.studio"
+                className="inline-block mt-8 text-[10px] tracking-[0.25em] uppercase transition-colors duration-500"
+                style={{
+                  color: 'var(--rfe-rose-dim)',
+                  opacity: quoteVisible ? 1 : 0,
+                  transition: 'opacity 2s var(--ease-quiet) 0.8s, color 500ms',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--rfe-rose)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--rfe-rose-dim)')}
+              >
+                contact@rfe.studio
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </section>
   )
 }
+
+// ============================================
+// FEATURED WORK
+// ============================================
 
 function FeaturedWorkSection() {
   const { ref: titleRef, isVisible: titleVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
@@ -490,7 +547,7 @@ function FeaturedWorkSection() {
             className="text-[9px] uppercase font-light"
             style={{ color: 'var(--rfe-gold-dim)' }}
           >
-            selected work
+            in the spotlight
           </span>
         </div>
 
@@ -654,6 +711,10 @@ function FeaturedWorkSection() {
   )
 }
 
+// ============================================
+// TEAM TEASER — "the gaze"
+// ============================================
+
 function TeamTeaser() {
   const { ref: sectionRef, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.15 })
   const { lang } = useLanguage()
@@ -687,41 +748,88 @@ function TeamTeaser() {
             transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
           }}
         >
-          the voices
+          the gaze
         </span>
 
-        {/* Portrait grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-14">
-          {teamImages.map((img, i) => (
-            <div
-              key={img.src}
-              className="relative aspect-[3/4] overflow-hidden"
+        {/* Staggered portrait grid — not uniform */}
+        <div className="grid grid-cols-12 gap-3 md:gap-5 mb-14">
+          <div
+            className="col-span-5 relative aspect-[3/4] overflow-hidden"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 2s var(--ease-quiet), transform 2s var(--ease-quiet)',
+            }}
+          >
+            <Image
+              src={teamImages[0].src}
+              alt={teamImages[0].alt}
+              fill
+              className="object-cover"
+              sizes="42vw"
               style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: `opacity 2s var(--ease-quiet) ${i * 200}ms, transform 2s var(--ease-quiet) ${i * 200}ms`,
+                filter: isVisible ? 'grayscale(0.4) brightness(0.85) contrast(1.05)' : 'grayscale(1) brightness(0.5)',
+                transition: 'filter 3s var(--ease-quiet)',
               }}
-            >
-              <Image
-                src={img.src}
-                alt={img.alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 50vw, 33vw"
-                style={{
-                  filter: isVisible ? 'grayscale(0.4) brightness(0.85) contrast(1.05)' : 'grayscale(1) brightness(0.5)',
-                  transition: 'filter 3s var(--ease-quiet)',
-                }}
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: 'linear-gradient(to top, rgba(7, 7, 8, 0.6) 0%, transparent 50%)',
-                }}
-                aria-hidden="true"
-              />
-            </div>
-          ))}
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(7, 7, 8, 0.6) 0%, transparent 50%)' }}
+              aria-hidden="true"
+            />
+          </div>
+
+          <div
+            className="col-span-4 relative aspect-[2/3] overflow-hidden mt-12 md:mt-20"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 2s var(--ease-quiet) 200ms, transform 2s var(--ease-quiet) 200ms',
+            }}
+          >
+            <Image
+              src={teamImages[1].src}
+              alt={teamImages[1].alt}
+              fill
+              className="object-cover"
+              sizes="33vw"
+              style={{
+                filter: isVisible ? 'grayscale(0.4) brightness(0.85) contrast(1.05)' : 'grayscale(1) brightness(0.5)',
+                transition: 'filter 3s var(--ease-quiet)',
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(7, 7, 8, 0.6) 0%, transparent 50%)' }}
+              aria-hidden="true"
+            />
+          </div>
+
+          <div
+            className="col-span-3 relative aspect-[3/5] overflow-hidden mt-6 md:mt-10"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 2s var(--ease-quiet) 400ms, transform 2s var(--ease-quiet) 400ms',
+            }}
+          >
+            <Image
+              src={teamImages[2].src}
+              alt={teamImages[2].alt}
+              fill
+              className="object-cover"
+              sizes="25vw"
+              style={{
+                filter: isVisible ? 'grayscale(0.4) brightness(0.85) contrast(1.05)' : 'grayscale(1) brightness(0.5)',
+                transition: 'filter 3s var(--ease-quiet)',
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(7, 7, 8, 0.6) 0%, transparent 50%)' }}
+              aria-hidden="true"
+            />
+          </div>
         </div>
 
         <div className="text-center">
@@ -765,6 +873,10 @@ function TeamTeaser() {
   )
 }
 
+// ============================================
+// PRESS — "they're listening"
+// ============================================
+
 function PressSection() {
   const { ref: headingRef, isVisible: headingVisible } = useReveal<HTMLDivElement>({ threshold: 0.3 })
   const { ref: cardRef, isVisible: cardVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
@@ -793,7 +905,7 @@ function PressSection() {
               transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
             }}
           >
-            press
+            they&apos;re listening
           </span>
 
           <div style={{ overflow: 'hidden', paddingBottom: '4px' }}>
@@ -855,13 +967,17 @@ function PressSection() {
   )
 }
 
+// ============================================
+// CONTACT — woven in, not relegated
+// ============================================
+
 function ContactSection() {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.35 })
 
   return (
     <section
       id="contact"
-      className="relative px-6 py-36 lg:py-52 flex flex-col items-center justify-center text-center section-tone-deep section-bleed-top"
+      className="relative px-6 py-28 lg:py-40 flex flex-col items-center justify-center text-center section-tone-deep section-bleed-top"
     >
       <div
         className="absolute inset-0 pointer-events-none"
@@ -875,18 +991,6 @@ function ContactSection() {
       />
 
       <div ref={ref} className="relative max-w-lg mx-auto">
-        <span
-          className="block text-[9px] uppercase mb-10 font-light"
-          style={{
-            color: 'var(--rfe-gold-dim)',
-            letterSpacing: isVisible ? '0.42em' : '0.08em',
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
-          }}
-        >
-          contact
-        </span>
-
         <div style={{ overflow: 'hidden', paddingBottom: '4px', marginBottom: '2rem' }}>
           <p
             className="font-serif font-light"
@@ -928,6 +1032,10 @@ function ContactSection() {
   )
 }
 
+// ============================================
+// HOME — non-linear, overlapping, editorial
+// ============================================
+
 export default function HomeContent() {
   return (
     <main className="relative">
@@ -945,29 +1053,20 @@ export default function HomeContent() {
           aria-hidden="true"
         />
 
-        <ArcDivider />
+        {/* Structure: Hero → Manifesto → Horizontal Work → Overlapping Image → Featured → Team → Press → Contact */}
+        {/* Key breaks from linear: horizontal scroll, overlapping grid, contact email in image section */}
 
-      <ManifestoSection />
+        <ManifestoSection />
 
-      <ProjectsFilmStrip />
+        <WorkHorizontalScroll />
 
-      <ArcDivider flip />
-
-      <CinematicImageSection />
-
-        <ArcDivider />
+        <OverlappingImageSection />
 
         <FeaturedWorkSection />
 
-        <ArcDivider flip />
-
         <TeamTeaser />
 
-        <ArcDivider />
-
         <PressSection />
-
-        <ArcDivider flip />
 
         <ContactSection />
       </div>

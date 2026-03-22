@@ -39,7 +39,7 @@ const dictionary = {
     hero: {
       headline: 'Bringing the past back into the present.',
       subheadline: 'Film Restoration & Preservation',
-      paragraph: 'Composite Films restores and colorizes archival cinema, building a bridge between historical memory and contemporary audiences — through a decade of craft and cutting-edge technology.',
+      paragraph: 'RFE restores and colorizes archival cinema, building a bridge between historical memory and contemporary audiences — through a decade of craft and cutting-edge technology.',
       tagline: "The world's leading production studio dedicated to the archival preservation and remasterization of cinema, live performance, and cultural heritage.",
       cta: 'Our Work',
     },
@@ -64,7 +64,7 @@ const dictionary = {
     footer: {
       contact: 'Contact',
       followUs: 'Follow Us',
-      rights: '© 2024 Composite Films. All rights reserved.',
+      rights: '© 2024 RFE. All rights reserved.',
     },
     work: {
       title: 'Our Work',
@@ -109,7 +109,7 @@ const dictionary = {
     hero: {
       headline: 'Rendre le passé à nouveau visible.',
       subheadline: 'Restauration & Préservation Cinématographique',
-      paragraph: "Composite Films restaure et colorise les archives du cinéma, créant un pont entre la mémoire de l'histoire et le regard d'aujourd'hui — grâce à dix ans de savoir-faire et des technologies de pointe.",
+      paragraph: "RFE restaure et colorise les archives du cinéma, créant un pont entre la mémoire de l'histoire et le regard d'aujourd'hui — grâce à dix ans de savoir-faire et des technologies de pointe.",
       tagline: 'Le studio de production mondial leader dédié à la préservation archivistique et à la remastérisation du cinéma, des spectacles vivants et du patrimoine culturel.',
       cta: 'Nos Travaux',
     },
@@ -134,7 +134,7 @@ const dictionary = {
     footer: {
       contact: 'Contact',
       followUs: 'Suivez-nous',
-      rights: '© 2024 Composite Films. Tous droits réservés.',
+      rights: '© 2024 RFE. Tous droits réservés.',
     },
     work: {
       title: 'Nos Travaux',
@@ -171,12 +171,12 @@ const dictionary = {
 
 const aboutContent = {
   en: [
-    "Composite Films was founded in Paris in 1998 with a singular mission: to preserve and restore the moving images that define our shared cultural memory. What began as a small laboratory dedicated to French silent cinema has grown into a globally recognized studio, trusted by archives, studios, and cultural institutions worldwide.",
+    "RFE was founded in Paris in 1998 with a singular mission: to preserve and restore the moving images that define our shared cultural memory. What began as a small laboratory dedicated to French silent cinema has grown into a globally recognized studio, trusted by archives, studios, and cultural institutions worldwide.",
     "Our approach combines deep respect for original artistic intent with the most advanced restoration technologies available. Every scratch removed, every frame stabilized, every color calibrated is guided by rigorous historical research and an unwavering commitment to authenticity. We do not simply clean images—we listen to them, understand their context, and restore them to speak clearly once more.",
     "Today, our team of archivists, colorists, and restoration artists continues this work from our studios in Paris and Lyon. We remain independent, allowing us to take the time each project deserves. For us, restoration is not an industry—it is a responsibility.",
   ],
   fr: [
-    "Composite Films a été fondée à Paris en 1998 avec une mission singulière : préserver et restaurer les images animées qui définissent notre mémoire culturelle commune. Ce qui a commencé comme un petit laboratoire dédié au cinéma muet français est devenu un studio mondialement reconnu, auquel font confiance les archives, les studios et les institutions culturelles du monde entier.",
+    "RFE a été fondée à Paris en 1998 avec une mission singulière : préserver et restaurer les images animées qui définissent notre mémoire culturelle commune. Ce qui a commencé comme un petit laboratoire dédié au cinéma muet français est devenu un studio mondialement reconnu, auquel font confiance les archives, les studios et les institutions culturelles du monde entier.",
     "Notre approche combine un profond respect de l'intention artistique originale avec les technologies de restauration les plus avancées disponibles. Chaque rayure effacée, chaque image stabilisée, chaque couleur calibrée est guidée par une recherche historique rigoureuse et un engagement indéfectible envers l'authenticité. Nous ne nettoyons pas simplement les images—nous les écoutons, comprenons leur contexte, et les restaurons pour qu'elles parlent à nouveau clairement.",
     "Aujourd'hui, notre équipe d'archivistes, de coloristes et d'artistes de la restauration poursuit ce travail depuis nos studios de Paris et Lyon. Nous restons indépendants, ce qui nous permet de prendre le temps que chaque projet mérite. Pour nous, la restauration n'est pas une industrie—c'est une responsabilité.",
   ],
@@ -191,8 +191,8 @@ const teamMembers = [
       fr: 'Fondatrice & Directrice Créative',
     },
     bio: {
-      en: "With over 25 years in film restoration, Marie-Claire founded Composite Films with a vision to preserve cinema's most precious works for future generations.",
-      fr: 'Avec plus de 25 ans dans la restauration cinématographique, Marie-Claire a fondé Composite Films avec la vision de préserver les œuvres les plus précieuses du cinéma pour les générations futures.',
+      en: "With over 25 years in film restoration, Marie-Claire founded RFE with a vision to preserve cinema's most precious works for future generations.",
+      fr: 'Avec plus de 25 ans dans la restauration cinématographique, Marie-Claire a fondé RFE avec la vision de préserver les œuvres les plus précieuses du cinéma pour les générations futures.',
     },
   },
   {
@@ -267,8 +267,8 @@ const awardsNews = [
     },
     source: 'Académie des César',
     content: {
-      en: 'Composite Films receives the prestigious César Award for our work on "Les Enfants du Paradis" restoration, recognizing exceptional dedication to preserving French cinematic heritage.',
-      fr: 'Composite Films reçoit le prestigieux César pour notre travail sur la restauration des "Enfants du Paradis", reconnaissant un dévouement exceptionnel à la préservation du patrimoine cinématographique français.',
+      en: 'RFE receives the prestigious César Award for our work on "Les Enfants du Paradis" restoration, recognizing exceptional dedication to preserving French cinematic heritage.',
+      fr: 'RFE reçoit le prestigieux César pour notre travail sur la restauration des "Enfants du Paradis", reconnaissant un dévouement exceptionnel à la préservation du patrimoine cinématographique français.',
     },
   },
   {
@@ -293,8 +293,8 @@ const awardsNews = [
     },
     source: 'Press Release',
     content: {
-      en: 'Composite Films announces a multi-year partnership with the Smithsonian Institution to restore and preserve rare American documentary footage from the early 20th century.',
-      fr: "Composite Films annonce un partenariat pluriannuel avec l'Institution Smithsonian pour restaurer et préserver de rares images documentaires américaines du début du 20e siècle.",
+      en: 'RFE announces a multi-year partnership with the Smithsonian Institution to restore and preserve rare American documentary footage from the early 20th century.',
+      fr: "RFE annonce un partenariat pluriannuel avec l'Institution Smithsonian pour restaurer et préserver de rares images documentaires américaines du début du 20e siècle.",
     },
   },
   {
@@ -319,8 +319,8 @@ const awardsNews = [
     },
     source: 'Le Monde',
     content: {
-      en: 'Composite Films unveils proprietary AI-assisted colorization technology that maintains historical accuracy while bringing unprecedented vibrancy to archival footage.',
-      fr: "Composite Films dévoile une technologie de colorisation propriétaire assistée par IA qui maintient l'exactitude historique tout en apportant une vivacité sans précédent aux images d'archives.",
+      en: 'RFE unveils proprietary AI-assisted colorization technology that maintains historical accuracy while bringing unprecedented vibrancy to archival footage.',
+      fr: "RFE dévoile une technologie de colorisation propriétaire assistée par IA qui maintient l'exactitude historique tout en apportant une vivacité sans précédent aux images d'archives.",
     },
   },
   {
@@ -332,8 +332,8 @@ const awardsNews = [
     },
     source: 'BAFTA',
     content: {
-      en: 'The British Academy honors Composite Films with a special award for outstanding contribution to film heritage preservation and restoration.',
-      fr: "L'Académie britannique honore Composite Films d'un prix spécial pour sa contribution exceptionnelle à la préservation et à la restauration du patrimoine cinématographique.",
+      en: 'The British Academy honors RFE with a special award for outstanding contribution to film heritage preservation and restoration.',
+      fr: "L'Académie britannique honore RFE d'un prix spécial pour sa contribution exceptionnelle à la préservation et à la restauration du patrimoine cinématographique.",
     },
   },
 ]
@@ -477,8 +477,8 @@ function generateWorkKeywords(
   locale: 'en' | 'fr'
 ): string[] {
   const baseKeywords = locale === 'fr'
-    ? ['restauration de film', 'colorisation', 'production documentaire', 'Composite Films']
-    : ['film restoration', 'colorization', 'documentary production', 'Composite Films']
+    ? ['restauration de film', 'colorisation', 'production documentaire', 'RFE']
+    : ['film restoration', 'colorization', 'documentary production', 'RFE']
 
   const titleKeywords = work.title.split(/\s+/).filter(word => word.length > 2)
   return [...new Set([...baseKeywords, ...titleKeywords, ...work.tags, String(work.year)])]
@@ -498,14 +498,14 @@ function generateWorkSeoDescription(
   )
 
   if (locale === 'fr') {
-    if (isRestoration) return `Découvrez ${work.title} (${work.year}), un projet de colorisation et restauration par Composite Films.`
-    if (isDocumentary) return `Découvrez ${work.title} (${work.year}), une production documentaire par Composite Films.`
-    return `${work.title} (${work.year}) - Un projet par Composite Films.`
+    if (isRestoration) return `Découvrez ${work.title} (${work.year}), un projet de colorisation et restauration par RFE.`
+    if (isDocumentary) return `Découvrez ${work.title} (${work.year}), une production documentaire par RFE.`
+    return `${work.title} (${work.year}) - Un projet par RFE.`
   }
 
-  if (isRestoration) return `Discover ${work.title} (${work.year}), a colorization and restoration project by Composite Films.`
-  if (isDocumentary) return `Discover ${work.title} (${work.year}), a documentary production by Composite Films.`
-  return `${work.title} (${work.year}) - A project by Composite Films.`
+  if (isRestoration) return `Discover ${work.title} (${work.year}), a colorization and restoration project by RFE.`
+  if (isDocumentary) return `Discover ${work.title} (${work.year}), a documentary production by RFE.`
+  return `${work.title} (${work.year}) - A project by RFE.`
 }
 
 // ============================================

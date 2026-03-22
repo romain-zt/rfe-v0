@@ -1,17 +1,33 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageContext'
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [visible, setVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { lang } = useLanguage()
+  const lastScrollY = useRef(0)
+  const ticking = useRef(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 80)
+      if (ticking.current) return
+      ticking.current = true
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY
+        // Show header on scroll-up (past 100px), hide on scroll-down
+        if (currentY < 100) {
+          setVisible(false)
+        } else if (currentY < lastScrollY.current) {
+          setVisible(true)
+        } else {
+          setVisible(false)
+        }
+        lastScrollY.current = currentY
+        ticking.current = false
+      })
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
@@ -29,19 +45,23 @@ export function Header() {
   const navItems = [
     { href: `/${lang}`, label: 'home' },
     { href: `/${lang}/about`, label: 'about' },
-    { href: `/${lang}/our-team`, label: 'our team' },
-    { href: `/${lang}/our-work`, label: 'our work' },
+    { href: `/${lang}/our-team`, label: 'the gaze' },
+    { href: `/${lang}/our-work`, label: 'the work' },
     { href: `/${lang}/contact`, label: 'contact' },
   ]
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          isScrolled ? 'bg-background/40 backdrop-blur-xl' : 'bg-transparent'
-        }`}
+        className="fixed top-0 left-0 right-0 z-50 transition-transform duration-500"
+        style={{
+          transform: visible || menuOpen ? 'translateY(0)' : 'translateY(-100%)',
+          background: 'rgba(7, 7, 8, 0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+        }}
       >
-        <div className="px-6 lg:px-10 h-16 flex items-center justify-between">
+        <div className="px-6 lg:px-10 h-14 flex items-center justify-between">
           <Link
             href={`/${lang}`}
             className="group outline-none"
@@ -51,27 +71,13 @@ export function Header() {
             <img
               src="/assets/logos/logo-rfe-blackgold.png"
               alt="RFE"
-              className="h-9 w-auto object-contain transition-opacity duration-500 group-hover:opacity-80"
+              className="h-7 w-auto object-contain transition-opacity duration-500 group-hover:opacity-80"
             />
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-            {navItems.slice(1).map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-[10px] tracking-[0.25em] uppercase transition-colors duration-500 hover:text-[var(--rfe-rose)]"
-                style={{ color: 'rgba(245, 240, 235, 0.45)' }}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Mobile menu button */}
+          {/* Hamburger — always visible */}
           <button
-            className="md:hidden relative w-8 h-8 flex flex-col items-center justify-center gap-1.5"
+            className="relative w-8 h-8 flex flex-col items-center justify-center gap-1.5"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
@@ -101,14 +107,14 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile menu overlay */}
+      {/* Full-screen menu overlay */}
       <div
-        className={`fixed inset-0 z-40 transition-all duration-700 md:hidden ${
+        className={`fixed inset-0 z-40 transition-all duration-700 ${
           menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{ background: 'rgba(7, 7, 8, 0.97)' }}
       >
-        <nav className="flex flex-col items-center justify-center h-full gap-10" aria-label="Mobile navigation">
+        <nav className="flex flex-col items-center justify-center h-full gap-10" aria-label="Navigation">
           {navItems.map((item, i) => (
             <Link
               key={item.href}

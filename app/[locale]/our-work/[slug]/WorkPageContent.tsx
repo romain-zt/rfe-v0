@@ -156,14 +156,7 @@ export default function WorkPageContent({ work }: WorkPageContentProps) {
               transition: 'opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s',
             }}
           >
-            {/* <h2 className="font-serif text-lg sm:text-xl font-light tracking-wide">
-              {lang === 'fr' ? 'Intéressé par ce projet ?' : 'Interested in this project?'}
-            </h2>
-            <p className="text-sm text-muted-foreground/70 leading-relaxed max-w-2xl">
-              {lang === 'fr'
-                ? 'Composite Films propose des services de colorisation, restauration et production documentaire pour archives cinématographiques et télévisuelles.'
-                : 'Composite Films offers colorization, restoration, and documentary production services for film and television archives.'}
-            </p> */}
+            {/* CTA copy removed — Composite Films artifact */}
             <Link
               href={`/${lang}/contact`}
               className="inline-flex items-center gap-2 text-[11px] sm:text-xs tracking-[0.15em] uppercase border border-foreground/40 px-5 py-3 hover:bg-foreground/5 transition-colors"

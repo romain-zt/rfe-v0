@@ -294,12 +294,7 @@ function WorkHorizontalScroll() {
         {/* Horizontal scroll container */}
         <div
           ref={scrollRef}
-          className="flex gap-4 md:gap-6 overflow-x-auto overflow-y-hidden px-6 lg:px-16 pb-4 snap-x snap-mandatory"
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-          }}
+          className="flex gap-4 md:gap-6 overflow-x-auto overflow-y-hidden px-6 lg:px-16 pb-4 snap-x snap-mandatory no-scrollbar"
         >
           {projects.map((project, i) => {
             const width = project.size === 'large'

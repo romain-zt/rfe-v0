@@ -4,6 +4,8 @@
 
 export type Language = 'en' | 'fr'
 
+export type WorkCategory = 'film' | 'series' | 'unscripted'
+
 export type WorkItem = {
   id: number
   slug?: string
@@ -13,6 +15,7 @@ export type WorkItem = {
   tags: string[]
   description?: string
   videoUrl?: string
+  category?: WorkCategory
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: string[]

@@ -6,7 +6,8 @@ import Image from 'next/image'
 export function CinematicHero() {
   const [phase, setPhase] = useState(0)
   const sectionRef = useRef<HTMLElement>(null)
-  const imgRef = useRef<HTMLImageElement>(null)
+  const imgLizRef = useRef<HTMLDivElement>(null)
+  const imgKaraRef = useRef<HTMLDivElement>(null)
   const vignetteRef = useRef<HTMLDivElement>(null)
   const orbRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -31,25 +32,21 @@ export function CinematicHero() {
     const scrolled = -rect.top
     const progress = Math.max(0, Math.min(1, scrolled / (sectionH * 0.65)))
 
-    // "Lights on" — brightness lifts, grayscale drops, contrast eases
-    if (imgRef.current) {
-      const brightness = 0.35 + progress * 0.35
-      const grayscale = 0.6 - progress * 0.5
-      const contrast = 1.1 - progress * 0.05
-      imgRef.current.style.filter = `grayscale(${grayscale}) brightness(${brightness}) contrast(${contrast})`
-    }
+    const brightness = 0.4 + progress * 0.3
+    const grayscale = 0.5 - progress * 0.4
+    const filterVal = `grayscale(${grayscale}) brightness(${brightness}) contrast(1.05)`
 
-    // Vignette loosens as light arrives
+    if (imgLizRef.current) imgLizRef.current.style.filter = filterVal
+    if (imgKaraRef.current) imgKaraRef.current.style.filter = filterVal
+
     if (vignetteRef.current) {
       vignetteRef.current.style.opacity = `${1 - progress * 0.55}`
     }
 
-    // Orb subtle parallax
     if (orbRef.current) {
       orbRef.current.style.transform = `translate(-50%, calc(-50% + ${scrolled * 0.1}px))`
     }
 
-    // Content parallax + fade on scroll-away
     if (contentRef.current) {
       const fadeOut = Math.max(0, 1 - progress * 1.8)
       contentRef.current.style.transform = `translateY(${scrolled * 0.25}px)`
@@ -72,21 +69,59 @@ export function CinematicHero() {
       style={{ height: '180vh', clipPath: 'inset(0)' }}
       aria-label="Hero"
     >
-      {/* Fixed background — stays pinned while page scrolls over it */}
+      {/* Fixed background — two portraits side by side */}
       <div className="fixed inset-0 z-0" style={{ willChange: 'auto' }}>
-        <Image
-          ref={imgRef}
-          src="/assets/team/liz-rohm-hero.png"
-          alt=""
-          fill
-          className="object-cover object-top"
-          priority
-          sizes="100vw"
+        <div className="absolute inset-0 flex">
+          {/* Elisabeth — left half */}
+          <div
+            ref={imgLizRef}
+            className="relative w-1/2 h-full"
+            style={{
+              filter: 'grayscale(0.5) brightness(0.4) contrast(1.05)',
+              opacity: phase >= 1 ? 1 : 0,
+              transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1)',
+            }}
+          >
+            <Image
+              src="/assets/team/liz-rohm-hero.png"
+              alt="Elisabeth Rohm"
+              fill
+              className="object-cover object-top"
+              priority
+              sizes="50vw"
+            />
+          </div>
+
+          {/* Kara — right half */}
+          <div
+            ref={imgKaraRef}
+            className="relative w-1/2 h-full"
+            style={{
+              filter: 'grayscale(0.5) brightness(0.4) contrast(1.05)',
+              opacity: phase >= 1 ? 1 : 0,
+              transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s',
+            }}
+          >
+            <Image
+              src="/assets/team/kara.png"
+              alt="Kara Feifer"
+              fill
+              className="object-cover object-top"
+              priority
+              sizes="50vw"
+            />
+          </div>
+        </div>
+
+        {/* Center divider — subtle gold line */}
+        <div
+          className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px pointer-events-none"
           style={{
-            filter: 'grayscale(0.6) brightness(0.35) contrast(1.1)',
-            opacity: phase >= 1 ? 1 : 0,
-            transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1)',
+            background: 'linear-gradient(to bottom, transparent, rgba(181, 151, 90, 0.25) 20%, rgba(181, 151, 90, 0.25) 80%, transparent)',
+            opacity: phase >= 2 ? 1 : 0,
+            transition: 'opacity 2s cubic-bezier(0.25, 0.1, 0.25, 1) 1.2s',
           }}
+          aria-hidden="true"
         />
 
         {/* Vignette — loosens with scroll */}
@@ -95,15 +130,15 @@ export function CinematicHero() {
           className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(ellipse 65% 55% at 50% 50%, transparent 0%, rgba(7, 7, 8, 0.4) 50%, rgba(7, 7, 8, 0.95) 100%),
-              linear-gradient(to bottom, rgba(7, 7, 8, 0.3) 0%, transparent 30%, transparent 60%, rgba(7, 7, 8, 0.9) 100%)
+              radial-gradient(ellipse 70% 55% at 50% 50%, transparent 0%, rgba(7, 7, 8, 0.35) 50%, rgba(7, 7, 8, 0.92) 100%),
+              linear-gradient(to bottom, rgba(7, 7, 8, 0.3) 0%, transparent 25%, transparent 60%, rgba(7, 7, 8, 0.9) 100%)
             `,
           }}
           aria-hidden="true"
         />
       </div>
 
-      {/* Sticky viewport — holds content centered in first 100vh */}
+      {/* Sticky viewport — content centered in first 100vh */}
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
         {/* Ambient orb */}
         <div
@@ -129,108 +164,62 @@ export function CinematicHero() {
           aria-hidden="true"
         />
 
-        {/* Rose pulse */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: '50%',
-            left: '50%',
-            width: 'min(28vw, 200px)',
-            height: 'min(28vw, 200px)',
-            transform: 'translate(-50%, -50%)',
-            opacity: phase >= 1 ? 1 : 0,
-            transition: 'opacity 4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.8s',
-          }}
-          aria-hidden="true"
-        >
-          <div
-            className="rose-pulse-ring w-full h-full"
-            style={{
-              borderRadius: '50%',
-              background: `radial-gradient(circle,
-                rgba(139, 26, 26, 0.12) 0%,
-                rgba(196, 160, 160, 0.06) 45%,
-                transparent 72%
-              )`,
-            }}
-          />
-        </div>
-
-        {/* Inner orbit ring */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: '50%',
-            left: '50%',
-            width: 'min(68vw, 560px)',
-            height: 'min(68vw, 560px)',
-            transform: 'translate(-50%, -50%)',
-            opacity: phase >= 1 ? 1 : 0,
-            transition: 'opacity 6s cubic-bezier(0.25, 0.1, 0.25, 1) 1s',
-          }}
-          aria-hidden="true"
-        >
-          <div
-            className="ring-breathe-a w-full h-full"
-            style={{
-              borderRadius: '50%',
-              border: '1px solid rgba(181, 151, 90, 0.07)',
-            }}
-          />
-        </div>
-
-        {/* Outer orbit ring */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            top: '50%',
-            left: '50%',
-            width: 'min(84vw, 690px)',
-            height: 'min(84vw, 690px)',
-            transform: 'translate(-50%, -50%)',
-            opacity: phase >= 1 ? 1 : 0,
-            transition: 'opacity 6s cubic-bezier(0.25, 0.1, 0.25, 1) 1.6s',
-          }}
-          aria-hidden="true"
-        >
-          <div
-            className="ring-breathe-b w-full h-full"
-            style={{
-              borderRadius: '50%',
-              border: '1px solid rgba(196, 160, 160, 0.04)',
-            }}
-          />
-        </div>
-
-        {/* Content — parallaxes up and fades as you scroll */}
+        {/* Content — parallaxes up and fades on scroll */}
         <div ref={contentRef} className="relative z-10 text-center px-6 max-w-4xl mx-auto" style={{ willChange: 'transform, opacity' }}>
           <div style={{ overflow: 'hidden', paddingBottom: '6px' }}>
             <h1
               className="font-serif font-light text-balance"
               style={{
-                fontSize: 'clamp(2.5rem, 8vw, 6rem)',
+                fontSize: 'clamp(2rem, 6.5vw, 5rem)',
                 letterSpacing: '-0.01em',
-                lineHeight: 1.05,
+                lineHeight: 1.1,
                 color: 'var(--foreground)',
                 transform: phase >= 2 ? 'translateY(0)' : 'translateY(110%)',
                 transition: 'transform 1.5s var(--ease-emerge)',
               }}
             >
-              not here to behave.
+              There&rsquo;s always more to the story.
             </h1>
           </div>
 
           <p
             className="mt-8 text-sm uppercase font-light"
             style={{
-              color: 'var(--rfe-rose)',
+              color: 'var(--rfe-gold)',
               letterSpacing: phase >= 3 ? '0.28em' : '0.06em',
-              opacity: phase >= 3 ? 0.65 : 0,
+              opacity: phase >= 3 ? 0.7 : 0,
               transition: 'opacity 2s var(--ease-quiet), letter-spacing 3s var(--ease-quiet)',
             }}
           >
-            a cinematic female gaze studio
+            True Crime / Real Drama
           </p>
+
+          {/* Name credits — below subtitle */}
+          <div
+            className="mt-10 flex items-center justify-center gap-8 md:gap-16"
+            style={{
+              opacity: phase >= 3 ? 1 : 0,
+              transition: 'opacity 2s var(--ease-quiet) 0.4s',
+            }}
+          >
+            <span
+              className="text-[10px] uppercase tracking-[0.22em] font-light"
+              style={{ color: 'rgba(245, 240, 235, 0.35)' }}
+            >
+              Elisabeth Rohm
+            </span>
+            <span
+              className="w-px h-3"
+              style={{ background: 'rgba(181, 151, 90, 0.3)' }}
+              aria-hidden="true"
+            />
+            <span
+              className="text-[10px] uppercase tracking-[0.22em] font-light"
+              style={{ color: 'rgba(245, 240, 235, 0.35)' }}
+            >
+              Kara Feifer
+            </span>
+          </div>
         </div>
 
         {/* Scroll indicator */}
@@ -246,7 +235,7 @@ export function CinematicHero() {
             className="w-px"
             style={{
               height: 48,
-              background: 'linear-gradient(to bottom, var(--rfe-rose), transparent)',
+              background: 'linear-gradient(to bottom, var(--rfe-gold), transparent)',
               animation: phase >= 3 ? 'scroll-line 2.8s ease-in-out infinite' : 'none',
             }}
           />

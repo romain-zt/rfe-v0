@@ -1,23 +1,11 @@
-import { generatePageMetadata, SITE_CONFIG } from '@/lib/seo'
-// import { WebPageJsonLd, BreadcrumbJsonLd } from '@/components/JsonLd'
-// import NewsContent from './NewsContent'
 import { redirect } from 'next/navigation'
+import type { Language } from '@/lib/i18n/types'
 
-export const metadata = generatePageMetadata('news')
+type Props = {
+  params: Promise<{ locale: Language }>
+}
 
-export default function NewsPage() {
-  redirect('/')
-
-  // return (
-  //   <>
-  //     <WebPageJsonLd page="news" url={`${SITE_CONFIG.url}/news`} />
-  //     <BreadcrumbJsonLd
-  //       items={[
-  //         { name: 'Home', url: SITE_CONFIG.url },
-  //         { name: 'News', url: `${SITE_CONFIG.url}/news` },
-  //       ]}
-  //     />
-  //     <NewsContent />
-  //   </>
-  // )
+export default async function NewsPage({ params }: Props) {
+  const { locale } = await params
+  redirect(`/${locale}/press`)
 }

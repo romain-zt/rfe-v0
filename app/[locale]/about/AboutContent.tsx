@@ -3,223 +3,273 @@
 import { PageCinematicHero } from '@/components/PageCinematicHero'
 import { useReveal } from '@/hooks/useReveal'
 import Image from 'next/image'
+import Link from 'next/link'
 
-function ManifestoHero() {
-  return (
-    <PageCinematicHero
-      imageSrc="/assets/team/liz-rohm-2.jpg"
-      imagePosition="center center"
-      label="about"
-    >
-      not a production company.<br />
-      <span style={{ color: 'var(--rfe-rose)' }}>a voice.</span>
-    </PageCinematicHero>
-  )
-}
+// ============================================
+// COMPANY OVERVIEW
+// ============================================
 
-function ManifestoBlock({
-  label,
-  headline,
-  body,
-  accent = false,
-  delay = 0,
-}: {
-  label: string
-  headline: string
-  body: string
-  accent?: boolean
-  delay?: number
-}) {
-  const { ref: blockRef, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.15 })
+function CompanyOverview() {
+  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.15 })
 
   return (
-    <div
-      ref={blockRef}
-      className="py-20 md:py-28 border-t"
-      style={{ borderColor: 'rgba(245, 240, 235, 0.04)' }}
-    >
-      <p
-        className="text-[10px] uppercase mb-8 font-light"
-        style={{
-          color: accent ? 'var(--rfe-gold)' : 'var(--rfe-rose-dim)',
-          letterSpacing: isVisible ? '0.38em' : '0.08em',
-          opacity: isVisible ? 1 : 0,
-          transition: `opacity 1.5s var(--ease-quiet) ${delay}ms, letter-spacing 2.2s var(--ease-quiet) ${delay}ms`,
-        }}
-      >
-        {label}
-      </p>
-
-      <div style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '2rem' }}>
-        <h2
-          className="font-serif font-light text-balance"
-          style={{
-            fontSize: 'clamp(1.8rem, 4.5vw, 3rem)',
-            lineHeight: 1.2,
-            letterSpacing: '-0.01em',
-            color: 'var(--foreground)',
-            transform: isVisible ? 'translateY(0)' : 'translateY(110%)',
-            transition: `transform 1.6s var(--ease-emerge) ${delay + 80}ms`,
-          }}
-        >
-          {headline}
-        </h2>
-      </div>
-
-      <p
-        className="text-sm leading-[2.2] font-light"
-        style={{
-          color: 'rgba(245, 240, 235, 0.42)',
-          letterSpacing: '0.025em',
-          maxWidth: '58ch',
-          opacity: isVisible ? 1 : 0,
-          transition: `opacity 2.8s var(--ease-quiet) ${delay + 350}ms`,
-        }}
-      >
-        {body}
-      </p>
-    </div>
-  )
-}
-
-function DualitySection() {
-  const { ref: sectionRef, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.15 })
-
-  const dualities = [
-    { left: 'softness', right: 'rebellion' },
-    { left: 'silence', right: 'voice' },
-    { left: 'fragility', right: 'strength' },
-    { left: 'intimacy', right: 'power' },
-  ]
-
-  return (
-    <section className="relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 section-tone-dusk section-bleed-top section-bleed-bottom">
+    <section className="relative px-6 lg:px-16 xl:px-24 py-20 lg:py-32 section-tone-charcoal section-bleed-top section-bleed-bottom">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: `
-            radial-gradient(ellipse 50% 50% at 50% 50%, rgba(139, 26, 26, 0.04) 0%, transparent 60%),
-            radial-gradient(ellipse 35% 35% at 20% 20%, rgba(181, 151, 90, 0.02) 0%, transparent 50%)
+            radial-gradient(ellipse 55% 45% at 15% 35%, rgba(181, 151, 90, 0.04) 0%, transparent 60%),
+            radial-gradient(ellipse 40% 40% at 85% 75%, rgba(196, 160, 160, 0.025) 0%, transparent 55%)
           `,
         }}
         aria-hidden="true"
       />
 
-      <div ref={sectionRef} className="relative max-w-4xl mx-auto text-center" style={{ position: 'relative', zIndex: 2 }}>
-        <span
-          className="block text-[9px] uppercase mb-16 font-light"
+      <div ref={ref} className="relative max-w-4xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
+        <p
+          className="text-[10px] uppercase mb-10 font-light"
           style={{
-            color: 'var(--rfe-gold-dim)',
-            letterSpacing: isVisible ? '0.42em' : '0.08em',
+            color: 'var(--rfe-gold)',
+            letterSpacing: isVisible ? '0.38em' : '0.08em',
             opacity: isVisible ? 1 : 0,
             transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
           }}
         >
-          our duality
-        </span>
+          About Us
+        </p>
 
-        <div className="space-y-8 md:space-y-12">
-          {dualities.map((d, i) => (
-            <div
-              key={d.left}
-              className="flex items-center justify-center gap-6 md:gap-12"
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(15px)',
-                transition: `opacity 2s var(--ease-quiet) ${i * 150}ms, transform 2s var(--ease-quiet) ${i * 150}ms`,
-              }}
-            >
-              <span
-                className="font-serif font-light text-right"
-                style={{
-                  fontSize: 'clamp(1.2rem, 3vw, 2rem)',
-                  color: 'var(--rfe-rose)',
-                  minWidth: '8ch',
-                  letterSpacing: '0.02em',
-                }}
-              >
-                {d.left}
-              </span>
-              <span
-                className="text-[9px] uppercase tracking-[0.3em]"
-                style={{ color: 'var(--rfe-gold-dim)' }}
-              >
-                ×
-              </span>
-              <span
-                className="font-serif font-light text-left"
-                style={{
-                  fontSize: 'clamp(1.2rem, 3vw, 2rem)',
-                  color: 'var(--foreground)',
-                  minWidth: '8ch',
-                  letterSpacing: '0.02em',
-                }}
-              >
-                {d.right}
-              </span>
-            </div>
-          ))}
+        <div style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '2.5rem' }}>
+          <h2
+            className="font-serif font-light text-balance"
+            style={{
+              fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
+              lineHeight: 1.2,
+              letterSpacing: '-0.01em',
+              color: 'var(--foreground)',
+              transform: isVisible ? 'translateY(0)' : 'translateY(110%)',
+              transition: 'transform 1.6s var(--ease-emerge) 0.1s',
+            }}
+          >
+            Woman-owned. Story-driven. Built for impact.
+          </h2>
+        </div>
+
+        <div
+          className="space-y-6"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 2.5s var(--ease-quiet) 0.4s',
+          }}
+        >
+          <p
+            className="text-base leading-[2.1] font-light"
+            style={{ color: 'rgba(245, 240, 235, 0.65)', letterSpacing: '0.02em', maxWidth: '68ch' }}
+          >
+            Launched in 2023, RFE is a woman-owned film and television production company committed to telling
+            inspirational, empowering stories steeped in true crime and true stories that resonate with audiences
+            of all kinds.
+          </p>
+          <p
+            className="text-base leading-[2.1] font-light"
+            style={{ color: 'rgba(245, 240, 235, 0.5)', letterSpacing: '0.02em', maxWidth: '68ch' }}
+          >
+            Rohm Feifer Entertainment&rsquo;s team has decades of experience creating high-quality, critically-acclaimed,
+            award-winning and globally popular films and series, as well as nonscripted series, documentaries, and podcasts.
+          </p>
         </div>
       </div>
     </section>
   )
 }
 
-function ImageBreak() {
-  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 })
+// ============================================
+// BIO SECTION — reusable
+// ============================================
+
+function BioSection({
+  name,
+  role,
+  bio,
+  mainImage,
+  imageAlt,
+  extraImages,
+  externalLink,
+  externalLinkLabel,
+  reverse = false,
+}: {
+  name: string
+  role: string
+  bio: string[]
+  mainImage: string
+  imageAlt: string
+  extraImages?: string[]
+  externalLink?: string
+  externalLinkLabel?: string
+  reverse?: boolean
+}) {
+  const { ref: sectionRef, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 })
 
   return (
-    <div
-      ref={ref}
-      className="relative w-full overflow-hidden"
-      style={{ height: 'clamp(300px, 50vh, 550px)' }}
+    <section
+      className={`relative px-6 lg:px-16 xl:px-24 py-20 lg:py-32 ${reverse ? 'section-tone-cool' : 'section-tone-warm'} section-bleed-top section-bleed-bottom`}
     >
-      <Image
-        src="/assets/team/elisabeth-rohm-2.jpg"
-        alt="Elisabeth Röhm"
-        fill
-        className="object-cover"
-        sizes="100vw"
-        style={{
-          filter: isVisible ? 'grayscale(0.4) brightness(0.7)' : 'grayscale(1) brightness(0.3)',
-          transition: 'filter 3s var(--ease-quiet)',
-          objectPosition: 'center 30%',
-        }}
-      />
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: `
-            linear-gradient(to bottom, rgba(7, 7, 8, 0.8) 0%, transparent 25%, transparent 75%, rgba(7, 7, 8, 0.8) 100%),
-            radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(7, 7, 8, 0.5) 100%)
-          `,
+          background: reverse
+            ? `radial-gradient(ellipse 55% 45% at 80% 50%, rgba(196, 160, 160, 0.05) 0%, transparent 60%)`
+            : `radial-gradient(ellipse 55% 45% at 20% 50%, rgba(181, 151, 90, 0.05) 0%, transparent 60%)`,
         }}
         aria-hidden="true"
       />
 
-      {/* Centered quote */}
       <div
-        className="absolute inset-0 flex items-center justify-center px-6"
-        style={{
-          opacity: isVisible ? 1 : 0,
-          transition: 'opacity 2.5s var(--ease-quiet) 0.5s',
-        }}
+        ref={sectionRef}
+        className={`relative max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start ${reverse ? 'lg:[direction:rtl]' : ''}`}
+        style={{ position: 'relative', zIndex: 2 }}
       >
-        <p
-          className="font-serif font-light italic text-center"
-          style={{
-            fontSize: 'clamp(1.2rem, 3vw, 2rem)',
-            color: 'rgba(245, 240, 235, 0.7)',
-            maxWidth: '32ch',
-            lineHeight: 1.5,
-          }}
-        >
-          &ldquo;where feminine emotion becomes cinematic power.&rdquo;
-        </p>
+        {/* Image column */}
+        <div className={reverse ? 'lg:[direction:ltr]' : ''}>
+          <div
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+              transition: 'opacity 2s var(--ease-quiet), transform 2s var(--ease-quiet)',
+            }}
+          >
+            {/* Main portrait */}
+            <div className="relative aspect-[3/4] overflow-hidden">
+              <Image
+                src={mainImage}
+                alt={imageAlt}
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                style={{
+                  filter: isVisible ? 'grayscale(0.2) brightness(0.9) contrast(1.05)' : 'grayscale(1) brightness(0.5)',
+                  transition: 'filter 3s var(--ease-quiet)',
+                }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `
+                    radial-gradient(ellipse 90% 90% at 50% 50%, transparent 35%, rgba(7, 7, 8, 0.45) 100%),
+                    linear-gradient(to top, rgba(7, 7, 8, 0.45) 0%, transparent 40%)
+                  `,
+                }}
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* Extra BTS images in a small row */}
+            {extraImages && extraImages.length > 0 && (
+              <div className="flex gap-2 mt-3">
+                {extraImages.slice(0, 3).map((src, i) => (
+                  <div
+                    key={src}
+                    className="relative flex-1 aspect-[4/3] overflow-hidden"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transition: `opacity 2s var(--ease-quiet) ${0.3 + i * 0.15}s`,
+                    }}
+                  >
+                    <Image
+                      src={src}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="16vw"
+                      style={{ filter: 'grayscale(0.5) brightness(0.75)' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Text column */}
+        <div className={`${reverse ? 'lg:[direction:ltr]' : ''} lg:pt-4`}>
+          <p
+            className="text-[10px] uppercase mb-5 font-light"
+            style={{
+              color: 'var(--rfe-gold)',
+              letterSpacing: isVisible ? '0.38em' : '0.08em',
+              opacity: isVisible ? 1 : 0,
+              transition: 'opacity 1.5s var(--ease-quiet) 0.2s, letter-spacing 2.2s var(--ease-quiet) 0.2s',
+            }}
+          >
+            {role}
+          </p>
+
+          <div style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '2rem' }}>
+            <h2
+              className="font-serif font-light"
+              style={{
+                fontSize: 'clamp(2rem, 4.5vw, 3rem)',
+                lineHeight: 1.15,
+                letterSpacing: '-0.01em',
+                color: 'var(--foreground)',
+                transform: isVisible ? 'translateY(0)' : 'translateY(110%)',
+                transition: 'transform 1.6s var(--ease-emerge) 0.3s',
+              }}
+            >
+              {name}
+            </h2>
+          </div>
+
+          <div
+            className="space-y-5"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transition: 'opacity 2.5s var(--ease-quiet) 0.5s',
+            }}
+          >
+            {bio.map((paragraph, i) => (
+              <p
+                key={i}
+                className="text-sm leading-[2.1] font-light"
+                style={{ color: 'rgba(245, 240, 235, 0.5)', letterSpacing: '0.02em', maxWidth: '52ch' }}
+              >
+                {paragraph}
+              </p>
+            ))}
+          </div>
+
+          {externalLink && externalLinkLabel && (
+            <Link
+              href={externalLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-10 text-[10px] tracking-[0.25em] uppercase pb-1 border-b transition-all duration-500"
+              style={{
+                color: 'var(--rfe-rose-dim)',
+                borderColor: 'rgba(196, 160, 160, 0.18)',
+                opacity: isVisible ? 1 : 0,
+                transition: 'opacity 2s var(--ease-quiet) 0.8s, color 500ms, border-color 500ms',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--rfe-rose)'
+                e.currentTarget.style.borderColor = 'var(--rfe-rose)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--rfe-rose-dim)'
+                e.currentTarget.style.borderColor = 'rgba(196, 160, 160, 0.18)'
+              }}
+            >
+              {externalLinkLabel} ↗
+            </Link>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
+
+// ============================================
+// CLOSING STATEMENT
+// ============================================
 
 function ClosingStatement() {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.3 })
@@ -249,9 +299,9 @@ function ClosingStatement() {
               transition: 'transform 1.5s var(--ease-emerge)',
             }}
           >
-            we don&apos;t make films for comfort.
+            There&rsquo;s always more to the story.
             <br />
-            <span style={{ color: 'var(--rfe-rose)' }}>we make films that stay with you.</span>
+            <span style={{ color: 'var(--rfe-rose)' }}>We&rsquo;re here to tell it.</span>
           </p>
         </div>
 
@@ -280,52 +330,55 @@ function ClosingStatement() {
   )
 }
 
+// ============================================
+// ABOUT CONTENT
+// ============================================
+
 export default function AboutContent() {
   return (
     <main className="relative">
-      <ManifestoHero />
+      <PageCinematicHero
+        imageSrc="/assets/team/liz-rohm-hero.png"
+        imagePosition="center center"
+        label="about us"
+      >
+        True Crime.{' '}
+        <span style={{ color: 'var(--rfe-rose)' }}>Real Drama.</span>
+      </PageCinematicHero>
 
       <div className="relative z-10" style={{ backgroundColor: 'var(--background)' }}>
-        <section className="relative px-6 lg:px-16 xl:px-24 py-8 lg:py-16 section-tone-charcoal section-bleed-top section-bleed-bottom">
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `
-                radial-gradient(ellipse 55% 45% at 15% 35%, rgba(181, 151, 90, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 85% 75%, rgba(196, 160, 160, 0.025) 0%, transparent 55%)
-              `,
-            }}
-            aria-hidden="true"
-          />
+        <CompanyOverview />
 
-          <div className="relative max-w-5xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
-            <ManifestoBlock
-              label="why we exist"
-              headline="Because women's stories have always existed. They just kept getting silenced."
-              body="Cut, softened, explained away. Told through someone else's eyes, someone else's camera, someone else's version of what a woman should be. We exist to let them breathe — raw, incomplete, refusing resolution. Because the most powerful stories are the ones that won't be contained."
-              accent
-            />
+        <BioSection
+          name="Kara Feifer"
+          role="Co-Founder & Executive Producer"
+          bio={[
+            'Kara Feifer, entertainment veteran, is not only known for starring in the international television series TIME OF YOUR LIFE, but also for her fruitful network collaborations.',
+            'She executive produced films such as TEMPTING FATE, starring Alyssa Milano; TO HAVE AND TO HOLD; FAMILY PICTURES, starring Elisabeth Rohm; HUSBAND/FATHER/KILLER, starring Jackie Cruz; WIFE STALKER starring Keshia Knight Pulliam; and DATING APP KILLER: THE MONICA WHITE STORY starring Lela Rochon.',
+            'She is the executive producer of "She Wants More," the Webby nominated iHeart podcast.',
+          ]}
+          mainImage="/assets/team/kara.png"
+          imageAlt="Kara Feifer"
+        />
 
-            <ManifestoBlock
-              label="what we refuse"
-              headline="Comfort. Compliance. The polished performance of femininity."
-              body="Stories that end before they begin. Heroines who exist to be saved. The camera that looks at women instead of looking with them. We refuse the lie that women's anger is ugly, that feminine stories are small, that silence means consent. Every frame we make is a refusal."
-              delay={80}
-            />
-
-            <ManifestoBlock
-              label="what we chase"
-              headline="The moment before the scream. The silence that holds everything."
-              body="A gaze that doesn't look away. Fragility turning into something you can't name but can't stop feeling. We chase the tension between tenderness and rage, the stories that live in the body before they reach the mouth. Cinema that doesn't explain — it moves through you."
-              accent
-              delay={160}
-            />
-          </div>
-        </section>
-
-        <ImageBreak />
-
-        <DualitySection />
+        <BioSection
+          name="Elisabeth Rohm"
+          role="Co-Founder, Director & Producer"
+          bio={[
+            'Elisabeth Rohm is an acclaimed actress, director, and producer, best known for her role in LAW & ORDER (Emmy and SAG nominee). Her collaboration with David O. Russell in the Oscar-nominated AMERICAN HUSTLE earned her a SAG Award for Best Ensemble. She also starred in Russell\'s JOY as well as Jay Roach\'s Oscar-nominated BOMBSHELL.',
+            'Beginning with her directorial debut, GIRL IN THE BASEMENT, Rohm gravitates towards thrilling, woman-centered stories. Other films include SWITCHED BEFORE BIRTH; GIRL IN ROOM 13; DEVIL ON CAMPUS: THE LARRY RAY STORY, starring Billy Zane; HUSBAND/FATHER/KILLER; and WIFE STALKER. Episodic directing includes LAW & ORDER and CHICAGO MED.',
+          ]}
+          mainImage="/assets/team/liz-rohm-hero.png"
+          imageAlt="Elisabeth Rohm"
+          extraImages={[
+            '/assets/team/liz-rohm-1.jpg',
+            '/assets/team/liz-rohm-2.jpg',
+            '/assets/team/liz-rohm-3.jpg',
+          ]}
+          externalLink="https://portfolio.buchwald.com/portfolios/10708"
+          externalLinkLabel="Director's portfolio"
+          reverse
+        />
 
         <ClosingStatement />
       </div>

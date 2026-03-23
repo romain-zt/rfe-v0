@@ -43,11 +43,11 @@ export function Header() {
   }, [menuOpen])
 
   const navItems = [
-    { href: `/${lang}`, label: 'home' },
-    { href: `/${lang}/about`, label: 'about' },
-    { href: `/${lang}/our-team`, label: 'the gaze' },
-    { href: `/${lang}/our-work`, label: 'the work' },
-    { href: `/${lang}/contact`, label: 'contact' },
+    { href: `/${lang}/about`, label: 'About Us' },
+    { href: `/${lang}/our-work`, label: 'Our Work' },
+    { href: `/${lang}/development`, label: 'Development' },
+    { href: `/${lang}/press`, label: 'Press' },
+    { href: `/${lang}/contact`, label: 'Contact' },
   ]
 
   return (

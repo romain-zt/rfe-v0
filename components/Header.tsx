@@ -62,7 +62,7 @@ export function Header() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/assets/logos/logo-rfe-blackgold.png"
+              src="/favicon.png"
               alt="RFE"
               className="h-7 w-auto object-contain transition-opacity duration-500 group-hover:opacity-80"
             />

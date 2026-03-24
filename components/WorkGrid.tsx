@@ -317,21 +317,26 @@ export function WorkGrid() {
 
   return (
     <>
-      {/* Filters */}
-      <div className="flex justify-center gap-6 sm:gap-8 mb-14 sm:mb-16">
-        {(['drama', 'thriller'] as FilterType[]).map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`text-[11px] tracking-[0.15em] uppercase transition-all duration-500 pb-1 border-b ${
-              filter === f
-                ? 'text-foreground border-foreground/40'
-                : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20'
-            }`}
-          >
-            {filterLabels[f]}
-          </button>
-        ))}
+      {/* Filters — sticky; z-50 keeps filters above site header (z-30) when scrolled */}
+      <div
+        className="sticky max-w-[50dvw] mx-auto top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-4 mb-14 sm:mb-16 border-b border-border/30"
+        style={{ backgroundColor: 'var(--tone-charcoal)' }}
+      >
+        <div className="flex justify-center gap-6 sm:gap-8">
+          {(['drama', 'thriller'] as FilterType[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`text-[11px] tracking-[0.15em] uppercase transition-all duration-500 pb-1 border-b ${
+                filter === f
+                  ? 'text-foreground border-foreground/40'
+                  : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20'
+              }`}
+            >
+              {filterLabels[f]}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Staggered masonry grid — editorial magazine layout */}

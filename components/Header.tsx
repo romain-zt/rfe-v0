@@ -8,29 +8,22 @@ export function Header() {
   const [visible, setVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { lang } = useLanguage()
-  const lastScrollY = useRef(0)
   const ticking = useRef(false)
+  const SCROLL_THRESHOLD = 300
 
   useEffect(() => {
-    const handleScroll = () => {
+    const updateVisibility = () => {
       if (ticking.current) return
       ticking.current = true
       requestAnimationFrame(() => {
-        const currentY = window.scrollY
-        // Show header on scroll-up (past 100px), hide on scroll-down
-        if (currentY < 100) {
-          setVisible(false)
-        } else if (currentY < lastScrollY.current) {
-          setVisible(true)
-        } else {
-          setVisible(false)
-        }
-        lastScrollY.current = currentY
+        // Hidden at top only; visible once scrolled past threshold (any direction)
+        setVisible(window.scrollY >= SCROLL_THRESHOLD)
         ticking.current = false
       })
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    updateVisibility()
+    window.addEventListener('scroll', updateVisibility, { passive: true })
+    return () => window.removeEventListener('scroll', updateVisibility)
   }, [])
 
   useEffect(() => {
@@ -53,7 +46,7 @@ export function Header() {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 transition-transform duration-500"
+        className={`fixed top-0 left-0 right-0 transition-transform duration-500 ${menuOpen ? 'z-[80]' : 'z-30'}`}
         style={{
           transform: visible || menuOpen ? 'translateY(0)' : 'translateY(-100%)',
           background: 'rgba(7, 7, 8, 0.85)',
@@ -109,7 +102,7 @@ export function Header() {
 
       {/* Full-screen menu overlay */}
       <div
-        className={`fixed inset-0 z-40 transition-all duration-700 ${
+        className={`fixed inset-0 z-[70] transition-all duration-700 ${
           menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         style={{ background: 'rgba(7, 7, 8, 0.97)' }}

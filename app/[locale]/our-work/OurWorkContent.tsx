@@ -22,10 +22,10 @@ export default function OurWorkContent() {
     <main className="relative">
       <WorkHero />
 
-      <div className="relative z-10" style={{ backgroundColor: 'var(--background)' }}>
+      <div className="relative" style={{ backgroundColor: 'var(--background)' }}>
         <section className="relative px-6 lg:px-16 xl:px-24 py-16 lg:py-24 section-tone-charcoal section-bleed-top">
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 z-0 pointer-events-none"
             style={{
               background: `
                 radial-gradient(ellipse 60% 40% at 50% 15%, rgba(181, 151, 90, 0.04) 0%, transparent 55%),
@@ -36,7 +36,7 @@ export default function OurWorkContent() {
             aria-hidden="true"
           />
 
-          <div className="relative max-w-7xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
+          <div className="relative max-w-7xl mx-auto">
             <WorkGrid />
           </div>
         </section>

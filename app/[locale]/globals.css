@@ -3,6 +3,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Main brand type — add licensed sackers-gothic.woff2 to /public/fonts/ */
+@font-face {
+  font-family: 'Sackers Gothic';
+  src: url('/fonts/sackers-gothic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* RFE — cinematic female gaze studio */
   --background: #070708;
@@ -100,8 +109,8 @@
 }
 
 @theme inline {
-  --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
-  --font-serif: 'Fraunces', 'Fraunces Fallback', Georgia, serif;
+  --font-sans: 'Sackers Gothic', 'Inter', 'Inter Fallback', system-ui, sans-serif;
+  --font-serif: 'Sackers Gothic', 'Fraunces', 'Fraunces Fallback', Georgia, serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);

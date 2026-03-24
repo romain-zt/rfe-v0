@@ -55,7 +55,10 @@ export default async function RootLayout({
   const { locale } = await params
 
   return (
-    <html lang={locale} className="dark">
+    <html
+      lang={locale}
+      className={`dark ${_inter.variable} ${_fraunces.variable}`}
+    >
       <head>
         <RootJsonLd lang={locale} />
       </head>
@@ -82,7 +85,7 @@ export default async function RootLayout({
           <BottomLogoReveal />
           <Header />
           <div
-            className="relative z-10"
+            className="relative [&>header]:z-10"
             style={{ background: 'var(--background)', marginBottom: '70vh' }}
           >
             {children}

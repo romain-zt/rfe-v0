@@ -67,7 +67,7 @@ function ProjectCard({ work, index }: { work: WorkItem; index: number }) {
             }}
           />
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 z-0 pointer-events-none"
             style={{
               background: 'linear-gradient(to top, rgba(7, 7, 8, 0.6) 0%, transparent 50%)',
             }}
@@ -164,10 +164,10 @@ export default function DevelopmentContent() {
         <span style={{ color: 'var(--rfe-rose)' }}>Unscripted.</span>
       </PageCinematicHero>
 
-      <div className="relative z-10" style={{ backgroundColor: 'var(--background)' }}>
+      <div className="relative" style={{ backgroundColor: 'var(--background)' }}>
         <section className="relative px-6 lg:px-16 xl:px-24 py-20 lg:py-28 section-tone-charcoal section-bleed-top">
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 z-0 pointer-events-none"
             style={{
               background: `
                 radial-gradient(ellipse 55% 40% at 15% 30%, rgba(181, 151, 90, 0.04) 0%, transparent 55%),
@@ -177,7 +177,7 @@ export default function DevelopmentContent() {
             aria-hidden="true"
           />
 
-          <div className="relative max-w-7xl mx-auto" style={{ position: 'relative', zIndex: 2 }}>
+          <div className="relative max-w-7xl mx-auto">
             {/* Intro */}
             <div
               ref={introRef}
@@ -197,28 +197,36 @@ export default function DevelopmentContent() {
               </p>
             </div>
 
-            {/* Category tabs */}
-            <div className="flex gap-6 sm:gap-10 mb-16 border-b" style={{ borderColor: 'rgba(245, 240, 235, 0.06)' }}>
-              {(Object.keys(categoryLabels) as Category[]).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className="pb-4 text-[11px] tracking-[0.18em] uppercase transition-all duration-500"
-                  style={{
-                    color: activeCategory === cat ? 'var(--rfe-gold)' : 'rgba(245, 240, 235, 0.3)',
-                    borderBottom: activeCategory === cat ? '1px solid var(--rfe-gold)' : '1px solid transparent',
-                    marginBottom: '-1px',
-                  }}
-                >
-                  {categoryLabels[cat]}
-                  <span
-                    className="ml-2 text-[9px]"
-                    style={{ color: activeCategory === cat ? 'rgba(181, 151, 90, 0.5)' : 'rgba(245, 240, 235, 0.15)' }}
+            {/* Category tabs — sticky; z-50 keeps filters above site header (z-30) when scrolled */}
+            <div
+              className="sticky max-w-[50dvw] mx-auto top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-3 mb-16"
+              style={{
+                backgroundColor: 'var(--tone-charcoal)',
+                borderColor: 'rgba(245, 240, 235, 0.06)',
+              }}
+            >
+              <div className="flex justify-center gap-6 sm:gap-10">
+                {(Object.keys(categoryLabels) as Category[]).map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className="pb-4 text-[11px] tracking-[0.18em] uppercase transition-all duration-500"
+                    style={{
+                      color: activeCategory === cat ? 'var(--rfe-gold)' : 'rgba(245, 240, 235, 0.3)',
+                      borderBottom: activeCategory === cat ? '1px solid var(--rfe-gold)' : '1px solid transparent',
+                      marginBottom: '-1px',
+                    }}
                   >
-                    {categorized[cat].length > 0 ? `(${categorized[cat].length})` : ''}
-                  </span>
-                </button>
-              ))}
+                    {categoryLabels[cat]}
+                    <span
+                      className="ml-2 text-[9px]"
+                      style={{ color: activeCategory === cat ? 'rgba(181, 151, 90, 0.5)' : 'rgba(245, 240, 235, 0.15)' }}
+                    >
+                      {categorized[cat].length > 0 ? `(${categorized[cat].length})` : ''}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Active category content */}

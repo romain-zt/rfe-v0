@@ -648,7 +648,7 @@ function ContactSection() {
         </div>
 
         <a
-          href="mailto:contact@rfe.studio"
+          href="mailto:elisabeth@rohmfeiferentertainment.com"
           className="inline-block text-sm tracking-[0.15em] border-b pb-0.5"
           style={{
             color: 'var(--rfe-rose)',
@@ -665,7 +665,7 @@ function ContactSection() {
             e.currentTarget.style.borderColor = 'rgba(196, 160, 160, 0.18)'
           }}
         >
-          contact@rfe.studio
+          elisabeth@rohmfeiferentertainment.com
         </a>
       </div>
     </section>

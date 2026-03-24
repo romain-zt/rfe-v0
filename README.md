@@ -1,6 +1,6 @@
 # RFE — a cinematic female gaze studio
 
-Next.js website for [rfe.studio](https://www.rfe.studio).
+Next.js website for [rohmfeiferentertainment.com](https://www.rohmfeiferentertainment.com).
 
 ## Stack
 

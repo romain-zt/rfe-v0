@@ -102,7 +102,7 @@ export const fallbackFr: SiteContent = {
     },
   ],
   contactInfo: {
-    email: 'contact@rfe.studio',
+    email: 'elisabeth@rohmfeiferentertainment.com',
     phone: '',
     address: 'Los Angeles, California',
     social: {

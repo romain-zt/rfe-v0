@@ -306,7 +306,7 @@ function ClosingStatement() {
         </div>
 
         <a
-          href="mailto:contact@rfe.studio"
+          href="mailto:elisabeth@rohmfeiferentertainment.com"
           className="inline-block mt-8 text-[10px] tracking-[0.3em] uppercase pb-1 border-b transition-all duration-700"
           style={{
             color: 'var(--rfe-gold-dim)',
@@ -323,7 +323,7 @@ function ClosingStatement() {
             e.currentTarget.style.borderColor = 'rgba(181, 151, 90, 0.2)'
           }}
         >
-          contact@rfe.studio
+          elisabeth@rohmfeiferentertainment.com
         </a>
       </div>
     </section>

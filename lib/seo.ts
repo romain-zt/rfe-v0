@@ -3,16 +3,16 @@ import type { Language } from '@/app/[locale]/content'
 
 export const SITE_CONFIG = {
   name: 'RFE',
-  url: 'https://www.rfe.studio',
+  url: 'https://www.rohmfeiferentertainment.com',
   locale: {
     default: 'en' as Language,
     supported: ['en'] as Language[],
   },
   social: {
-    instagram: 'https://instagram.com/rfe.studio',
+    instagram: 'https://instagram.com/rohmfeiferentertainment',
   },
   contact: {
-    email: 'contact@rfe.studio',
+    email: 'elisabeth@rohmfeiferentertainment.com',
   },
 } as const
 

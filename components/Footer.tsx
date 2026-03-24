@@ -13,13 +13,13 @@ export function Footer() {
       />
 
       <a
-        href="mailto:contact@rfe.studio"
+        href="mailto:elisabeth@rohmfeiferentertainment.com"
         className="text-xs tracking-[0.2em] transition-colors duration-700"
         style={{ color: 'rgba(245, 240, 235, 0.3)' }}
         onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--rfe-rose)')}
         onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(245, 240, 235, 0.3)')}
       >
-        contact@rfe.studio
+        elisabeth@rohmfeiferentertainment.com
       </a>
 
       <p

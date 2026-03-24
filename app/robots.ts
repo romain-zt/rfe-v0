@@ -7,8 +7,8 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
     },
     sitemap: [
-      'https://www.rfe.studio/sitemap.xml',
-      'https://www.rfe.studio/video-sitemap.xml',
+      'https://www.rohmfeiferentertainment.com/sitemap.xml',
+      'https://www.rohmfeiferentertainment.com/video-sitemap.xml',
     ],
   };
 }

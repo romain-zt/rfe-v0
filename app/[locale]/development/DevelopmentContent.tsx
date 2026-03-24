@@ -21,21 +21,11 @@ const categoryLabels: Record<Category, string> = {
   unscripted: 'Unscripted',
 }
 
-// Temporary categorization — will be updated once deck content is confirmed
-// Films: Drama category items (feature film format)
-// Series: Thriller category items (episodic format)
-// Unscripted: TBD — placeholder empty for now
 function categorizeWorks(works: WorkItem[]): Record<Category, WorkItem[]> {
-  const dramaItems = works.filter((w) =>
-    w.tags.some((t) => ['Drama', 'Drame'].includes(t))
-  )
-  const thrillerItems = works.filter((w) =>
-    w.tags.some((t) => t === 'Thriller')
-  )
   return {
-    films: dramaItems,
-    series: thrillerItems,
-    unscripted: [],
+    films: works.filter((w) => w.category === 'film'),
+    series: works.filter((w) => w.category === 'series'),
+    unscripted: works.filter((w) => w.category === 'unscripted'),
   }
 }
 

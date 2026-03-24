@@ -49,8 +49,10 @@ interface ArticleJsonLdProps {
 // ===========================================
 
 export function OrganizationJsonLd({ lang = 'en' }: OrganizationJsonLdProps) {
-  const content = seoContent[lang].site
+  const content = seoContent[lang]?.site
   const isFr = lang === 'fr'
+
+  if (!content) return null
 
   const schema = {
     '@context': 'https://schema.org',
@@ -103,7 +105,9 @@ export function OrganizationJsonLd({ lang = 'en' }: OrganizationJsonLdProps) {
 // ===========================================
 
 export function WebsiteJsonLd({ lang = 'en' }: OrganizationJsonLdProps) {
-  const content = seoContent[lang].site
+  const content = seoContent[lang]?.site
+
+  if (!content) return null
 
   const schema = {
     '@context': 'https://schema.org',
@@ -135,7 +139,9 @@ export function WebPageJsonLd({
   page = 'home',
   url = SITE_CONFIG.url,
 }: WebPageJsonLdProps) {
-  const content = seoContent[lang].pages[page]
+  const content = seoContent[lang]?.pages?.[page]
+
+  if (!content) return null
 
   const schema = {
     '@context': 'https://schema.org',
@@ -238,7 +244,9 @@ export function ArticleJsonLd({
 // ===========================================
 
 export function LocalBusinessJsonLd({ lang = 'en' }: OrganizationJsonLdProps) {
-  const content = seoContent[lang].site
+  const content = seoContent[lang]?.site
+
+  if (!content) return null
 
   const schema = {
     '@context': 'https://schema.org',

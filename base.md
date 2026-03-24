@@ -267,3 +267,5 @@ If you want next step, I can:
 * or directly give you a **Next.js + Tailwind + Framer starter aligned with this vibe**
 
 [1]: https://deadline.com/2026/02/shirley-maclaine-margret-and-stevie-matthew-weiner-1236729698/?utm_source=chatgpt.com "Shirley MacLaine To Star In Matthew Weiner's 'Margret ..."
+
+https://www.canva.com/design/DAGoLwZHr7E/VCsMvNc-DXZFQ9SipdycpQ/view?utm_content=DAGoLwZHr7E&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h12ccd44375#3

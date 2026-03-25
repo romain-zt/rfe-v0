@@ -68,9 +68,23 @@ export function Header() {
             />
           </Link>
 
-          {/* Hamburger — always visible */}
+          {/* Desktop nav — hidden on mobile */}
+          <nav className="hidden lg:flex items-center gap-8" aria-label="Navigation">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="font-sans text-sm tracking-wide transition-opacity duration-300 hover:opacity-60"
+                style={{ color: 'rgba(245, 240, 235, 0.85)' }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Hamburger — mobile only */}
           <button
-            className="relative w-8 h-8 flex flex-col items-center justify-center gap-1.5"
+            className="relative lg:hidden w-8 h-8 flex flex-col items-center justify-center gap-1.5"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}

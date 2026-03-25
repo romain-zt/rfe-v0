@@ -18,12 +18,10 @@ function WorkHorizontalScroll() {
   const { lang } = useLanguage()
 
   const projects = [
-    { src: '/assets/works/margret-stevie.png', title: 'Margret & Stevie', year: '2026', size: 'large' },
-    { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer', year: '2026', size: 'small' },
-    { src: '/assets/works/lobotomist-wife.png', title: "The Lobotomist's Wife", year: '2026', size: 'medium' },
-    { src: '/assets/works/diamonds-and-deadlines.png', title: 'Diamonds and Deadlines', year: '2026', size: 'large' },
-    { src: '/assets/works/ruby-falls.png', title: 'Ruby Falls', year: '2026', size: 'small' },
-    { src: '/assets/works/murder-your-darlings.jpg', title: 'Murder Your Darlings', year: '2026', size: 'medium' },
+    { src: '/assets/works/husband-father-killer.jpg', title: 'Husband Father Killer', year: '2024', size: 'large' },
+    { src: '/assets/works/wife-stalker.png', title: 'Wife Stalker', year: '2025', size: 'large' },
+    { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer', year: '2026', size: 'medium' },
+    { src: '/assets/works/sisters-daughter.png', title: "My Sister's Daughter", year: '2026', size: 'large' },
   ]
 
   const handleScroll = useCallback(() => {

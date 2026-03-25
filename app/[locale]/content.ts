@@ -52,7 +52,8 @@ export const MEDIA = {
       { id: 16, title: 'Matador', year: 2025, src: '/assets/works/matador.png', tags: ['Drama'], description: 'A streetwise Brooklyn kid flees to Mexico City and trains under a legendary matador to become the first American bullfighter.' },
 
       // — Thriller —
-      { id: 17, title: 'The Dating App Killer', year: 2025, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], description: 'Based on the true story of Monica White. Elisabeth Rohm directed and executive produced alongside Kara Feifer.' },
+      { id: 46, title: 'Husband Father Killer', year: 2024, src: '/assets/works/husband-father-killer.jpg', tags: ['Thriller'], description: 'Based on the horrific true story of Alyssa Pladl, Elisabeth Rohm directed and executive produced the film alongside Kara Feifer. Debuted on Lifetime on October 19, 2024.' },
+      { id: 17, title: 'The Dating App Killer', year: 2026, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], description: 'Based on the true story of Monica White. Elisabeth Rohm directed and executive produced alongside Kara Feifer.' },
       { id: 18, title: 'Murder Your Darlings', year: 2026, src: '/assets/works/murder-your-darlings.jpg', tags: ['Thriller'], description: 'When a novelist falls for a celebrated author, she becomes entangled in a dangerous web of obsession, stalkers, and possible murder.' },
       { id: 19, title: 'If You Tell', year: 2026, src: '/assets/works/if-you-tell.png', tags: ['Thriller'], description: 'A shocking and empowering true-crime story of three sisters forced to make the most difficult decision of their lives: to turn their murderous mother into the police.' },
       { id: 20, title: 'If Anything Happens to Me', year: 2026, src: '/assets/works/if-anything-happens-to-me.png', tags: ['Thriller'], description: 'A letter left behind. A trail that leads inward.' },
@@ -108,7 +109,8 @@ export const MEDIA = {
       { id: 16, title: 'Matador', year: 2025, src: '/assets/works/matador.png', tags: ['Drame'], description: 'Un gamin de Brooklyn fuit à Mexico et s\'entraîne sous un matador légendaire pour devenir le premier torero américain.' },
 
       // — Thriller —
-      { id: 17, title: 'The Dating App Killer', year: 2025, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], description: "Basé sur l'histoire vraie de Monica White. Elisabeth Rohm a réalisé et produit aux côtés de Kara Feifer." },
+      { id: 46, title: 'Husband Father Killer', year: 2024, src: '/assets/works/husband-father-killer.jpg', tags: ['Thriller'], description: "Basé sur l'histoire vraie et horrifiante d'Alyssa Pladl, Elisabeth Rohm a réalisé et produit aux côtés de Kara Feifer. Diffusé sur Lifetime le 19 octobre 2024." },
+      { id: 17, title: 'The Dating App Killer', year: 2026, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], description: "Basé sur l'histoire vraie de Monica White. Elisabeth Rohm a réalisé et produit aux côtés de Kara Feifer." },
       { id: 18, title: 'Murder Your Darlings', year: 2026, src: '/assets/works/murder-your-darlings.jpg', tags: ['Thriller'], description: "Quand une romancière tombe amoureuse d'un auteur célèbre, elle se retrouve prise dans un réseau dangereux d'obsession et de meurtre." },
       { id: 19, title: 'If You Tell', year: 2026, src: '/assets/works/if-you-tell.png', tags: ['Thriller'], description: "L'histoire bouleversante de trois sœurs forcées de prendre la décision la plus difficile de leur vie : dénoncer leur mère meurtrière à la police." },
       { id: 20, title: 'If Anything Happens to Me', year: 2026, src: '/assets/works/if-anything-happens-to-me.png', tags: ['Thriller'], description: 'Une lettre laissée derrière. Une piste qui mène vers l\'intérieur.' },

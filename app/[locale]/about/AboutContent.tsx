@@ -335,7 +335,7 @@ function ClosingStatement() {
           </p>
         </div>
 
-        <a
+        {/* <a
           href="mailto:elisabeth@rohmfeiferentertainment.com"
           className="inline-block mt-8 text-[10px] tracking-[0.3em] uppercase pb-1 border-b transition-all duration-700"
           style={{
@@ -354,7 +354,7 @@ function ClosingStatement() {
           }}
         >
           elisabeth@rohmfeiferentertainment.com
-        </a>
+        </a> */}
       </div>
     </section>
   )

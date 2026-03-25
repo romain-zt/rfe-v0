@@ -679,14 +679,14 @@ function ContactSection() {
       />
 
       <div ref={ref} className="relative max-w-lg mx-auto">
-        <div style={{ overflow: 'hidden', paddingBottom: '4px', marginBottom: '2rem' }}>
+        {/* <div style={{ overflow: 'hidden', paddingBottom: '4px', marginBottom: '2rem' }}>
           <p
             className="font-serif font-light"
             style={{
               fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
               color: 'rgba(245, 240, 235, 0.55)',
               lineHeight: 1.55,
-              letterSpacing: '-0.005em',
+              // letterSpacing: '-0.005em',
               transform: isVisible ? 'translateY(0)' : 'translateY(110%)',
               transition: 'transform 1.5s var(--ease-emerge) 0.2s',
             }}
@@ -714,7 +714,7 @@ function ContactSection() {
           }}
         >
           elisabeth@rohmfeiferentertainment.com
-        </a>
+        </a> */}
       </div>
     </section>
   )

@@ -10,6 +10,7 @@ import { GrainOverlay } from '@/components/GrainOverlay'
 import { RootJsonLd } from '@/components/JsonLd'
 import { generateRootMetadata } from '@/lib/seo'
 import { fallbackEn } from '@/lib/i18n/fallback/en'
+import { fallbackFr } from '@/lib/i18n/fallback/fr'
 import type { Language } from '@/lib/i18n/types'
 import './globals.css'
 
@@ -53,6 +54,7 @@ export default async function RootLayout({
   params: Promise<{ locale: Language }>
 }>) {
   const { locale } = await params
+  const site = locale === 'fr' ? fallbackFr : fallbackEn
 
   return (
     <html
@@ -65,13 +67,13 @@ export default async function RootLayout({
       <body className="font-sans antialiased min-h-screen cinema-root max-w-[100dvw] overflow-x-hidden">
         <LanguageProvider
           locale={locale}
-          t={fallbackEn.t}
+          t={site.t}
           content={{
-            aboutContent: fallbackEn.aboutContent,
-            teamMembers: fallbackEn.teamMembers,
-            awardsNews: fallbackEn.awardsNews,
-            contactInfo: fallbackEn.contactInfo,
-            ourWork: fallbackEn.ourWork,
+            aboutContent: site.aboutContent,
+            teamMembers: site.teamMembers,
+            awardsNews: site.awardsNews,
+            contactInfo: site.contactInfo,
+            ourWork: site.ourWork,
           }}
         >
           {/* Cinematic depth layers */}

@@ -65,6 +65,10 @@ export const seoContent = {
         title: 'Contact — RFE',
         description: "if it won't leave you alone, write to us.",
       },
+      legal: {
+        title: 'Legal notice — RFE',
+        description: 'Publisher, hosting, and terms of use for this website.',
+      },
     },
   },
   fr: {
@@ -104,6 +108,10 @@ export const seoContent = {
       contact: {
         title: 'Contact — RFE',
         description: "si ça ne vous lâche pas, écrivez-nous.",
+      },
+      legal: {
+        title: 'Mentions légales — RFE',
+        description: 'Éditeur, hébergement et conditions d’utilisation du site.',
       },
     },
   },

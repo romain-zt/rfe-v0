@@ -43,6 +43,7 @@ export const fallbackEn: SiteContent = {
       contact: 'Contact',
       followUs: 'Follow Us',
       rights: '© 2026 RFE. All rights reserved.',
+      legal: 'Legal notice',
     },
     work: {
       title: 'Our Work',
@@ -84,6 +85,39 @@ export const fallbackEn: SiteContent = {
       send: 'Send',
       address: 'Address',
       phone: 'Phone',
+    },
+    legalPage: {
+      title: 'Legal notice',
+      subtitle: 'Publisher information, hosting, and terms of use.',
+      sections: [
+        {
+          title: 'Publisher',
+          paragraphs: [
+            'This website is published by Rohm Feifer Entertainment (“RFE”), a film and television production company.',
+            'Contact: elisabeth@rohmfeiferentertainment.com',
+            'Address: Los Angeles, California, United States.',
+          ],
+        },
+        {
+          title: 'Hosting',
+          paragraphs: [
+            'This site is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, United States (vercel.com).',
+          ],
+        },
+        {
+          title: 'Intellectual property',
+          paragraphs: [
+            'Unless otherwise stated, text, images, logos, trailers, and other content on this site are owned by or licensed to RFE and are protected by applicable copyright and trademark laws. You may not copy, reproduce, or distribute site content without prior written permission, except for private viewing or as allowed by law.',
+          ],
+        },
+        {
+          title: 'Disclaimer',
+          paragraphs: [
+            'Information on this website is provided for general information only and may change without notice. RFE makes no warranties as to accuracy or completeness and is not liable for any loss arising from use of the site or reliance on its content.',
+            'Links to third-party sites are provided for convenience; RFE does not control or endorse those sites.',
+          ],
+        },
+      ],
     },
   },
   aboutContent: [

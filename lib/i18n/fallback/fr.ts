@@ -41,6 +41,7 @@ export const fallbackFr: SiteContent = {
       contact: 'Contact',
       followUs: 'Suivez-nous',
       rights: '© 2026 RFE. Tous droits réservés.',
+      legal: 'Mentions légales',
     },
     work: {
       title: 'Nos Travaux',
@@ -71,6 +72,39 @@ export const fallbackFr: SiteContent = {
       send: 'Envoyer',
       address: 'Adresse',
       phone: 'Téléphone',
+    },
+    legalPage: {
+      title: 'Mentions légales',
+      subtitle: 'Éditeur, hébergement et conditions d’utilisation.',
+      sections: [
+        {
+          title: 'Éditeur du site',
+          paragraphs: [
+            'Le présent site est édité par Rohm Feifer Entertainment (« RFE »), société de production cinématographique et télévisuelle.',
+            'Contact : elisabeth@rohmfeiferentertainment.com',
+            'Adresse : Los Angeles, Californie, États-Unis.',
+          ],
+        },
+        {
+          title: 'Hébergement',
+          paragraphs: [
+            'Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis (vercel.com).',
+          ],
+        },
+        {
+          title: 'Propriété intellectuelle',
+          paragraphs: [
+            'Sauf mention contraire, les textes, images, logos, bandes-annonces et autres contenus sont la propriété de RFE ou font l’objet d’une licence et sont protégés par le droit d’auteur et les marques. Toute reproduction ou diffusion sans autorisation écrite préalable est interdite, sauf consultation privée ou dans les limites prévues par la loi.',
+          ],
+        },
+        {
+          title: 'Limitation de responsabilité',
+          paragraphs: [
+            'Les informations publiées sur ce site le sont à titre indicatif et peuvent être modifiées sans préavis. RFE ne garantit ni l’exactitude ni l’exhaustivité des contenus et ne saurait être tenue responsable d’un préjudice lié à l’utilisation du site ou à la confiance accordée à ces informations.',
+            'Les liens vers des sites tiers sont fournis pour convenance ; RFE ne contrôle pas ces sites et n’en approuve pas le contenu.',
+          ],
+        },
+      ],
     },
   },
   aboutContent: [

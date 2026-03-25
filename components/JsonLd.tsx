@@ -21,7 +21,7 @@ interface OrganizationJsonLdProps {
 
 interface WebPageJsonLdProps {
   lang?: Language
-  page?: 'home' | 'ourWork' | 'ourTeam' | 'about' | 'news' | 'contact'
+  page?: 'home' | 'ourWork' | 'ourTeam' | 'about' | 'news' | 'contact' | 'legal'
   url?: string
 }
 

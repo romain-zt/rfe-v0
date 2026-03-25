@@ -6,7 +6,7 @@ import { getWorkSlug } from '@/lib/works'
 import type { Language } from '@/lib/i18n/types'
 
 const locales = ['en', 'fr'] as const
-const pages = ['', 'about', 'contact', 'our-work'] as const
+const pages = ['', 'about', 'contact', 'our-work', 'legal'] as const
 
 function isoDateOnly(d: Date) {
   // Google-friendly: YYYY-MM-DD

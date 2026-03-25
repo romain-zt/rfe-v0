@@ -18,7 +18,7 @@ function WorkHorizontalScroll() {
   const { lang } = useLanguage()
 
   const projects = [
-    { src: '/assets/works/husband-father-killer.jpg', title: 'Husband Father Killer', year: '2024', size: 'large' },
+    { src: '/assets/posters/husband-father-killer.png', title: 'Husband Father Killer', year: '2024', size: 'large' },
     { src: '/assets/works/wife-stalker.png', title: 'Wife Stalker', year: '2025', size: 'large' },
     { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer', year: '2026', size: 'medium' },
     { src: '/assets/works/sisters-daughter.png', title: "My Sister's Daughter", year: '2026', size: 'large' },

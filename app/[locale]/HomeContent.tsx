@@ -18,10 +18,12 @@ function WorkHorizontalScroll() {
   const { lang } = useLanguage()
 
   const projects = [
-    { src: '/assets/posters/husband-father-killer.png', title: 'Husband Father Killer', year: '2024', size: 'large' },
-    { src: '/assets/works/wife-stalker.png', title: 'Wife Stalker', year: '2025', size: 'large' },
-    { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer', year: '2026', size: 'medium' },
-    { src: '/assets/works/sisters-daughter.png', title: "My Sister's Daughter", year: '2026', size: 'large' },
+    { src: '/assets/posters/husband-father-killer.png', title: 'Husband Father Killer', year: '2024', size: 'large', label: 'Lifetime' },
+    { src: '/assets/works/wife-stalker.png', title: 'Wife Stalker', year: '2025', size: 'large', label: 'Lifetime' },
+    { src: '/assets/works/the-dating-app-killer.jpg', title: 'The Dating App Killer', year: '2026', size: 'medium', label: 'Lifetime' },
+    { src: '/assets/portfolio-medias/tournage-1.jpg', title: 'Behind the Lens', year: '', size: 'small', label: 'On set' },
+    { src: '/assets/portfolio-medias/tournage-2.jpg', title: 'In Production', year: '', size: 'small', label: 'On set' },
+    { src: '/assets/works/margret-stevie.png', title: 'Margret & Stevie', year: '2026', size: 'large', label: 'Feature Film' },
   ]
 
   const handleScroll = useCallback(() => {
@@ -84,24 +86,24 @@ function WorkHorizontalScroll() {
         >
           {projects.map((project, i) => {
             const width = project.size === 'large'
-              ? 'clamp(280px, 35vw, 420px)'
+              ? 'clamp(260px, 32vw, 400px)'
               : project.size === 'medium'
-                ? 'clamp(200px, 25vw, 320px)'
-                : 'clamp(150px, 18vw, 220px)'
+                ? 'clamp(200px, 24vw, 310px)'
+                : 'clamp(140px, 16vw, 200px)'
 
             const aspect = project.size === 'large'
               ? '3/4'
               : project.size === 'medium'
                 ? '2/3'
-                : '4/5'
+                : '1/1'
 
             return (
               <div
-                key={project.title}
+                key={`${project.title}-${i}`}
                 className="relative flex-shrink-0 snap-start group"
                 style={{
                   width,
-                  marginTop: i % 2 === 0 ? '0' : '2rem',
+                  marginTop: i % 2 === 0 ? '0' : '2.5rem',
                 }}
               >
                 <div
@@ -112,20 +114,32 @@ function WorkHorizontalScroll() {
                     src={project.src}
                     alt={project.title}
                     fill
-                    className="object-cover transition-all duration-[1.5s] group-hover:scale-[1.03]"
-                    sizes="(max-width: 768px) 60vw, 35vw"
+                    className="object-cover transition-all duration-[1.5s] group-hover:scale-[1.04]"
+                    sizes="(max-width: 768px) 60vw, 32vw"
                     style={{
-                      filter: 'grayscale(0.4) brightness(0.85)',
+                      filter: 'grayscale(0.35) brightness(0.88)',
                       transition: 'filter 1.5s var(--ease-quiet)',
                     }}
                   />
                   <div
-                    className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-0"
+                    className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-40"
                     style={{
-                      background: 'linear-gradient(to top, rgba(7, 7, 8, 0.55) 0%, transparent 50%)',
+                      background: 'linear-gradient(to top, rgba(7, 7, 8, 0.65) 0%, transparent 55%)',
                     }}
                     aria-hidden="true"
                   />
+                  {project.label && (
+                    <span
+                      className="absolute top-3 left-3 text-[8px] uppercase tracking-[0.28em] font-light px-2 py-1"
+                      style={{
+                        color: 'var(--rfe-gold-dim)',
+                        background: 'rgba(7, 7, 8, 0.55)',
+                        backdropFilter: 'blur(6px)',
+                      }}
+                    >
+                      {project.label}
+                    </span>
+                  )}
                 </div>
                 <div className="mt-3">
                   <p
@@ -134,20 +148,22 @@ function WorkHorizontalScroll() {
                   >
                     {project.title}
                   </p>
-                  <p
-                    className="text-[9px] tracking-[0.2em] mt-1"
-                    style={{ color: 'rgba(245, 240, 235, 0.2)' }}
-                  >
-                    {project.year}
-                  </p>
+                  {project.year && (
+                    <p
+                      className="text-[9px] tracking-[0.2em] mt-1"
+                      style={{ color: 'rgba(245, 240, 235, 0.2)' }}
+                    >
+                      {project.year}
+                    </p>
+                  )}
                 </div>
               </div>
             )
           })}
         </div>
 
-        <div className="px-6 lg:px-16 mt-6">
-          <div className="h-px w-full max-w-xs mx-auto" style={{ background: 'rgba(245, 240, 235, 0.06)' }}>
+        <div className="px-6 lg:px-16 mt-6 flex items-center gap-4">
+          <div className="h-px flex-1 max-w-xs" style={{ background: 'rgba(245, 240, 235, 0.06)' }}>
             <div
               className="h-full transition-all duration-150"
               style={{
@@ -156,6 +172,40 @@ function WorkHorizontalScroll() {
                 opacity: 0.4,
               }}
             />
+          </div>
+        </div>
+
+        {/* Video reel strip */}
+        <div
+          className="px-6 lg:px-16 mt-10 overflow-hidden"
+          style={{ maxHeight: 480 }}
+        >
+          <div
+            className="relative overflow-hidden"
+            style={{ height: '100%', borderRadius: 2 }}
+          >
+            <video
+              src="https://s3.amazonaws.com/buchwald-portfolios-production/transcoded-video-for-web/57101/57101-web.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+              style={{ filter: 'grayscale(0.5) brightness(0.75)' }}
+            />
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: 'linear-gradient(to right, rgba(7,7,8,0.7) 0%, transparent 25%, transparent 75%, rgba(7,7,8,0.7) 100%)',
+              }}
+              aria-hidden="true"
+            />
+            <span
+              className="absolute left-5 bottom-4 text-[8px] uppercase tracking-[0.3em] font-light"
+              style={{ color: 'var(--rfe-gold-dim)' }}
+            >
+              On set
+            </span>
           </div>
         </div>
       </div>

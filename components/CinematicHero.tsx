@@ -2,9 +2,12 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useLanguage } from '@/components/LanguageContext'
 
 export function CinematicHero() {
   const [phase, setPhase] = useState(0)
+  const { lang } = useLanguage()
   const sectionRef = useRef<HTMLElement>(null)
   const imgLizRef = useRef<HTMLDivElement>(null)
   const imgKaraRef = useRef<HTMLDivElement>(null)
@@ -221,6 +224,46 @@ export function CinematicHero() {
             </span>
           </div>
         </div>
+
+        {/* Left-side table of contents — desktop only */}
+        <nav
+          className="absolute left-8 xl:left-12 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-5 z-20"
+          aria-label="Site sections"
+          style={{
+            opacity: phase >= 3 ? 1 : 0,
+            transition: 'opacity 2.5s var(--ease-quiet) 1.2s',
+          }}
+        >
+          {[
+            { href: `/${lang}/about`, label: 'About Us' },
+            { href: `/${lang}/our-work`, label: 'Our Work' },
+            { href: `/${lang}/development`, label: 'Development' },
+            { href: `/${lang}/press`, label: 'Press' },
+            { href: `/${lang}/contact`, label: 'Contact' },
+          ].map((item, i) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-center gap-2.5 transition-all duration-500"
+              style={{
+                opacity: phase >= 3 ? 1 : 0,
+                transition: `opacity 2s var(--ease-quiet) ${1.3 + i * 0.1}s`,
+              }}
+            >
+              <span
+                className="block w-3 h-px transition-all duration-500 group-hover:w-5"
+                style={{ background: 'rgba(181, 151, 90, 0.35)' }}
+                aria-hidden="true"
+              />
+              <span
+                className="text-[8px] uppercase tracking-[0.32em] font-light transition-colors duration-500 group-hover:text-[rgba(245,240,235,0.65)]"
+                style={{ color: 'rgba(245, 240, 235, 0.28)' }}
+              >
+                {item.label}
+              </span>
+            </Link>
+          ))}
+        </nav>
 
         {/* Scroll indicator */}
         <div

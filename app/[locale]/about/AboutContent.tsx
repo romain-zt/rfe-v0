@@ -92,6 +92,7 @@ function BioSection({
   mainImage,
   imageAlt,
   extraImages,
+  videoSrc,
   externalLink,
   externalLinkLabel,
   reverse = false,
@@ -102,6 +103,7 @@ function BioSection({
   mainImage: string
   imageAlt: string
   extraImages?: string[]
+  videoSrc?: string
   externalLink?: string
   externalLinkLabel?: string
   reverse?: boolean
@@ -164,7 +166,7 @@ function BioSection({
             {/* Extra BTS images in a small row */}
             {extraImages && extraImages.length > 0 && (
               <div className="flex gap-2 mt-3">
-                {extraImages.slice(0, 3).map((src, i) => (
+                {extraImages.slice(0, 4).map((src, i) => (
                   <div
                     key={src}
                     className="relative flex-1 aspect-[4/3] overflow-hidden"
@@ -178,11 +180,40 @@ function BioSection({
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="16vw"
+                      sizes="12vw"
                       style={{ filter: 'grayscale(0.5) brightness(0.75)' }}
                     />
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Reel video */}
+            {videoSrc && (
+              <div
+                className="relative mt-3 overflow-hidden"
+                style={{
+                  aspectRatio: '16/9',
+                  opacity: isVisible ? 1 : 0,
+                  transition: 'opacity 2s var(--ease-quiet) 0.8s',
+                }}
+              >
+                <video
+                  src={videoSrc}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover"
+                  style={{ filter: 'brightness(0.88)' }}
+                />
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(ellipse 90% 90% at 50% 50%, transparent 40%, rgba(7,7,8,0.45) 100%)',
+                  }}
+                  aria-hidden="true"
+                />
               </div>
             )}
           </div>
@@ -358,6 +389,8 @@ export default function AboutContent() {
           ]}
           mainImage="/assets/team/kara.png"
           imageAlt="Kara Feifer"
+          externalLink="https://www.iheart.com/podcast/104-she-wants-more-with-kara-feifer-30836849/"
+          externalLinkLabel="She Wants More podcast"
         />
 
         <BioSection
@@ -367,13 +400,15 @@ export default function AboutContent() {
             'Elisabeth Rohm is an acclaimed actress, director, and producer, best known for her role in LAW & ORDER (Emmy and SAG nominee). Her collaboration with David O. Russell in the Oscar-nominated AMERICAN HUSTLE earned her a SAG Award for Best Ensemble. She also starred in Russell\u2019s JOY as well as Jay Roach\u2019s Oscar-nominated BOMBSHELL.',
             'Beginning with her directorial debut, GIRL IN THE BASEMENT, Rohm gravitates towards thrilling, woman-centered stories. Other films include SWITCHED BEFORE BIRTH; GIRL IN ROOM 13; DEVIL ON CAMPUS: THE LARRY RAY STORY, starring Billy Zane; HUSBAND/FATHER/KILLER; and WIFE STALKER. Episodic directing includes LAW & ORDER and CHICAGO MED.',
           ]}
-          mainImage="/assets/team/liz-rohm-hero.png"
+          mainImage="/assets/portfolio-medias/elisabeth-1.jpg"
           imageAlt="Elisabeth Rohm"
           extraImages={[
-            '/assets/team/liz-rohm-1.jpg',
-            '/assets/team/liz-rohm-2.jpg',
-            '/assets/team/liz-rohm-3.jpg',
+            '/assets/portfolio-medias/tournage-1.jpg',
+            '/assets/portfolio-medias/tournage-2.jpg',
+            '/assets/portfolio-medias/tournage-3.jpg',
+            '/assets/portfolio-medias/tournage-4.jpg',
           ]}
+          videoSrc="https://s3.amazonaws.com/buchwald-portfolios-production/transcoded-video-for-web/59047/59047-web.mp4"
           externalLink="https://portfolio.buchwald.com/portfolios/10708"
           externalLinkLabel="Director's portfolio"
           reverse

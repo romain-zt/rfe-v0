@@ -85,7 +85,7 @@ export default async function RootLayout({
           <BottomLogoReveal />
           <Header />
           <div
-            className="relative [&>header]:z-10"
+            className="relative [&>header]:z-10 [&>main>div]:max-w-7xl [&>main>div]:mx-auto "
             style={{ background: 'var(--background)', marginBottom: '70vh' }}
           >
             {children}

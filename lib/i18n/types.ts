@@ -16,6 +16,7 @@ export type WorkItem = {
   description?: string
   videoUrl?: string
   category?: WorkCategory
+  subcategory?: string
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: string[]

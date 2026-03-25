@@ -66,8 +66,7 @@ function CompanyOverview() {
             style={{ color: 'rgba(245, 240, 235, 0.65)', letterSpacing: '0.02em', maxWidth: '68ch' }}
           >
             Launched in 2023, RFE is a woman-owned film and television production company committed to telling
-            inspirational, empowering stories steeped in true crime and true stories that resonate with audiences
-            of all kinds.
+            inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.
           </p>
           <p
             className="text-base leading-[2.1] font-light"
@@ -355,7 +354,7 @@ export default function AboutContent() {
           bio={[
             'Kara Feifer, entertainment veteran, is not only known for starring in the international television series TIME OF YOUR LIFE, but also for her fruitful network collaborations.',
             'She executive produced films such as TEMPTING FATE, starring Alyssa Milano; TO HAVE AND TO HOLD; FAMILY PICTURES, starring Elisabeth Rohm; HUSBAND/FATHER/KILLER, starring Jackie Cruz; WIFE STALKER starring Keshia Knight Pulliam; and DATING APP KILLER: THE MONICA WHITE STORY starring Lela Rochon.',
-            'She is the executive producer of "She Wants More," the Webby nominated iHeart podcast.',
+            'She is the executive producer of \u201cShe Wants More,\u201d the Webby nominated iHeart podcast.',
           ]}
           mainImage="/assets/team/kara.png"
           imageAlt="Kara Feifer"
@@ -365,7 +364,7 @@ export default function AboutContent() {
           name="Elisabeth Rohm"
           role="Co-Founder, Director & Producer"
           bio={[
-            'Elisabeth Rohm is an acclaimed actress, director, and producer, best known for her role in LAW & ORDER (Emmy and SAG nominee). Her collaboration with David O. Russell in the Oscar-nominated AMERICAN HUSTLE earned her a SAG Award for Best Ensemble. She also starred in Russell\'s JOY as well as Jay Roach\'s Oscar-nominated BOMBSHELL.',
+            'Elisabeth Rohm is an acclaimed actress, director, and producer, best known for her role in LAW & ORDER (Emmy and SAG nominee). Her collaboration with David O. Russell in the Oscar-nominated AMERICAN HUSTLE earned her a SAG Award for Best Ensemble. She also starred in Russell\u2019s JOY as well as Jay Roach\u2019s Oscar-nominated BOMBSHELL.',
             'Beginning with her directorial debut, GIRL IN THE BASEMENT, Rohm gravitates towards thrilling, woman-centered stories. Other films include SWITCHED BEFORE BIRTH; GIRL IN ROOM 13; DEVIL ON CAMPUS: THE LARRY RAY STORY, starring Billy Zane; HUSBAND/FATHER/KILLER; and WIFE STALKER. Episodic directing includes LAW & ORDER and CHICAGO MED.',
           ]}
           mainImage="/assets/team/liz-rohm-hero.png"

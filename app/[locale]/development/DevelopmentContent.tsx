@@ -21,12 +21,62 @@ const categoryLabels: Record<Category, string> = {
   unscripted: 'Unscripted',
 }
 
+// Ordered group definitions per category.
+// subcategory: null = items with no subcategory (rendered first, no separator heading)
+// subcategory: string = items matching that subcategory value, preceded by a separator
+type GroupDef = { subcategory: string | null; label?: string }
+
+const SECTION_ORDER: Record<Category, GroupDef[]> = {
+  films: [
+    { subcategory: null },
+    { subcategory: 'true-crime-movies', label: 'True Crime Movies' },
+    { subcategory: 'dramas-feature', label: 'Dramas' },
+  ],
+  series: [
+    { subcategory: null },
+    { subcategory: 'true-crime-series', label: 'True Crime Stories' },
+    { subcategory: 'dramas-feature', label: 'Dramas' },
+    { subcategory: 'dramas-series', label: 'Dramas Series' },
+  ],
+  unscripted: [
+    { subcategory: 'comedy-features', label: 'Unscripted' },
+  ],
+}
+
 function categorizeWorks(works: WorkItem[]): Record<Category, WorkItem[]> {
   return {
     films: works.filter((w) => w.category === 'film'),
     series: works.filter((w) => w.category === 'series'),
     unscripted: works.filter((w) => w.category === 'unscripted'),
   }
+}
+
+// ============================================
+// SECTION SEPARATOR
+// ============================================
+
+function SectionSeparator({ label }: { label: string }) {
+  const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
+
+  return (
+    <div
+      ref={ref}
+      className="col-span-full pt-14 pb-4 border-t"
+      style={{ borderColor: 'rgba(245, 240, 235, 0.06)' }}
+    >
+      <span
+        className="text-[9px] uppercase font-light"
+        style={{
+          color: 'var(--rfe-gold-dim)',
+          letterSpacing: isVisible ? '0.42em' : '0.08em',
+          opacity: isVisible ? 1 : 0,
+          transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  )
 }
 
 // ============================================
@@ -73,7 +123,6 @@ function ProjectCard({ work, index }: { work: WorkItem; index: number }) {
             }}
             aria-hidden="true"
           />
-          {/* Hover overlay */}
           <div className="absolute inset-0 bg-background/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
             <span className="text-[9px] tracking-[0.2em] uppercase border border-foreground/25 px-4 py-2" style={{ color: 'rgba(245,240,235,0.75)' }}>
               {t.work.view}
@@ -96,13 +145,23 @@ function ProjectCard({ work, index }: { work: WorkItem; index: number }) {
 }
 
 // ============================================
-// CATEGORY SECTION
+// GROUPED CATEGORY SECTION
 // ============================================
 
 function CategorySection({ works, category }: { works: WorkItem[]; category: Category }) {
-  const { ref: headerRef, isVisible: headerVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
+  const groups = SECTION_ORDER[category]
 
-  if (works.length === 0) {
+  // Build ordered list of (groupDef, items[]) pairs, skipping empty groups
+  const renderedGroups = groups
+    .map((group) => ({
+      group,
+      items: group.subcategory === null
+        ? works.filter((w) => !w.subcategory)
+        : works.filter((w) => w.subcategory === group.subcategory),
+    }))
+    .filter(({ items }) => items.length > 0)
+
+  if (renderedGroups.length === 0) {
     return (
       <div className="py-16 text-center border-t" style={{ borderColor: 'rgba(245, 240, 235, 0.04)' }}>
         <p className="text-[9px] uppercase tracking-[0.3em] font-light" style={{ color: 'rgba(245, 240, 235, 0.15)' }}>
@@ -112,31 +171,21 @@ function CategorySection({ works, category }: { works: WorkItem[]; category: Cat
     )
   }
 
-  return (
-    <div>
-      <div
-        ref={headerRef}
-        className="mb-10 border-t pt-10"
-        style={{ borderColor: 'rgba(245, 240, 235, 0.06)' }}
-      >
-        <span
-          className="text-[9px] uppercase font-light"
-          style={{
-            color: 'var(--rfe-gold-dim)',
-            letterSpacing: headerVisible ? '0.42em' : '0.08em',
-            opacity: headerVisible ? 1 : 0,
-            transition: 'opacity 1.5s var(--ease-quiet), letter-spacing 2.2s var(--ease-quiet)',
-          }}
-        >
-          {categoryLabels[category]}
-        </span>
-      </div>
+  let globalIndex = 0
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7">
-        {works.map((work, i) => (
-          <ProjectCard key={work.id} work={work} index={i} />
-        ))}
-      </div>
+  return (
+    <div className="space-y-0">
+      {renderedGroups.map(({ group, items }) => (
+        <div key={group.subcategory ?? '__root'}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 lg:gap-7">
+            {group.label && <SectionSeparator label={group.label} />}
+            {items.map((work) => {
+              const idx = globalIndex++
+              return <ProjectCard key={`${work.id}-${work.subcategory}`} work={work} index={idx} />
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
@@ -197,7 +246,7 @@ export default function DevelopmentContent() {
               </p>
             </div>
 
-            {/* Category tabs — sticky; z-50 keeps filters above site header (z-30) when scrolled */}
+            {/* Category tabs */}
             <div
               className="sticky max-w-[50dvw] mx-auto top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-3 mb-16"
               style={{

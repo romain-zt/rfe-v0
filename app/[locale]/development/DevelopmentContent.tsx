@@ -248,7 +248,7 @@ export default function DevelopmentContent() {
 
             {/* Category tabs */}
             <div
-              className="sticky max-w-[50dvw] mx-auto top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-3 mb-16"
+              className="sticky top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-3 mb-16"
               style={{
                 backgroundColor: 'var(--tone-charcoal)',
                 borderColor: 'rgba(245, 240, 235, 0.06)',

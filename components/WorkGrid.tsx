@@ -319,7 +319,7 @@ export function WorkGrid() {
     <>
       {/* Filters — sticky; z-50 keeps filters above site header (z-30) when scrolled */}
       <div
-        className="sticky max-w-[50dvw] mx-auto top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-4 mb-14 sm:mb-16 border-b border-border/30"
+        className="sticky top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-4 mb-14 sm:mb-16 border-b border-border/30"
         style={{ backgroundColor: 'var(--tone-charcoal)' }}
       >
         <div className="flex justify-center gap-6 sm:gap-8">

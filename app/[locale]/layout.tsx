@@ -62,7 +62,7 @@ export default async function RootLayout({
       <head>
         <RootJsonLd lang={locale} />
       </head>
-      <body className="font-sans antialiased min-h-screen cinema-root">
+      <body className="font-sans antialiased min-h-screen cinema-root max-w-[100dvw] overflow-x-hidden">
         <LanguageProvider
           locale={locale}
           t={fallbackEn.t}
@@ -85,7 +85,7 @@ export default async function RootLayout({
           <BottomLogoReveal />
           <Header />
           <div
-            className="relative [&>header]:z-10 [&>main>div]:max-w-7xl [&>main>div]:mx-auto "
+            className="relative [&>header]:z-10 [&>main>div]:max-w-7xl [&>main>div]:mx-auto max-w-[100dvw] overflow-x-hidden"
             style={{ background: 'var(--background)', marginBottom: '70vh' }}
           >
             {children}

@@ -35,9 +35,7 @@ export type MediaItem = {
 // MEDIA CONTENT (Language-aware)
 // ============================================
 
-export const MEDIA = {
-  posters: {
-    en: [
+const POSTER_ITEMS = [
       // — Drama —
       { id: 2, title: 'Out for Love', year: 2026, src: '/assets/works/out-for-love.png', tags: ['Drama'], description: 'What happens when desire refuses to follow the rules.' },
       { id: 3, title: 'Ruby Falls', year: 2026, src: '/assets/works/ruby-falls.png', tags: ['Drama'], description: 'A young actress comes to Los Angeles hoping to uncover the secrets of the father who abandoned her in a cave when she was a child.' },
@@ -93,6 +91,12 @@ export const MEDIA = {
       // — Development: Unscripted —
       { id: 43, title: 'Horseplay', year: 2026, src: '/assets/posters/horseplay.png', tags: ['Unscripted'], category: 'unscripted' as const, subcategory: 'comedy-features', description: 'When a young hobby horse competitor is assaulted, a college athlete goes undercover to solve the mystery in the unique world of competitive hobby horsing.' },
       { id: 44, title: 'Nookietown', year: 2026, src: '/assets/posters/nookietown.png', tags: ['Unscripted'], category: 'unscripted' as const, subcategory: 'comedy-features', description: "When an exhausted housewife asks her divorced best friend to sleep with her husband, what starts as a joke becomes an opportunity. Based on V.C. Chickering's novel." },
-    ] as MediaItem[],
+] as MediaItem[]
+
+export const MEDIA = {
+  posters: {
+    en: POSTER_ITEMS,
+    /** Same catalog as EN; UI copy is localized via i18n. */
+    fr: POSTER_ITEMS,
   },
 }

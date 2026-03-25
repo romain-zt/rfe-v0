@@ -88,7 +88,7 @@ export default async function RootLayout({
           <Header />
           <div
             className="relative [&>header]:z-10 [&>main>div]:max-w-7xl [&>main>div]:mx-auto max-w-[100dvw] [overflow-x:clip]"
-            style={{ background: 'var(--background)', marginBottom: '70vh' }}
+            style={{ background: 'var(--background)', marginBottom: '80vh' }}
           >
             {children}
             <Footer />

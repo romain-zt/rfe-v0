@@ -39,6 +39,7 @@ export const fallbackFr: SiteContent = {
     },
     footer: {
       contact: 'Contact',
+      bottomRevealCta: 'Écrivez-nous',
       followUs: 'Suivez-nous',
       rights: '© 2026 RFE. Tous droits réservés.',
       legal: 'Mentions légales',

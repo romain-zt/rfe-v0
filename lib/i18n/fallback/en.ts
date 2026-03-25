@@ -41,6 +41,7 @@ export const fallbackEn: SiteContent = {
     },
     footer: {
       contact: 'Contact',
+      bottomRevealCta: 'Write to us',
       followUs: 'Follow Us',
       rights: '© 2026 RFE. All rights reserved.',
       legal: 'Legal notice',

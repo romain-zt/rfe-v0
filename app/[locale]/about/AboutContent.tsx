@@ -400,7 +400,7 @@ export default function AboutContent() {
             'Elisabeth Rohm is an acclaimed actress, director, and producer, best known for her role in LAW & ORDER (Emmy and SAG nominee). Her collaboration with David O. Russell in the Oscar-nominated AMERICAN HUSTLE earned her a SAG Award for Best Ensemble. She also starred in Russell\u2019s JOY as well as Jay Roach\u2019s Oscar-nominated BOMBSHELL.',
             'Beginning with her directorial debut, GIRL IN THE BASEMENT, Rohm gravitates towards thrilling, woman-centered stories. Other films include SWITCHED BEFORE BIRTH; GIRL IN ROOM 13; DEVIL ON CAMPUS: THE LARRY RAY STORY, starring Billy Zane; HUSBAND/FATHER/KILLER; and WIFE STALKER. Episodic directing includes LAW & ORDER and CHICAGO MED.',
           ]}
-          mainImage="/assets/portfolio-medias/elisabeth-1.jpg"
+          mainImage="/assets/portfolio-medias/elisabeth-1.png"
           imageAlt="Elisabeth Rohm"
           extraImages={[
             '/assets/portfolio-medias/tournage-1.jpg',

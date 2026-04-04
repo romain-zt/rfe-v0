@@ -1,0 +1,27 @@
+:root {
+  /* RFE brand palette */
+  --background: #070708;
+  --foreground: #F5F0EB;
+  --rfe-red: #8B1A1A;
+  --rfe-rose: #C4A0A0;
+  --rfe-gold: #B5975A;
+  --rfe-gold-dim: rgba(181, 151, 90, 0.6);
+  --rfe-rose-dim: rgba(196, 160, 160, 0.5);
+
+  /* Expressive easing — each has a character */
+  --ease-emerge: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quiet: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-sharp: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Section tone palette — near-blacks with personality */
+  --tone-deep: #050506;
+  --tone-charcoal: #0a0a0c;
+  --tone-slate: #0c0d10;
+  --tone-warm: #0b0908;
+  --tone-cool: #080a0d;
+  --tone-ember: #0d0907;
+  --tone-dusk: #090810;
+
+  /* Base radius */
+  --radius: 0.25rem;
+}

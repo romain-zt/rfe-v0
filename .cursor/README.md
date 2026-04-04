@@ -1,41 +1,29 @@
-# .cursor/ — RFE Payload CMS Migration
+# .cursor/ — RFE Monorepo
 
 ## What this is
 
-Cursor config for the **progressive migration** of the RFE (Rohm Feifer Entertainment) website from a hardcoded Next.js site to an integrated **Next.js + Payload CMS** application.
+Cursor config for the **RFE** (Rohm Feifer Entertainment) monorepo — a pnpm workspace with
+Turborepo, housing the Next.js + Payload CMS website and shared internal packages.
 
 ## Repo identity
 
 - **Domain:** Cinema / film & TV production studio website
-- **Stack:** Next.js 16, React 19, Tailwind v4, pnpm
-- **Target CMS:** Payload CMS (integrated in the same Next.js app)
-- **Database:** Postgres
-- **Storage:** S3-compatible object storage (MinIO locally, S3/R2 in production)
-- **Deployment:** Docker / VPS / self-host (migration away from Vercel)
+- **Architecture:** pnpm monorepo + Turborepo
+- **App:** `apps/rfe-v0/` — Next.js 16, React 19, Payload CMS, Tailwind v4
+- **Packages:** `@rfe/ui`, `@rfe/design-tokens`, `@rfe/tsconfig`, `@rfe/eslint-config`
+- **Database:** Postgres (Docker)
+- **Storage:** S3-compatible (MinIO locally, S3/R2 in production)
+- **Deployment:** Docker / VPS / self-host
 - **i18n:** en-US from day one, architecture ready for additional locales
 
-## Current state
+## Development workflow
 
-The site currently has:
-- All content hardcoded in TypeScript (`content.ts`, `lib/i18n/fallback/en.ts`, `fr.ts`)
-- i18n strings loaded from Google Sheets CSV (with TS fallbacks)
-- Design tokens in CSS variables (`globals.css`) — RFE palette, section tones, easings
-- ~44 work items with poster images, categories, tags, descriptions
-- Team members, awards/news, contact info, about content, legal pages
-- Custom cinematic visual effects (grain, cinema depth, lens, leak)
-- Brand font: Sackers Gothic
-- Rich SEO setup in `lib/seo.ts`
-
-## Migration philosophy
-
-1. **Progressive** — migrate one page/feature at a time, never all-at-once
-2. **Seed-first** — every migration step includes runnable seeds; no manual admin setup
-3. **Content-preserving** — inspect existing content before modeling; don't invent from scratch
-4. **Branch-safe** — never push to `main`/`master`; always work on feature branches
-5. **Docker-first** — local dev uses Docker Compose (app + Postgres + MinIO)
-6. **i18n-ready** — Payload localization configured from day one
-7. **Design-system-in-CMS** — branding/colors/typography become editable in Payload
-8. **Clean-while-migrating** — improve structure when adjacent and safe, never big rewrites
+1. **Spec-first** — write a spec in `specs/` before implementing non-trivial changes
+2. **Progressive migration** — migrate content to Payload one page/feature at a time
+3. **Seed-first** — every CMS migration step includes runnable seeds
+4. **Branch-safe** — never push to `main`/`master`; always feature branches
+5. **Docker-first** — local dev uses Docker Compose for Postgres + MinIO
+6. **Build-gated** — `pnpm build` must succeed before a step is considered done
 
 ## Directory layout
 
@@ -53,6 +41,8 @@ The site currently has:
 | Rule file | Purpose |
 |-----------|---------|
 | `00-project-context` | What this repo is, stack, conventions |
+| `05-monorepo-conventions` | Package naming, dependency direction, catalog |
+| `06-spec-driven-dev` | Spec-first workflow for non-trivial changes |
 | `10-architecture-boundaries` | Frontend / Payload / shared boundaries |
 | `20-progressive-migration` | How to migrate safely |
 | `25-branch-safety` | Never push to main |

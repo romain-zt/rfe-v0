@@ -1,3 +1,4 @@
+@import '@rfe/design-tokens/css';
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -13,9 +14,7 @@
 }
 
 :root {
-  /* RFE — cinematic female gaze studio */
-  --background: #070708;
-  --foreground: #F5F0EB;
+  /* UI surface tokens (extend brand tokens from @rfe/design-tokens) */
   --card: #0d0d0f;
   --card-foreground: #F5F0EB;
   --popover: #0d0d0f;
@@ -33,30 +32,8 @@
   --border: rgba(245, 240, 235, 0.08);
   --input: rgba(245, 240, 235, 0.08);
   --ring: rgba(245, 240, 235, 0.2);
-  --radius: 0.25rem;
 
-  /* RFE accent palette — use sparingly */
-  --rfe-red: #8B1A1A;
-  --rfe-rose: #C4A0A0;
-  --rfe-gold: #B5975A;
-  --rfe-gold-dim: rgba(181, 151, 90, 0.6);
-  --rfe-rose-dim: rgba(196, 160, 160, 0.5);
-
-  /* Expressive easing — each has a character */
-  --ease-emerge: cubic-bezier(0.16, 1, 0.3, 1);     /* expo out — something breaking free */
-  --ease-quiet: cubic-bezier(0.87, 0, 0.13, 1);      /* slow in/out — contemplative breath */
-  --ease-sharp: cubic-bezier(0.76, 0, 0.24, 1);      /* decisive — refuses comfort */
-
-  /* Section tone palette — near-blacks with personality */
-  --tone-deep: #050506;
-  --tone-charcoal: #0a0a0c;
-  --tone-slate: #0c0d10;
-  --tone-warm: #0b0908;
-  --tone-cool: #080a0d;
-  --tone-ember: #0d0907;
-  --tone-dusk: #090810;
-
-  /* Shadcn/ui default variables (added, if not conflicting with user's defined colors) */
+  /* Shadcn/ui chart + sidebar variables */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);

@@ -12,8 +12,10 @@ alwaysApply: true
 - The codebase is being **progressively migrated** from a hardcoded Next.js site to an integrated **Next.js + Payload CMS** application
 
 ## Stack
+- **Monorepo:** pnpm workspaces + Turborepo
+- **Package scope:** `@rfe/*` (workspace-only, not published)
 - **Runtime:** Next.js 16 + React 19
-- **Package manager:** pnpm
+- **Package manager:** pnpm (with catalog for version pinning)
 - **Styling:** Tailwind CSS v4 (via `@tailwindcss/postcss`, no `tailwind.config` file)
 - **CMS:** Payload CMS (integrated — runs in the same Next.js app)
 - **Database:** PostgreSQL
@@ -22,33 +24,43 @@ alwaysApply: true
 - **i18n:** `[locale]` segment routing, currently `en` + `fr`
 
 ## Key file locations
+
+### Monorepo root
 | Concern | Path |
 |---------|------|
-| App routes | `app/[locale]/` |
+| Workspace config | `pnpm-workspace.yaml` |
+| Build orchestration | `turbo.json` |
+| Docker infrastructure | `docker-compose.yml` |
+| Specs | `specs/` |
+
+### App (`apps/rfe-v0/`)
+| Concern | Path |
+|---------|------|
+| App routes | `app/(frontend)/[locale]/` |
 | Locale middleware | `middleware.ts` |
 | Components | `components/` |
-| Design tokens / CSS | `app/[locale]/globals.css` |
-| Content data (hardcoded) | `app/[locale]/content.ts` |
+| Design tokens / CSS | `app/(frontend)/[locale]/globals.css` |
+| Content data (hardcoded) | `app/(frontend)/[locale]/content.ts` |
 | i18n fallback strings | `lib/i18n/fallback/en.ts`, `fr.ts` |
 | i18n types | `lib/i18n/types.ts` |
 | SEO config | `lib/seo.ts` |
 | Work item helpers | `lib/works.ts` |
-| Static assets | `public/assets/` |
-| Logos | `public/assets/logos/`, `public/logo-rfe*.svg`, `public/favicon.png` |
-| Poster images | `public/assets/works/`, `public/assets/posters/` |
-| Team photos | `public/assets/team/` |
-| Brand font | `public/fonts/sackers-gothic.woff2` |
-
-## Payload CMS target structure (when introduced)
-| Concern | Expected path |
-|---------|---------------|
 | Payload config | `payload.config.ts` |
 | Collections | `collections/` |
 | Globals | `globals/` |
 | Blocks | `blocks/` |
-| Seed scripts | `scripts/seed/` or `src/seed/` |
+| Seed scripts | `scripts/seed/` |
 | Payload route group | `app/(payload)/` |
-| Frontend route group | `app/(frontend)/[locale]/` |
+| Static assets | `public/assets/` |
+| Brand font | `public/fonts/sackers-gothic.woff2` |
+
+### Shared packages
+| Package | Path | Purpose |
+|---------|------|---------|
+| `@rfe/ui` | `packages/ui/` | Shared UI components, cn() |
+| `@rfe/design-tokens` | `packages/design-tokens/` | CSS variables, brand tokens |
+| `@rfe/tsconfig` | `packages/tsconfig/` | Shared TypeScript configs |
+| `@rfe/eslint-config` | `packages/eslint-config/` | Shared ESLint config |
 
 ## Design system summary
 The current branding lives in CSS variables in `app/[locale]/globals.css`:
@@ -64,9 +76,11 @@ The current branding lives in CSS variables in `app/[locale]/globals.css`:
 
 ## Conventions
 - Use TypeScript for all new code
-- Use `@/` path alias (maps to repo root)
+- Use `@/` path alias in apps (maps to app root)
 - Prefer server components; use `'use client'` only when needed
 - Mobile-first responsive design (Tailwind responsive classes)
 - Minimum touch targets: 44×44px
 - Semantic HTML, ARIA labels, accessible components
-- No `eslint` config currently committed (add if needed)
+- Internal packages use `workspace:*` protocol
+- Shared dependency versions managed via pnpm catalog
+- Every non-trivial change starts with a spec in `specs/`

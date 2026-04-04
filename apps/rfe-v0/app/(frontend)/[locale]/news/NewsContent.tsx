@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useLanguage, type AwardsNewsItem } from '@/components/LanguageContext'
-import { Modal } from '@/components/Modal'
+import { Modal } from '@rfe/ui'
 
 export default function NewsContent() {
   const { lang, t, content } = useLanguage()

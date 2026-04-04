@@ -1,0 +1,39 @@
+{
+  "name": "@rfe/admin",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap",
+    "seed": "tsx scripts/seed/index.ts"
+  },
+  "dependencies": {
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "payload": "catalog:",
+    "@payloadcms/db-postgres": "catalog:",
+    "@payloadcms/graphql": "catalog:",
+    "@payloadcms/next": "catalog:",
+    "@payloadcms/richtext-lexical": "catalog:",
+    "@payloadcms/storage-s3": "catalog:",
+    "@payloadcms/ui": "catalog:",
+    "@rfe/cms": "workspace:*",
+    "sharp": "catalog:"
+  },
+  "devDependencies": {
+    "@rfe/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "sass": "^1.99.0",
+    "typescript": "catalog:",
+    "tsx": "^4.20.3",
+    "cross-env": "^7.0.3"
+  }
+}

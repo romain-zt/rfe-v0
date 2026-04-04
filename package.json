@@ -4,10 +4,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "pnpm --filter @rfe/v0 dev",
+    "dev:admin": "pnpm --filter @rfe/admin dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean && rm -rf node_modules",
-    "seed": "pnpm --filter @rfe/v0 seed"
+    "seed": "pnpm --filter @rfe/admin seed"
   },
   "devDependencies": {
     "turbo": "^2.5.4"

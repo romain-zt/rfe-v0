@@ -1,10 +1,10 @@
 import { revalidateTag } from 'next/cache'
-import type { NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function POST(request: NextRequest) {
   const secret = request.headers.get('x-revalidate-secret')
   if (secret !== process.env.REVALIDATION_SECRET && process.env.NODE_ENV !== 'development') {
-    return new Response('Invalid secret', { status: 403 })
+    return NextResponse.json({ error: 'Invalid secret' }, { status: 403 })
   }
 
   let body: { collection?: string; slug?: string; global?: string } = {}
@@ -24,5 +24,5 @@ export async function POST(request: NextRequest) {
     revalidateTag('cms')
   }
 
-  return Response.json({ revalidated: true, now: Date.now() })
+  return NextResponse.json({ revalidated: true, now: Date.now() })
 }

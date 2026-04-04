@@ -29,6 +29,7 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
   const siteUrl = opts.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
   return buildConfig({
+    cors: [siteUrl, 'http://localhost:3000'],
     admin: {
       user: 'users',
       meta: { titleSuffix: '— RFE' },
@@ -68,7 +69,7 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
           },
           region: opts.s3.region,
           endpoint: opts.s3.endpoint,
-          forcePathStyle: true,
+          forcePathStyle: !!opts.s3.endpoint,
         },
       }),
       seoPlugin({

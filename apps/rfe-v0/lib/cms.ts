@@ -117,3 +117,49 @@ export async function getSiteConfig() {
 export async function getNavigation() {
   return cms.findGlobal<NavigationData>('navigation')
 }
+
+export type PageData = {
+  id: number
+  title: string
+  slug: string
+  hero: {
+    type: 'cinematic' | 'page' | 'minimal'
+    headline?: string
+    subtitle?: string
+    label?: string
+    media?: { url?: string; alt?: string; sizes?: Record<string, { url: string }> } | number | null
+    imagePosition?: string
+  }
+  layout: Array<{ blockType: string; [key: string]: unknown }>
+  meta?: {
+    title?: string
+    description?: string
+    image?: { url?: string } | number | null
+    keywords?: string
+    canonicalUrl?: string
+    jsonLdType?: string
+    jsonLdCustom?: Record<string, unknown>
+  }
+  publishedAt?: string
+  updatedAt?: string
+}
+
+export async function getPageBySlug(slug: string) {
+  const params = new URLSearchParams({
+    'where[slug][equals]': slug,
+    limit: '1',
+    depth: '2',
+  })
+  const apiUrl = process.env.CMS_API_URL || 'http://localhost:3001'
+  const res = await fetch(`${apiUrl}/api/pages?${params}`, {
+    headers: { 'Content-Type': 'application/json' },
+    next: { revalidate: 60 },
+  })
+  if (!res.ok) return null
+  const data = await res.json()
+  return (data.docs?.[0] as PageData) ?? null
+}
+
+export async function getAllPages() {
+  return cms.find<PageData>('pages', { limit: '100', depth: '0' })
+}

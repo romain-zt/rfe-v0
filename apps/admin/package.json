@@ -17,6 +17,7 @@
     "@payloadcms/graphql": "catalog:",
     "@payloadcms/next": "catalog:",
     "@payloadcms/richtext-lexical": "catalog:",
+    "@payloadcms/plugin-seo": "catalog:",
     "@payloadcms/storage-s3": "catalog:",
     "@payloadcms/ui": "catalog:",
     "@rfe/cms": "workspace:*",

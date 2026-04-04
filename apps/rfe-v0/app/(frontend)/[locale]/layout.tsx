@@ -7,8 +7,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { BottomLogoReveal } from '@/components/BottomLogoReveal'
 import { GrainOverlay } from '@rfe/ui'
-import { RootJsonLd } from '@/components/JsonLd'
-import { generateRootMetadata } from '@/lib/seo'
+import { generateSiteJsonLd } from '@/lib/generate-meta'
 import { fallbackEn } from '@/lib/i18n/fallback/en'
 import { getWorks, getTeamMembers, getSiteConfig, getNavigation } from '@/lib/cms'
 import type { Language } from '@/lib/i18n/types'
@@ -33,7 +32,21 @@ type Props = {
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params
-  return generateRootMetadata(locale)
+  const siteConfig = await getSiteConfig().catch(() => null)
+  const title = siteConfig?.seo?.defaultTitle || 'RFE — a cinematic female gaze studio'
+  const description = siteConfig?.seo?.defaultDescription || 'stories that refuse to stay quiet.'
+  const siteUrl = siteConfig?.seo?.siteUrl || 'https://www.rohmfeiferentertainment.com'
+
+  return {
+    title: { default: title, template: siteConfig?.seo?.titleTemplate || '%s | RFE' },
+    description,
+    metadataBase: new URL(siteUrl),
+    alternates: { canonical: `/${locale}`, languages: { en: '/en', 'x-default': '/en' } },
+    openGraph: { type: 'website' as const, locale: 'en_US', url: `${siteUrl}/${locale}`, siteName: siteConfig?.brand?.name || 'RFE', title, description },
+    twitter: { card: 'summary_large_image' as const, title, description },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large' as const, 'max-snippet': -1 } },
+    icons: { icon: { url: '/icon.svg', type: 'image/svg+xml' }, apple: { url: '/icon.svg', type: 'image/svg+xml' } },
+  }
 }
 
 export const viewport: Viewport = {
@@ -117,7 +130,7 @@ export default async function RootLayout({
       className={`dark ${_inter.variable} ${_fraunces.variable}`}
     >
       <head>
-        <RootJsonLd lang={locale} />
+        {generateSiteJsonLd(siteConfig, navItems, locale)}
       </head>
       <body className="font-sans antialiased min-h-screen cinema-root max-w-[100dvw] overflow-x-hidden">
         <LanguageProvider

@@ -3,9 +3,11 @@ import { buildConfig, type Config } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import sharp from 'sharp'
 import { collections } from './collections'
 import { globals } from './globals'
+import { generatePreviewPath } from './utilities/generatePreviewPath'
 
 export type RfeConfigOptions = {
   dirname: string
@@ -18,15 +20,25 @@ export type RfeConfigOptions = {
     region: string
     endpoint?: string
   }
+  siteUrl?: string
   overrides?: Partial<Config>
 }
 
 export function buildRfeConfig(opts: RfeConfigOptions) {
+  const siteUrl = opts.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
   return buildConfig({
     admin: {
       user: 'users',
       meta: { titleSuffix: '— RFE' },
       importMap: { baseDir: opts.dirname },
+      livePreview: {
+        breakpoints: [
+          { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+          { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+          { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+        ],
+      },
     },
     collections,
     globals,
@@ -53,6 +65,12 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
           endpoint: opts.s3.endpoint,
           forcePathStyle: true,
         },
+      }),
+      seoPlugin({
+        generateTitle: ({ doc }) =>
+          doc?.title ? `${doc.title} — RFE` : 'RFE — a cinematic female gaze studio',
+        generateURL: ({ doc }) =>
+          doc?.slug ? `${siteUrl}/${doc.slug}` : siteUrl,
       }),
     ],
     sharp,

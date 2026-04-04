@@ -6,6 +6,7 @@ import { seedTeam } from './seed-team'
 import { seedPress } from './seed-press'
 import { seedSiteConfig } from './seed-site-config'
 import { seedNavigation } from './seed-navigation'
+import { seedPages } from './seed-pages'
 
 export async function runSeed(payload: Payload): Promise<void> {
   console.log('[seed] Starting full seed...')
@@ -16,5 +17,6 @@ export async function runSeed(payload: Payload): Promise<void> {
   await seedPress(payload)
   await seedSiteConfig(payload)
   await seedNavigation(payload)
+  await seedPages(payload)
   console.log('[seed] Full seed complete.')
 }

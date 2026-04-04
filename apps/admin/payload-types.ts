@@ -72,7 +72,9 @@ export interface Config {
     works: Work;
     'team-members': TeamMember;
     'press-items': PressItem;
+    pages: Page;
     'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -84,7 +86,9 @@ export interface Config {
     works: WorksSelect<false> | WorksSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     'press-items': PressItemsSelect<false> | PressItemsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -107,7 +111,13 @@ export interface Config {
   };
   user: User;
   jobs: {
-    tasks: unknown;
+    tasks: {
+      schedulePublish: TaskSchedulePublish;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -269,6 +279,411 @@ export interface PressItem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  hero: {
+    type: 'cinematic' | 'page' | 'minimal';
+    headline?: string | null;
+    subtitle?: string | null;
+    /**
+     * Small uppercase label above the headline (e.g. "OUR WORK", "ABOUT US")
+     */
+    label?: string | null;
+    media?: (number | null) | Media;
+    /**
+     * CSS object-position value (e.g. "center top", "50% 30%")
+     */
+    imagePosition?: string | null;
+  };
+  layout: (
+    | ContentBlock
+    | MediaBlockType
+    | CTABlock
+    | TwoColumnLayoutBlock
+    | WorksGridBlock
+    | WorksScrollBlock
+    | FeaturedWorkBlock
+    | TeamShowcaseBlock
+    | PressListBlock
+    | ContactInfoBlock
+    | ContactFormBlock
+    | LegalSectionsBlock
+  )[];
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+    /**
+     * Comma-separated keywords for <meta name="keywords">
+     */
+    keywords?: string | null;
+    /**
+     * Override canonical URL (leave empty for auto-generated)
+     */
+    canonicalUrl?: string | null;
+    /**
+     * JSON-LD @type for structured data
+     */
+    jsonLdType?: ('WebPage' | 'ItemPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage') | null;
+    /**
+     * Optional custom JSON-LD (injected verbatim). For advanced use only.
+     */
+    jsonLdCustom?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * URL slug ("home" is reserved for the homepage)
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock".
+ */
+export interface ContentBlock {
+  columns?:
+    | {
+        size?: ('full' | 'half' | 'oneThird' | 'twoThirds') | null;
+        richText: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Background tone for this section
+   */
+  sectionTone?: ('default' | 'deep' | 'charcoal' | 'slate' | 'warm' | 'cool' | 'ember' | 'dusk') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'content';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlockType".
+ */
+export interface MediaBlockType {
+  media: number | Media;
+  caption?: string | null;
+  size?: ('full' | 'contained') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTABlock".
+ */
+export interface CTABlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        label: string;
+        url: string;
+        isExternal?: boolean | null;
+        appearance?: ('default' | 'outline' | 'gold') | null;
+        id?: string | null;
+      }[]
+    | null;
+  sectionTone?: ('default' | 'deep' | 'charcoal' | 'warm') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TwoColumnLayoutBlock".
+ */
+export interface TwoColumnLayoutBlock {
+  leftColumn?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Image for the left column (optional if using rich text)
+   */
+  leftMedia?: (number | null) | Media;
+  rightColumn?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Image for the right column (optional if using rich text)
+   */
+  rightMedia?: (number | null) | Media;
+  reverseOnMobile?: boolean | null;
+  sectionTone?: ('default' | 'deep' | 'charcoal' | 'slate' | 'warm' | 'cool') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'twoColumnLayout';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorksGridBlock".
+ */
+export interface WorksGridBlock {
+  title?: string | null;
+  /**
+   * Filter works by category. Leave empty to show all.
+   */
+  category?: ('film' | 'series' | 'unscripted') | null;
+  /**
+   * Show category/tag filter tabs above the grid
+   */
+  showFilters?: boolean | null;
+  /**
+   * Show subcategory tabs (for development page)
+   */
+  showSubcategoryTabs?: boolean | null;
+  /**
+   * Maximum number of works to display
+   */
+  limit?: number | null;
+  sectionTone?: ('default' | 'charcoal' | 'deep') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'worksGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorksScrollBlock".
+ */
+export interface WorksScrollBlock {
+  title?: string | null;
+  items?:
+    | {
+        /**
+         * Select a work, or use the manual fields below
+         */
+        work?: (number | null) | Work;
+        /**
+         * Override image (or use for non-work items like BTS photos)
+         */
+        media?: (number | null) | Media;
+        /**
+         * Override label (e.g. "Lifetime", "On set")
+         */
+        label?: string | null;
+        size?: ('large' | 'medium' | 'small') | null;
+        id?: string | null;
+      }[]
+    | null;
+  ctaLabel?: string | null;
+  ctaUrl?: string | null;
+  sectionTone?: ('default' | 'warm' | 'charcoal') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'worksScroll';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeaturedWorkBlock".
+ */
+export interface FeaturedWorkBlock {
+  /**
+   * Select a work to feature
+   */
+  work?: (number | null) | Work;
+  /**
+   * Override the poster image (optional)
+   */
+  overridePoster?: (number | null) | Media;
+  /**
+   * Featured quote or tagline
+   */
+  quote?: string | null;
+  /**
+   * Quote attribution (e.g. "Deadline Hollywood")
+   */
+  attribution?: string | null;
+  /**
+   * Link to external article or trailer
+   */
+  externalUrl?: string | null;
+  layout?: ('split' | 'overlay') | null;
+  sectionTone?: ('default' | 'deep' | 'charcoal' | 'warm' | 'ember' | 'dusk') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featuredWork';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamShowcaseBlock".
+ */
+export interface TeamShowcaseBlock {
+  title?: string | null;
+  introText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  showBios?: boolean | null;
+  showPhotos?: boolean | null;
+  sectionTone?: ('default' | 'charcoal' | 'deep' | 'warm') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'teamShowcase';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PressListBlock".
+ */
+export interface PressListBlock {
+  title?: string | null;
+  /**
+   * Maximum number of press items. Use a small number for teasers.
+   */
+  limit?: number | null;
+  /**
+   * Show a "View All" link to the press page
+   */
+  showViewAll?: boolean | null;
+  viewAllUrl?: string | null;
+  sectionTone?: ('default' | 'charcoal' | 'deep' | 'slate' | 'warm') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'pressList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactInfoBlock".
+ */
+export interface ContactInfoBlock {
+  title?: string | null;
+  showEmail?: boolean | null;
+  showPhone?: boolean | null;
+  showAddress?: boolean | null;
+  showSocials?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactInfo';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFormBlock".
+ */
+export interface ContactFormBlock {
+  title?: string | null;
+  subtitle?: string | null;
+  /**
+   * Email address for mailto form. Defaults to site contact email if empty.
+   */
+  recipientEmail?: string | null;
+  nameLabel?: string | null;
+  emailLabel?: string | null;
+  messageLabel?: string | null;
+  submitLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactForm';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LegalSectionsBlock".
+ */
+export interface LegalSectionsBlock {
+  sections?:
+    | {
+        title: string;
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'legalSections';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -283,6 +698,98 @@ export interface PayloadKv {
     | number
     | boolean
     | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'schedulePublish';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -310,6 +817,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'press-items';
         value: number | PressItem;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -492,11 +1003,270 @@ export interface PressItemsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        type?: T;
+        headline?: T;
+        subtitle?: T;
+        label?: T;
+        media?: T;
+        imagePosition?: T;
+      };
+  layout?:
+    | T
+    | {
+        content?: T | ContentBlockSelect<T>;
+        mediaBlock?: T | MediaBlockTypeSelect<T>;
+        cta?: T | CTABlockSelect<T>;
+        twoColumnLayout?: T | TwoColumnLayoutBlockSelect<T>;
+        worksGrid?: T | WorksGridBlockSelect<T>;
+        worksScroll?: T | WorksScrollBlockSelect<T>;
+        featuredWork?: T | FeaturedWorkBlockSelect<T>;
+        teamShowcase?: T | TeamShowcaseBlockSelect<T>;
+        pressList?: T | PressListBlockSelect<T>;
+        contactInfo?: T | ContactInfoBlockSelect<T>;
+        contactForm?: T | ContactFormBlockSelect<T>;
+        legalSections?: T | LegalSectionsBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+        keywords?: T;
+        canonicalUrl?: T;
+        jsonLdType?: T;
+        jsonLdCustom?: T;
+      };
+  publishedAt?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  columns?:
+    | T
+    | {
+        size?: T;
+        richText?: T;
+        id?: T;
+      };
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlockType_select".
+ */
+export interface MediaBlockTypeSelect<T extends boolean = true> {
+  media?: T;
+  caption?: T;
+  size?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTABlock_select".
+ */
+export interface CTABlockSelect<T extends boolean = true> {
+  richText?: T;
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        isExternal?: T;
+        appearance?: T;
+        id?: T;
+      };
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TwoColumnLayoutBlock_select".
+ */
+export interface TwoColumnLayoutBlockSelect<T extends boolean = true> {
+  leftColumn?: T;
+  leftMedia?: T;
+  rightColumn?: T;
+  rightMedia?: T;
+  reverseOnMobile?: T;
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorksGridBlock_select".
+ */
+export interface WorksGridBlockSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  showFilters?: T;
+  showSubcategoryTabs?: T;
+  limit?: T;
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorksScrollBlock_select".
+ */
+export interface WorksScrollBlockSelect<T extends boolean = true> {
+  title?: T;
+  items?:
+    | T
+    | {
+        work?: T;
+        media?: T;
+        label?: T;
+        size?: T;
+        id?: T;
+      };
+  ctaLabel?: T;
+  ctaUrl?: T;
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeaturedWorkBlock_select".
+ */
+export interface FeaturedWorkBlockSelect<T extends boolean = true> {
+  work?: T;
+  overridePoster?: T;
+  quote?: T;
+  attribution?: T;
+  externalUrl?: T;
+  layout?: T;
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamShowcaseBlock_select".
+ */
+export interface TeamShowcaseBlockSelect<T extends boolean = true> {
+  title?: T;
+  introText?: T;
+  showBios?: T;
+  showPhotos?: T;
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PressListBlock_select".
+ */
+export interface PressListBlockSelect<T extends boolean = true> {
+  title?: T;
+  limit?: T;
+  showViewAll?: T;
+  viewAllUrl?: T;
+  sectionTone?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactInfoBlock_select".
+ */
+export interface ContactInfoBlockSelect<T extends boolean = true> {
+  title?: T;
+  showEmail?: T;
+  showPhone?: T;
+  showAddress?: T;
+  showSocials?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFormBlock_select".
+ */
+export interface ContactFormBlockSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  recipientEmail?: T;
+  nameLabel?: T;
+  emailLabel?: T;
+  messageLabel?: T;
+  submitLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LegalSectionsBlock_select".
+ */
+export interface LegalSectionsBlockSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        title?: T;
+        content?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -787,6 +1557,23 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSchedulePublish".
+ */
+export interface TaskSchedulePublish {
+  input: {
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
+    doc?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
+    global?: string | null;
+    user?: (number | null) | User;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

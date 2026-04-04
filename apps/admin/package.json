@@ -13,10 +13,6 @@
     "seed": "tsx scripts/seed/index.ts"
   },
   "dependencies": {
-    "next": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "payload": "catalog:",
     "@payloadcms/db-postgres": "catalog:",
     "@payloadcms/graphql": "catalog:",
     "@payloadcms/next": "catalog:",
@@ -24,6 +20,10 @@
     "@payloadcms/storage-s3": "catalog:",
     "@payloadcms/ui": "catalog:",
     "@rfe/cms": "workspace:*",
+    "next": "catalog:",
+    "payload": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "sharp": "catalog:"
   },
   "devDependencies": {
@@ -31,9 +31,10 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "cross-env": "^7.0.3",
+    "dotenv": "^17.4.0",
     "sass": "^1.99.0",
-    "typescript": "catalog:",
     "tsx": "^4.20.3",
-    "cross-env": "^7.0.3"
+    "typescript": "catalog:"
   }
 }

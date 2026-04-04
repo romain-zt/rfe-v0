@@ -2,12 +2,13 @@
 
 import { PageCinematicHero } from '@/components/PageCinematicHero'
 import { useReveal } from '@/hooks/useReveal'
+import type { PressItem } from '@/lib/cms'
 
 // ============================================
-// PRESS ITEMS DATA
+// FALLBACK PRESS ITEMS
 // ============================================
 
-const pressItems = [
+const fallbackPressItems: PressItem[] = [
   {
     id: 1,
     source: 'Deadline',
@@ -16,6 +17,7 @@ const pressItems = [
     url: 'https://deadline.com/2026/02/shirley-maclaine-margret-and-stevie-matthew-weiner-1236729698/',
     description:
       'Shirley MacLaine has been set to star in Margret and Stevie, directed by Matthew Weiner. The film follows two women whose sharp-edged friendship becomes a lifeline, reigniting resolve in each other.',
+    sortOrder: 0,
   },
 ]
 
@@ -27,7 +29,7 @@ function PressCard({
   item,
   index,
 }: {
-  item: typeof pressItems[0]
+  item: PressItem
   index: number
 }) {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.15 })
@@ -94,7 +96,8 @@ function PressCard({
 // PRESS CONTENT
 // ============================================
 
-export default function PressContent() {
+export default function PressContent({ items }: { items?: PressItem[] }) {
+  const pressItems = items?.length ? items : fallbackPressItems
   const { ref: headerRef, isVisible: headerVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
 
   return (

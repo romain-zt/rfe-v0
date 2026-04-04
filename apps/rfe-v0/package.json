@@ -11,6 +11,7 @@
     "clean": "rm -rf .next .turbo"
   },
   "dependencies": {
+    "@rfe/cms": "workspace:*",
     "@rfe/design-tokens": "workspace:*",
     "@rfe/ui": "workspace:*",
     "@hookform/resolvers": "^3.10.0",

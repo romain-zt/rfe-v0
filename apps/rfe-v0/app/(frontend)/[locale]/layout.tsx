@@ -10,7 +10,7 @@ import { GrainOverlay } from '@rfe/ui'
 import { RootJsonLd } from '@/components/JsonLd'
 import { generateRootMetadata } from '@/lib/seo'
 import { fallbackEn } from '@/lib/i18n/fallback/en'
-import { fallbackFr } from '@/lib/i18n/fallback/fr'
+import { getWorks, getTeamMembers, getSiteConfig, getNavigation } from '@/lib/cms'
 import type { Language } from '@/lib/i18n/types'
 import './globals.css'
 
@@ -43,7 +43,7 @@ export const viewport: Viewport = {
 }
 
 export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'fr' }]
+  return [{ locale: 'en' }]
 }
 
 export default async function RootLayout({
@@ -54,7 +54,62 @@ export default async function RootLayout({
   params: Promise<{ locale: Language }>
 }>) {
   const { locale } = await params
-  const site = locale === 'fr' ? fallbackFr : fallbackEn
+
+  const [siteConfig, navigation, worksRes, teamRes] = await Promise.all([
+    getSiteConfig().catch(() => null),
+    getNavigation().catch(() => null),
+    getWorks().catch(() => ({ docs: [] })),
+    getTeamMembers().catch(() => ({ docs: [] })),
+  ])
+
+  const works = worksRes.docs.map((w) => ({
+    id: w.id,
+    title: w.title,
+    slug: w.slug,
+    year: w.year,
+    src: typeof w.poster === 'object' && w.poster ? w.poster.url : '',
+    tags: w.tags || [],
+    description: w.description || '',
+    videoUrl: w.videoUrl || '',
+    category: w.category,
+    subcategory: w.subcategory,
+  }))
+
+  const teamMembers = teamRes.docs.map((m) => ({
+    id: m.id,
+    name: m.name,
+    role: m.role,
+    bio: m.bio,
+  }))
+
+  const content = {
+    aboutContent: siteConfig?.about?.paragraphs?.map((p) => p.text) ?? fallbackEn.aboutContent,
+    teamMembers: teamMembers.length ? teamMembers : fallbackEn.teamMembers,
+    awardsNews: fallbackEn.awardsNews,
+    contactInfo: siteConfig
+      ? {
+          email: siteConfig.contact.email,
+          phone: siteConfig.contact.phone ?? '',
+          address: siteConfig.contact.address,
+          social: {
+            instagram: siteConfig.social.instagram ?? '',
+            linkedin: siteConfig.social.linkedin ?? '',
+            vimeo: siteConfig.social.vimeo ?? '',
+            tiktok: siteConfig.social.tiktok ?? '',
+            imdb: siteConfig.social.imdb ?? '',
+          },
+        }
+      : fallbackEn.contactInfo,
+    ourWork: works.length ? works : fallbackEn.ourWork,
+  }
+
+  const navItems = navigation?.header?.items ?? [
+    { label: 'About Us', href: '/about', isExternal: false },
+    { label: 'Our Work', href: '/our-work', isExternal: false },
+    { label: 'Development', href: '/development', isExternal: false },
+    { label: 'Press', href: '/press', isExternal: false },
+    { label: 'Contact', href: '/contact', isExternal: false },
+  ]
 
   return (
     <html
@@ -67,14 +122,8 @@ export default async function RootLayout({
       <body className="font-sans antialiased min-h-screen cinema-root max-w-[100dvw] overflow-x-hidden">
         <LanguageProvider
           locale={locale}
-          t={site.t}
-          content={{
-            aboutContent: site.aboutContent,
-            teamMembers: site.teamMembers,
-            awardsNews: site.awardsNews,
-            contactInfo: site.contactInfo,
-            ourWork: site.ourWork,
-          }}
+          t={fallbackEn.t}
+          content={content}
         >
           {/* Cinematic depth layers */}
           <div className="cinema-hole" aria-hidden="true" />
@@ -85,7 +134,7 @@ export default async function RootLayout({
           <GrainOverlay />
 
           <BottomLogoReveal />
-          <Header />
+          <Header navItems={navItems} />
           <div
             className="relative [&>header]:z-10 [&>main>div]:max-w-7xl [&>main>div]:mx-auto max-w-[100dvw] [overflow-x:clip]"
             style={{ background: 'var(--background)', marginBottom: '80vh' }}

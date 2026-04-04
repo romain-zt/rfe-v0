@@ -4,7 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useLanguage } from './LanguageContext'
 
-export function Header() {
+type NavItem = { label: string; href: string; isExternal?: boolean }
+
+export function Header({ navItems: navItemsProp }: { navItems?: NavItem[] }) {
   const [visible, setVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { lang } = useLanguage()
@@ -35,13 +37,20 @@ export function Header() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
-  const navItems = [
-    { href: `/${lang}/about`, label: 'About Us' },
-    { href: `/${lang}/our-work`, label: 'Our Work' },
-    { href: `/${lang}/development`, label: 'Development' },
-    { href: `/${lang}/press`, label: 'Press' },
-    { href: `/${lang}/contact`, label: 'Contact' },
+  const defaultItems: NavItem[] = [
+    { href: '/about', label: 'About Us' },
+    { href: '/our-work', label: 'Our Work' },
+    { href: '/development', label: 'Development' },
+    { href: '/press', label: 'Press' },
+    { href: '/contact', label: 'Contact' },
   ]
+
+  const navItems = (navItemsProp ?? defaultItems).map((item) => ({
+    ...item,
+    href: item.isExternal || !item.href.startsWith('/')
+      ? item.href
+      : `/${lang}${item.href}`,
+  }))
 
   return (
     <>

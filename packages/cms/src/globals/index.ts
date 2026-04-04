@@ -1,3 +1,5 @@
-import type { GlobalConfig } from 'payload'
+import { SiteConfig } from './SiteConfig'
+import { Navigation } from './Navigation'
 
-export const globals: GlobalConfig[] = []
+export { SiteConfig, Navigation }
+export const globals = [SiteConfig, Navigation]

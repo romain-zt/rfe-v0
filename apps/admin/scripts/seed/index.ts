@@ -1,8 +1,11 @@
-import { getPayload } from 'payload'
-import config from '@/payload.config'
-import { runSeed } from '@rfe/cms/seed'
+import dotenv from 'dotenv'
+dotenv.config({ path: '.env.local' })
 
 async function seed() {
+  const { getPayload } = await import('payload')
+  const { default: config } = await import('@/payload.config')
+  const { runSeed } = await import('@rfe/cms/seed')
+
   const payload = await getPayload({ config })
   await runSeed(payload)
   process.exit(0)

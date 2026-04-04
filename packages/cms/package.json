@@ -6,7 +6,8 @@
   "exports": {
     ".": { "types": "./src/index.ts", "default": "./src/index.ts" },
     "./seed": { "types": "./src/seed/index.ts", "default": "./src/seed/index.ts" },
-    "./config": { "types": "./src/config.ts", "default": "./src/config.ts" }
+    "./config": { "types": "./src/config.ts", "default": "./src/config.ts" },
+    "./client": { "types": "./src/client.ts", "default": "./src/client.ts" }
   },
   "files": ["src"],
   "dependencies": {

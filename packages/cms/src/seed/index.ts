@@ -1,2 +1,8 @@
 export { seedAdmin } from './seed-admin'
+export { seedMedia } from './seed-media'
+export { seedWorks } from './seed-works'
+export { seedTeam } from './seed-team'
+export { seedPress } from './seed-press'
+export { seedSiteConfig } from './seed-site-config'
+export { seedNavigation } from './seed-navigation'
 export { runSeed } from './run-seed'

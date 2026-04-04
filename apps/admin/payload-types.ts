@@ -69,6 +69,9 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    works: Work;
+    'team-members': TeamMember;
+    'press-items': PressItem;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +81,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    works: WorksSelect<false> | WorksSelect<true>;
+    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    'press-items': PressItemsSelect<false> | PressItemsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +93,14 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | 'en' | 'en'[];
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-config': SiteConfig;
+    navigation: Navigation;
+  };
+  globalsSelect: {
+    'site-config': SiteConfigSelect<false> | SiteConfigSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+  };
   locale: 'en';
   widgets: {
     collections: CollectionsWidget;
@@ -198,6 +210,65 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works".
+ */
+export interface Work {
+  id: number;
+  title: string;
+  slug: string;
+  year: number;
+  poster?: (number | null) | Media;
+  tags?: ('Drama' | 'Thriller' | 'True Crime' | 'Unscripted')[] | null;
+  description?: string | null;
+  /**
+   * YouTube or Vimeo embed URL
+   */
+  videoUrl?: string | null;
+  category?: ('film' | 'series' | 'unscripted') | null;
+  subcategory?: string | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    keywords?: string | null;
+  };
+  /**
+   * Lower = first
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  bio: string;
+  photo?: (number | null) | Media;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press-items".
+ */
+export interface PressItem {
+  id: number;
+  title: string;
+  source: string;
+  date: string;
+  url: string;
+  description?: string | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -227,6 +298,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'works';
+        value: number | Work;
+      } | null)
+    | ({
+        relationTo: 'team-members';
+        value: number | TeamMember;
+      } | null)
+    | ({
+        relationTo: 'press-items';
+        value: number | PressItem;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -357,6 +440,58 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works_select".
+ */
+export interface WorksSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  year?: T;
+  poster?: T;
+  tags?: T;
+  description?: T;
+  videoUrl?: T;
+  category?: T;
+  subcategory?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        keywords?: T;
+      };
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  bio?: T;
+  photo?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press-items_select".
+ */
+export interface PressItemsSelect<T extends boolean = true> {
+  title?: T;
+  source?: T;
+  date?: T;
+  url?: T;
+  description?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -394,6 +529,254 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-config".
+ */
+export interface SiteConfig {
+  id: number;
+  brand: {
+    name: string;
+    tagline?: string | null;
+    logo?: (number | null) | Media;
+    favicon?: (number | null) | Media;
+  };
+  colors?: {
+    background?: string | null;
+    foreground?: string | null;
+    rfeRed?: string | null;
+    rfeRose?: string | null;
+    rfeGold?: string | null;
+  };
+  sectionTones?: {
+    deep?: string | null;
+    charcoal?: string | null;
+    slate?: string | null;
+    warm?: string | null;
+    cool?: string | null;
+    ember?: string | null;
+    dusk?: string | null;
+  };
+  typography?: {
+    brandFont?: string | null;
+    sansFont?: string | null;
+    serifFont?: string | null;
+    radiusBase?: string | null;
+  };
+  easings?: {
+    emerge?: string | null;
+    quiet?: string | null;
+    sharp?: string | null;
+  };
+  seo?: {
+    titleTemplate?: string | null;
+    defaultTitle?: string | null;
+    defaultDescription?: string | null;
+    keywords?: string | null;
+    ogImage?: (number | null) | Media;
+    siteUrl?: string | null;
+  };
+  contact?: {
+    email?: string | null;
+    phone?: string | null;
+    address?: string | null;
+  };
+  social?: {
+    instagram?: string | null;
+    linkedin?: string | null;
+    vimeo?: string | null;
+    tiktok?: string | null;
+    imdb?: string | null;
+  };
+  about?: {
+    paragraphs?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    heroHeadline?: string | null;
+    heroSubheadline?: string | null;
+    heroParagraph?: string | null;
+  };
+  legal?: {
+    title?: string | null;
+    subtitle?: string | null;
+    sections?:
+      | {
+          title: string;
+          paragraphs?:
+            | {
+                text: string;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: number;
+  header?: {
+    items?:
+      | {
+          label: string;
+          href: string;
+          isExternal?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  footer?: {
+    legalLabel?: string | null;
+    copyrightText?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-config_select".
+ */
+export interface SiteConfigSelect<T extends boolean = true> {
+  brand?:
+    | T
+    | {
+        name?: T;
+        tagline?: T;
+        logo?: T;
+        favicon?: T;
+      };
+  colors?:
+    | T
+    | {
+        background?: T;
+        foreground?: T;
+        rfeRed?: T;
+        rfeRose?: T;
+        rfeGold?: T;
+      };
+  sectionTones?:
+    | T
+    | {
+        deep?: T;
+        charcoal?: T;
+        slate?: T;
+        warm?: T;
+        cool?: T;
+        ember?: T;
+        dusk?: T;
+      };
+  typography?:
+    | T
+    | {
+        brandFont?: T;
+        sansFont?: T;
+        serifFont?: T;
+        radiusBase?: T;
+      };
+  easings?:
+    | T
+    | {
+        emerge?: T;
+        quiet?: T;
+        sharp?: T;
+      };
+  seo?:
+    | T
+    | {
+        titleTemplate?: T;
+        defaultTitle?: T;
+        defaultDescription?: T;
+        keywords?: T;
+        ogImage?: T;
+        siteUrl?: T;
+      };
+  contact?:
+    | T
+    | {
+        email?: T;
+        phone?: T;
+        address?: T;
+      };
+  social?:
+    | T
+    | {
+        instagram?: T;
+        linkedin?: T;
+        vimeo?: T;
+        tiktok?: T;
+        imdb?: T;
+      };
+  about?:
+    | T
+    | {
+        paragraphs?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        heroHeadline?: T;
+        heroSubheadline?: T;
+        heroParagraph?: T;
+      };
+  legal?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        sections?:
+          | T
+          | {
+              title?: T;
+              paragraphs?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  header?:
+    | T
+    | {
+        items?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+              isExternal?: T;
+              id?: T;
+            };
+      };
+  footer?:
+    | T
+    | {
+        legalLabel?: T;
+        copyrightText?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

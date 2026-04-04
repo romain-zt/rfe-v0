@@ -6,6 +6,9 @@ export const Navigation: GlobalConfig = {
   access: {
     read: () => true,
   },
+  admin: {
+    group: 'Settings',
+  },
   fields: [
     {
       name: 'header',

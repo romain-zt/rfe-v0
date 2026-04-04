@@ -67,12 +67,13 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
-    media: Media;
+    pages: Page;
+    'works-groups': WorksGroup;
     works: Work;
     'team-members': TeamMember;
     'press-items': PressItem;
-    pages: Page;
+    users: User;
+    media: Media;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -81,12 +82,13 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    'works-groups': WorksGroupsSelect<false> | WorksGroupsSelect<true>;
     works: WorksSelect<false> | WorksSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     'press-items': PressItemsSelect<false> | PressItemsSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -138,144 +140,6 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt?: string | null;
-  prefix?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    poster?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    hero?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    og?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "works".
- */
-export interface Work {
-  id: number;
-  title: string;
-  slug: string;
-  year: number;
-  poster?: (number | null) | Media;
-  tags?: ('Drama' | 'Thriller' | 'True Crime' | 'Unscripted')[] | null;
-  description?: string | null;
-  /**
-   * YouTube or Vimeo embed URL
-   */
-  videoUrl?: string | null;
-  category?: ('film' | 'series' | 'unscripted') | null;
-  subcategory?: string | null;
-  seo?: {
-    title?: string | null;
-    description?: string | null;
-    keywords?: string | null;
-  };
-  /**
-   * Lower = first
-   */
-  sortOrder?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members".
- */
-export interface TeamMember {
-  id: number;
-  name: string;
-  role: string;
-  bio: string;
-  photo?: (number | null) | Media;
-  sortOrder?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "press-items".
- */
-export interface PressItem {
-  id: number;
-  title: string;
-  source: string;
-  date: string;
-  url: string;
-  description?: string | null;
-  sortOrder?: number | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -352,6 +216,60 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt?: string | null;
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    poster?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -489,9 +407,17 @@ export interface TwoColumnLayoutBlock {
 export interface WorksGridBlock {
   title?: string | null;
   /**
-   * Filter works by category. Leave empty to show all.
+   * Choose how to populate this grid
    */
-  category?: ('film' | 'series' | 'unscripted') | null;
+  sourceType?: ('all' | 'pick' | 'group') | null;
+  /**
+   * Pick and reorder individual works for this grid
+   */
+  selectedWorks?: (number | Work)[] | null;
+  /**
+   * Pick a reusable works group
+   */
+  worksGroup?: (number | null) | WorksGroup;
   /**
    * Show category/tag filter tabs above the grid
    */
@@ -500,6 +426,10 @@ export interface WorksGridBlock {
    * Show subcategory tabs (for development page)
    */
   showSubcategoryTabs?: boolean | null;
+  /**
+   * Pre-filter works by category
+   */
+  category?: ('film' | 'series' | 'unscripted') | null;
   /**
    * Maximum number of works to display
    */
@@ -511,10 +441,75 @@ export interface WorksGridBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works".
+ */
+export interface Work {
+  id: number;
+  title: string;
+  slug: string;
+  year: number;
+  poster?: (number | null) | Media;
+  tags?: ('Drama' | 'Thriller' | 'True Crime' | 'Unscripted')[] | null;
+  description?: string | null;
+  /**
+   * YouTube or Vimeo embed URL
+   */
+  videoUrl?: string | null;
+  category?: ('film' | 'series' | 'unscripted') | null;
+  subcategory?: string | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+    keywords?: string | null;
+  };
+  /**
+   * Lower = first
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Curated lists of works for use in page blocks (grids, scroll strips, etc.)
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works-groups".
+ */
+export interface WorksGroup {
+  id: number;
+  /**
+   * Internal label (e.g. "Home Featured", "Development Projects")
+   */
+  name: string;
+  slug: string;
+  /**
+   * Pick and reorder works. Drag to set display order.
+   */
+  items: (number | Work)[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "WorksScrollBlock".
  */
 export interface WorksScrollBlock {
   title?: string | null;
+  /**
+   * Choose how to populate this scroll strip
+   */
+  sourceType?: ('all' | 'pick' | 'group' | 'manual') | null;
+  /**
+   * Pick and reorder individual works
+   */
+  selectedWorks?: (number | Work)[] | null;
+  /**
+   * Pick a reusable works group
+   */
+  worksGroup?: (number | null) | WorksGroup;
+  /**
+   * Manual items with per-item size/label control
+   */
   items?:
     | {
         /**
@@ -684,6 +679,60 @@ export interface LegalSectionsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members".
+ */
+export interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  bio: string;
+  photo?: (number | null) | Media;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press-items".
+ */
+export interface PressItem {
+  id: number;
+  title: string;
+  source: string;
+  date: string;
+  url: string;
+  description?: string | null;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -799,12 +848,12 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
+        relationTo: 'works-groups';
+        value: number | WorksGroup;
       } | null)
     | ({
         relationTo: 'works';
@@ -819,8 +868,12 @@ export interface PayloadLockedDocument {
         value: number | PressItem;
       } | null)
     | ({
-        relationTo: 'pages';
-        value: number | Page;
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -863,143 +916,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  prefix?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        poster?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        hero?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        og?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "works_select".
- */
-export interface WorksSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  year?: T;
-  poster?: T;
-  tags?: T;
-  description?: T;
-  videoUrl?: T;
-  category?: T;
-  subcategory?: T;
-  seo?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        keywords?: T;
-      };
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members_select".
- */
-export interface TeamMembersSelect<T extends boolean = true> {
-  name?: T;
-  role?: T;
-  bio?: T;
-  photo?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "press-items_select".
- */
-export interface PressItemsSelect<T extends boolean = true> {
-  title?: T;
-  source?: T;
-  date?: T;
-  url?: T;
-  description?: T;
-  sortOrder?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1116,9 +1032,12 @@ export interface TwoColumnLayoutBlockSelect<T extends boolean = true> {
  */
 export interface WorksGridBlockSelect<T extends boolean = true> {
   title?: T;
-  category?: T;
+  sourceType?: T;
+  selectedWorks?: T;
+  worksGroup?: T;
   showFilters?: T;
   showSubcategoryTabs?: T;
+  category?: T;
   limit?: T;
   sectionTone?: T;
   id?: T;
@@ -1130,6 +1049,9 @@ export interface WorksGridBlockSelect<T extends boolean = true> {
  */
 export interface WorksScrollBlockSelect<T extends boolean = true> {
   title?: T;
+  sourceType?: T;
+  selectedWorks?: T;
+  worksGroup?: T;
   items?:
     | T
     | {
@@ -1228,6 +1150,154 @@ export interface LegalSectionsBlockSelect<T extends boolean = true> {
       };
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works-groups_select".
+ */
+export interface WorksGroupsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  items?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works_select".
+ */
+export interface WorksSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  year?: T;
+  poster?: T;
+  tags?: T;
+  description?: T;
+  videoUrl?: T;
+  category?: T;
+  subcategory?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        keywords?: T;
+      };
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "team-members_select".
+ */
+export interface TeamMembersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  bio?: T;
+  photo?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press-items_select".
+ */
+export interface PressItemsSelect<T extends boolean = true> {
+  title?: T;
+  source?: T;
+  date?: T;
+  url?: T;
+  description?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  prefix?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        poster?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        og?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -6,6 +6,9 @@ export const SiteConfig: GlobalConfig = {
   access: {
     read: () => true,
   },
+  admin: {
+    group: 'Settings',
+  },
   fields: [
     {
       name: 'brand',

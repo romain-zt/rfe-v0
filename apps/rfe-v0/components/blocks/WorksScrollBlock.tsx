@@ -13,8 +13,17 @@ type ScrollItem = {
   size?: 'large' | 'medium' | 'small'
 }
 
+type RelationRef = number | { id: number; [key: string]: unknown }
+
+type WorksGroupRef = {
+  items?: RelationRef[]
+} | number | null
+
 type Props = {
   title?: string
+  sourceType?: 'all' | 'pick' | 'group' | 'manual'
+  selectedWorks?: RelationRef[] | null
+  worksGroup?: WorksGroupRef
   items?: ScrollItem[]
   ctaLabel?: string
   ctaUrl?: string
@@ -37,7 +46,21 @@ function getYear(item: ScrollItem): string {
   return ''
 }
 
-export function WorksScrollComponent({ title, items, ctaLabel, ctaUrl, sectionTone }: Props) {
+function extractIds(refs: RelationRef[] | WorksGroupRef | null | undefined): number[] | null {
+  if (!refs) return null
+  if (typeof refs === 'number') return null
+  if (Array.isArray(refs)) {
+    const ids = refs.map((r) => (typeof r === 'number' ? r : r.id))
+    return ids.length > 0 ? ids : null
+  }
+  if ('items' in refs && Array.isArray(refs.items)) {
+    const ids = refs.items.map((r) => (typeof r === 'number' ? r : r.id))
+    return ids.length > 0 ? ids : null
+  }
+  return null
+}
+
+export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGroup, items, ctaLabel, ctaUrl, sectionTone }: Props) {
   const { ref: titleRef, isVisible: titleVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
   const scrollRef = useRef<HTMLDivElement>(null)
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -58,15 +81,31 @@ export function WorksScrollComponent({ title, items, ctaLabel, ctaUrl, sectionTo
     return () => el.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
-  const displayItems: ScrollItem[] = items && items.length > 0
-    ? items
-    : (content?.ourWork || [])
-        .filter(w => !w.category && w.src)
-        .slice(0, 10)
-        .map((w, i) => ({
-          work: { title: w.title, year: w.year, poster: { url: w.src }, slug: w.slug },
-          size: (i % 3 === 0 ? 'large' : i % 3 === 1 ? 'medium' : 'small') as ScrollItem['size'],
-        }))
+  const allWorks = content?.ourWork || []
+
+  const curatedIds = (() => {
+    if (sourceType === 'pick') return extractIds(selectedWorks)
+    if (sourceType === 'group') return extractIds(worksGroup)
+    if (sourceType === 'manual') return null
+    return extractIds(selectedWorks) ?? extractIds(worksGroup)
+  })()
+
+  const displayItems: ScrollItem[] = (() => {
+    if (sourceType === 'manual' && items && items.length > 0) return items
+    if (!sourceType && items && items.length > 0) return items
+
+    const sourceWorks = curatedIds
+      ? (() => {
+          const worksById = new Map(allWorks.map((w) => [w.id, w]))
+          return curatedIds.map((id) => worksById.get(id)).filter(Boolean) as typeof allWorks
+        })()
+      : allWorks.filter(w => !w.category && w.src).slice(0, 10)
+
+    return sourceWorks.map((w, i) => ({
+      work: { title: w.title, year: w.year, poster: { url: w.src }, slug: w.slug },
+      size: (i % 3 === 0 ? 'large' : i % 3 === 1 ? 'medium' : 'small') as ScrollItem['size'],
+    }))
+  })()
 
   if (displayItems.length === 0) return null
 

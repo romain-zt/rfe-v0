@@ -8,6 +8,7 @@ export const Works: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'year', 'category', 'tags'],
+    group: 'Content',
   },
   fields: [
     { name: 'title', type: 'text', required: true },

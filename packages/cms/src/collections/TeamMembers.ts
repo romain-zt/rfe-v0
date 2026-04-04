@@ -5,7 +5,7 @@ export const TeamMembers: CollectionConfig = {
   access: {
     read: () => true,
   },
-  admin: { useAsTitle: 'name' },
+  admin: { useAsTitle: 'name', group: 'Content' },
   fields: [
     { name: 'name', type: 'text', required: true },
     { name: 'role', type: 'text', required: true },

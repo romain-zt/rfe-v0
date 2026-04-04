@@ -5,13 +5,36 @@ import { WorkGrid } from '@/components/WorkGrid'
 import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
 
+type RelationRef = number | { id: number; [key: string]: unknown }
+
+type WorksGroupRef = {
+  items?: RelationRef[]
+} | number | null
+
 type Props = {
   title?: string
+  sourceType?: 'all' | 'pick' | 'group'
+  selectedWorks?: RelationRef[] | null
+  worksGroup?: WorksGroupRef
   category?: string
   showFilters?: boolean
   showSubcategoryTabs?: boolean
   limit?: number
   sectionTone?: string
+}
+
+function extractIds(refs: RelationRef[] | WorksGroupRef | null | undefined): number[] | null {
+  if (!refs) return null
+  if (typeof refs === 'number') return null
+  if (Array.isArray(refs)) {
+    const ids = refs.map((r) => (typeof r === 'number' ? r : r.id))
+    return ids.length > 0 ? ids : null
+  }
+  if ('items' in refs && Array.isArray(refs.items)) {
+    const ids = refs.items.map((r) => (typeof r === 'number' ? r : r.id))
+    return ids.length > 0 ? ids : null
+  }
+  return null
 }
 
 export function WorksGridComponent(props: Props) {
@@ -21,7 +44,19 @@ export function WorksGridComponent(props: Props) {
 
   const allWorks = content?.ourWork || []
 
+  const curatedIds = useMemo(() => {
+    if (props.sourceType === 'pick') return extractIds(props.selectedWorks)
+    if (props.sourceType === 'group') return extractIds(props.worksGroup)
+    return extractIds(props.selectedWorks) ?? extractIds(props.worksGroup)
+  }, [props.sourceType, props.selectedWorks, props.worksGroup])
+
   const { works, filterMode, showFilters } = useMemo(() => {
+    if (curatedIds) {
+      const worksById = new Map(allWorks.map((w) => [w.id, w]))
+      const ordered = curatedIds.map((id) => worksById.get(id)).filter(Boolean) as typeof allWorks
+      return { works: ordered, filterMode: 'tags' as const, showFilters: false }
+    }
+
     if (props.showSubcategoryTabs) {
       let devWorks = allWorks.filter(w => w.category)
       if (props.category) {
@@ -40,7 +75,7 @@ export function WorksGridComponent(props: Props) {
       filterMode: 'tags' as const,
       showFilters: props.showFilters !== false,
     }
-  }, [allWorks, props.showSubcategoryTabs, props.category, props.showFilters, props.limit])
+  }, [allWorks, curatedIds, props.showSubcategoryTabs, props.category, props.showFilters, props.limit])
 
   return (
     <section className={`relative px-6 lg:px-16 xl:px-24 py-12 lg:py-20 ${toneClass}`}>

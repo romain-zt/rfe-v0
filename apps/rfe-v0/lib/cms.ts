@@ -163,3 +163,14 @@ export async function getPageBySlug(slug: string) {
 export async function getAllPages() {
   return cms.find<PageData>('pages', { limit: '100', depth: '0' })
 }
+
+export type WorksGroupData = {
+  id: number
+  name: string
+  slug: string
+  items: Work[]
+}
+
+export async function getWorksGroup(slug: string) {
+  return cms.findBySlug<WorksGroupData>('works-groups', slug)
+}

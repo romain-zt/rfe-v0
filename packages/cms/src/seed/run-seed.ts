@@ -2,6 +2,7 @@ import type { Payload } from 'payload'
 import { seedAdmin } from './seed-admin'
 import { seedMedia } from './seed-media'
 import { seedWorks } from './seed-works'
+import { seedWorksGroups } from './seed-works-groups'
 import { seedTeam } from './seed-team'
 import { seedPress } from './seed-press'
 import { seedSiteConfig } from './seed-site-config'
@@ -13,6 +14,7 @@ export async function runSeed(payload: Payload): Promise<void> {
   await seedAdmin(payload)
   const mediaMap = await seedMedia(payload)
   await seedWorks(payload, mediaMap)
+  await seedWorksGroups(payload)
   await seedTeam(payload, mediaMap)
   await seedPress(payload)
   await seedSiteConfig(payload)

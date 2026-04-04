@@ -1,6 +1,7 @@
 export { seedAdmin } from './seed-admin'
 export { seedMedia } from './seed-media'
 export { seedWorks } from './seed-works'
+export { seedWorksGroups } from './seed-works-groups'
 export { seedTeam } from './seed-team'
 export { seedPress } from './seed-press'
 export { seedSiteConfig } from './seed-site-config'

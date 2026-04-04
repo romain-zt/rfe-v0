@@ -8,15 +8,17 @@ type Props = {
   collection: keyof typeof collectionPrefixMap
   slug: string
   req: PayloadRequest
+  siteUrl?: string
 }
 
-export const generatePreviewPath = ({ collection, slug, req }: Props): string | null => {
+export const generatePreviewPath = ({ collection, slug, req, siteUrl }: Props): string | null => {
   const { locale } = req
 
   if (slug === undefined || slug === null) {
     return null
   }
 
+  const base = siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   const encodedSlug = encodeURIComponent(slug)
   const prefix = collectionPrefixMap[collection] ?? ''
   const pagePath = slug === 'home'
@@ -31,5 +33,5 @@ export const generatePreviewPath = ({ collection, slug, req }: Props): string | 
     previewSecret: process.env.PREVIEW_SECRET || '',
   })
 
-  return `/next/preview?${params.toString()}`
+  return `${base}/next/preview?${params.toString()}`
 }

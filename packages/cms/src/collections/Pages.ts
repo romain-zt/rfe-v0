@@ -126,6 +126,7 @@ export const Pages: CollectionConfig = {
               ],
               admin: {
                 description: 'JSON-LD @type for structured data',
+                condition: () => false,
               },
             },
             {
@@ -133,6 +134,7 @@ export const Pages: CollectionConfig = {
               type: 'json',
               admin: {
                 description: 'Optional custom JSON-LD (injected verbatim). For advanced use only.',
+                condition: () => false,
               },
             },
           ],

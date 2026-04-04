@@ -31,6 +31,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/admin') ||
+    pathname.startsWith('/next') ||
     pathname.includes('.')
   ) {
     return NextResponse.next()
@@ -51,5 +52,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|admin|.*\\..*).*)'],
+  matcher: ['/((?!_next|api|admin|next|.*\\..*).*)'],
 }

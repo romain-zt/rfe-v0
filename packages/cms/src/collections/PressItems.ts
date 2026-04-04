@@ -5,7 +5,7 @@ export const PressItems: CollectionConfig = {
   access: {
     read: () => true,
   },
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'source', 'date'] },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'source', 'date'], group: 'Content' },
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'source', type: 'text', required: true },

@@ -1,3 +1,8 @@
+---
+name: content-modeler
+model: claude-4.6-opus-high-thinking
+---
+
 # Agent: Content Modeler
 
 You are the **content modeling specialist** for the RFE Payload CMS migration.

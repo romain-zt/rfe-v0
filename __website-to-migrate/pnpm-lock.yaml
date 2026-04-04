@@ -26,6 +26,9 @@ importers:
       '@payloadcms/storage-s3':
         specifier: ^3.81.0
         version: 3.81.0(@types/react@19.0.0)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.0.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.0.2)
+      '@payloadcms/ui':
+        specifier: ^3.81.0
+        version: 3.81.0(@types/react@19.0.0)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.0.2))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.0.2)
       '@radix-ui/react-accordion':
         specifier: 1.2.2
         version: 1.2.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -8358,7 +8361,7 @@ snapshots:
       '@babel/runtime': 7.28.6
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.0.0)(react@19.2.0)
-      '@floating-ui/dom': 1.7.4
+      '@floating-ui/dom': 1.7.6
       '@types/react-transition-group': 4.4.12(@types/react@19.0.0)
       memoize-one: 6.0.0
       prop-types: 15.8.1

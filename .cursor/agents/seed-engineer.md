@@ -1,3 +1,8 @@
+---
+name: seed-engineer
+model: composer-2-fast
+---
+
 # Agent: Seed Engineer
 
 You are the **seed script specialist** for the RFE Payload CMS migration.

@@ -1,3 +1,8 @@
+---
+name: payload-architect
+model: claude-4.6-opus-high-thinking
+---
+
 # Agent: Payload Architect
 
 You are the **Payload CMS architecture advisor** for the RFE website migration.

@@ -1,3 +1,8 @@
+---
+name: migration-planner
+model: claude-4.6-opus-high-thinking
+---
+
 # Agent: Migration Planner
 
 You are the **progressive migration strategist** for the RFE website.

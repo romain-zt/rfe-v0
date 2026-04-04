@@ -25,6 +25,10 @@ export type PayloadClient = {
 
 export function createPayloadClient(baseUrl: string): PayloadClient {
   const headers = { 'Content-Type': 'application/json' }
+  const cacheStrategy =
+    process.env.NODE_ENV === 'development'
+      ? { cache: 'no-store' as const }
+      : { next: { revalidate: 60 } }
 
   return {
     find: async <T = Record<string, unknown>>(
@@ -34,7 +38,7 @@ export function createPayloadClient(baseUrl: string): PayloadClient {
       const params = new URLSearchParams(query)
       const res = await fetch(`${baseUrl}/api/${collection}?${params}`, {
         headers,
-        next: { revalidate: 60 },
+        ...cacheStrategy,
       })
       if (!res.ok) throw new Error(`Failed to fetch ${collection}: ${res.status}`)
       return res.json()
@@ -50,7 +54,7 @@ export function createPayloadClient(baseUrl: string): PayloadClient {
       })
       const res = await fetch(`${baseUrl}/api/${collection}?${params}`, {
         headers,
-        next: { revalidate: 60 },
+        ...cacheStrategy,
       })
       if (!res.ok) return null
       const data = await res.json()
@@ -60,7 +64,7 @@ export function createPayloadClient(baseUrl: string): PayloadClient {
     findGlobal: async <T = Record<string, unknown>>(slug: string): Promise<T> => {
       const res = await fetch(`${baseUrl}/api/globals/${slug}`, {
         headers,
-        next: { revalidate: 60 },
+        ...cacheStrategy,
       })
       if (!res.ok) throw new Error(`Failed to fetch global ${slug}: ${res.status}`)
       return res.json()

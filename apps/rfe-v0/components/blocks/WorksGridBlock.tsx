@@ -57,11 +57,17 @@ export function WorksGridComponent(props: Props) {
       return { works: ordered, filterMode: 'tags' as const, showFilters: false }
     }
 
-    if (props.showSubcategoryTabs) {
-      let devWorks = allWorks.filter(w => w.category)
-      if (props.category) {
-        devWorks = devWorks.filter(w => w.category === props.category)
+    if (props.category) {
+      const filtered = allWorks.filter(w => w.category === props.category)
+      return {
+        works: props.limit ? filtered.slice(0, props.limit) : filtered,
+        filterMode: props.showSubcategoryTabs ? 'category' as const : 'tags' as const,
+        showFilters: props.showSubcategoryTabs || (props.showFilters ?? false),
       }
+    }
+
+    if (props.showSubcategoryTabs) {
+      const devWorks = allWorks.filter(w => w.category)
       return {
         works: props.limit ? devWorks.slice(0, props.limit) : devWorks,
         filterMode: 'category' as const,

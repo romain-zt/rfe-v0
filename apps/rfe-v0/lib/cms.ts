@@ -144,16 +144,19 @@ export type PageData = {
   updatedAt?: string
 }
 
-export async function getPageBySlug(slug: string) {
+export async function getPageBySlug(slug: string, draft = false) {
   const params = new URLSearchParams({
     'where[slug][equals]': slug,
     limit: '1',
     depth: '2',
   })
+  if (draft) {
+    params.set('draft', 'true')
+  }
   const apiUrl = process.env.CMS_API_URL || 'http://localhost:3001'
   const res = await fetch(`${apiUrl}/api/pages?${params}`, {
     headers: { 'Content-Type': 'application/json' },
-    next: { revalidate: 60 },
+    ...(draft ? { cache: 'no-store' as const } : { next: { revalidate: 60 } }),
   })
   if (!res.ok) return null
   const data = await res.json()

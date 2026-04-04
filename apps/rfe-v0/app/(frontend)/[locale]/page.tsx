@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function HomePage({ params }: Props) {
   const { locale } = await params
-  const page = await getPageBySlug('home')
   const draft = await draftMode()
+  const page = await getPageBySlug('home', draft.isEnabled)
   const siteConfig = await getSiteConfig().catch(() => null)
 
   if (!page) {

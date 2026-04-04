@@ -34,13 +34,13 @@ export async function generateStaticParams() {
 
 export default async function DynamicPage({ params }: Props) {
   const { locale, slug } = await params
-  const page = await getPageBySlug(slug)
+  const draft = await draftMode()
+  const page = await getPageBySlug(slug, draft.isEnabled)
 
   if (!page) {
     notFound()
   }
 
-  const draft = await draftMode()
   const siteConfig = await getSiteConfig().catch(() => null)
 
   return (

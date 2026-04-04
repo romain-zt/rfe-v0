@@ -6,7 +6,6 @@ import { LanguageProvider } from '@/components/LanguageContext'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { BottomLogoReveal } from '@/components/BottomLogoReveal'
-import { GrainOverlay } from '@rfe/ui'
 import { generateSiteJsonLd } from '@/lib/generate-meta'
 import { fallbackEn } from '@/lib/i18n/fallback/en'
 import { getWorks, getTeamMembers, getSiteConfig, getNavigation } from '@/lib/cms'
@@ -142,9 +141,6 @@ export default async function RootLayout({
           <div className="cinema-hole" aria-hidden="true" />
           <div className="cinema-lens" aria-hidden="true" />
           <div className="cinema-leak" aria-hidden="true" />
-
-          {/* Grain overlay */}
-          <GrainOverlay />
 
           <BottomLogoReveal />
           <Header navItems={navItems} />

@@ -1,6 +1,32 @@
 'use client'
 
+import React from 'react'
 import { useReveal } from '@/hooks/useReveal'
+import { CTABlockComponent } from './CTABlock'
+import { WorksGridComponent } from './WorksGridBlock'
+import { WorksScrollComponent } from './WorksScrollBlock'
+import { FeaturedWorkComponent } from './FeaturedWorkBlock'
+import { TeamShowcaseComponent } from './TeamShowcaseBlock'
+import { PressListComponent } from './PressListBlock'
+import { ContactInfoComponent } from './ContactInfoBlock'
+import { ContactFormComponent } from './ContactFormBlock'
+import { LegalSectionsComponent } from './LegalSectionsBlock'
+import { MediaBlockComponent } from './MediaBlockComponent'
+import { TwoColumnLayoutComponent } from './TwoColumnLayoutBlock'
+
+const embeddedBlockComponents: Record<string, React.ComponentType<any>> = {
+  cta: CTABlockComponent,
+  worksGrid: WorksGridComponent,
+  worksScroll: WorksScrollComponent,
+  featuredWork: FeaturedWorkComponent,
+  teamShowcase: TeamShowcaseComponent,
+  pressList: PressListComponent,
+  contactInfo: ContactInfoComponent,
+  contactForm: ContactFormComponent,
+  legalSections: LegalSectionsComponent,
+  mediaBlock: MediaBlockComponent,
+  twoColumnLayout: TwoColumnLayoutComponent,
+}
 
 type Column = {
   size: 'full' | 'half' | 'oneThird' | 'twoThirds'
@@ -12,7 +38,7 @@ type Props = {
   sectionTone?: string
 }
 
-function renderLexicalText(node: any): React.ReactNode {
+function renderLexicalNode(node: any): React.ReactNode {
   if (!node) return null
 
   if (node.type === 'text') {
@@ -22,9 +48,19 @@ function renderLexicalText(node: any): React.ReactNode {
     return text
   }
 
-  const children = node.children?.map((child: any, i: number) => (
-    <span key={i}>{renderLexicalText(child)}</span>
-  ))
+  if (node.type === 'block') {
+    const fields = node.fields
+    if (!fields?.blockType) return null
+    const BlockComp = embeddedBlockComponents[fields.blockType]
+    if (!BlockComp) return null
+    return <BlockComp key={fields.id} {...fields} />
+  }
+
+  const children = node.children?.map((child: any, i: number) => {
+    const rendered = renderLexicalNode(child)
+    if (child.type === 'text' || child.type === 'linebreak') return <React.Fragment key={i}>{rendered}</React.Fragment>
+    return <React.Fragment key={i}>{rendered}</React.Fragment>
+  })
 
   switch (node.type) {
     case 'paragraph':
@@ -63,6 +99,24 @@ export function ContentBlockComponent({ columns, sectionTone }: Props) {
 
   const gridCols = columns && columns.length > 1 ? 'lg:grid-cols-2' : ''
 
+  const hasEmbeddedBlocks = columns?.some((col) =>
+    col.richText?.root?.children?.some((child: any) => child.type === 'block')
+  )
+
+  if (hasEmbeddedBlocks) {
+    return (
+      <div className={toneClass}>
+        {columns?.map((col, i) => (
+          <div key={i}>
+            {col.richText?.root?.children?.map((child: any, j: number) => (
+              <React.Fragment key={j}>{renderLexicalNode(child)}</React.Fragment>
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <section className={`relative px-6 lg:px-16 xl:px-24 py-16 lg:py-24 ${toneClass}`}>
       <div
@@ -76,7 +130,7 @@ export function ContentBlockComponent({ columns, sectionTone }: Props) {
       >
         {columns?.map((col, i) => (
           <div key={i} className={sizeClasses[col.size] || 'col-span-1'}>
-            {col.richText?.root && renderLexicalText(col.richText.root)}
+            {col.richText?.root && renderLexicalNode(col.richText.root)}
           </div>
         ))}
       </div>

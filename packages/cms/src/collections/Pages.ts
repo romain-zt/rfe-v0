@@ -16,6 +16,9 @@ export const Pages: CollectionConfig = {
     singular: 'Page',
     plural: 'Pages',
   },
+  access: {
+    read: () => true,
+  },
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     useAsTitle: 'title',

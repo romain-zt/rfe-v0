@@ -3,6 +3,9 @@ import type { GlobalConfig } from 'payload'
 export const SiteConfig: GlobalConfig = {
   slug: 'site-config',
   label: 'Site Configuration',
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'brand',

@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const PressItems: CollectionConfig = {
   slug: 'press-items',
+  access: {
+    read: () => true,
+  },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'source', 'date'] },
   fields: [
     { name: 'title', type: 'text', required: true },

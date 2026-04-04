@@ -1,20 +1,56 @@
 import type { Payload } from 'payload'
 
-function lexicalParagraph(text: string) {
+let blockIdCounter = 0
+function nextBlockId() {
+  return `seed-block-${++blockIdCounter}`
+}
+
+function lexicalText(text: string) {
+  return { detail: 0, format: 0, mode: 'normal', style: '', text, type: 'text', version: 1 }
+}
+
+function lexicalParagraphNode(text: string) {
+  return {
+    children: [lexicalText(text)],
+    direction: 'ltr',
+    format: '',
+    indent: 0,
+    type: 'paragraph',
+    version: 1,
+    textFormat: 0,
+    textStyle: '',
+  }
+}
+
+function lexicalHeadingNode(text: string, tag = 'h2') {
+  return {
+    children: [lexicalText(text)],
+    direction: 'ltr',
+    format: '',
+    indent: 0,
+    type: 'heading',
+    version: 1,
+    tag,
+  }
+}
+
+function lexicalBlockNode(blockType: string, fields: Record<string, unknown>) {
+  return {
+    type: 'block',
+    version: 2,
+    fields: {
+      id: nextBlockId(),
+      blockType,
+      blockName: '',
+      ...fields,
+    },
+  }
+}
+
+function lexicalRoot(children: Record<string, unknown>[]) {
   return {
     root: {
-      children: [
-        {
-          children: [{ detail: 0, format: 0, mode: 'normal', style: '', text, type: 'text', version: 1 }],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          type: 'paragraph',
-          version: 1,
-          textFormat: 0,
-          textStyle: '',
-        },
-      ],
+      children,
       direction: 'ltr',
       format: '',
       indent: 0,
@@ -22,60 +58,29 @@ function lexicalParagraph(text: string) {
       version: 1,
     },
   }
+}
+
+function lexicalParagraph(text: string) {
+  return lexicalRoot([lexicalParagraphNode(text)])
 }
 
 function lexicalMultiParagraph(texts: string[]) {
-  return {
-    root: {
-      children: texts.map((text) => ({
-        children: [{ detail: 0, format: 0, mode: 'normal', style: '', text, type: 'text', version: 1 }],
-        direction: 'ltr',
-        format: '',
-        indent: 0,
-        type: 'paragraph',
-        version: 1,
-        textFormat: 0,
-        textStyle: '',
-      })),
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      type: 'root',
-      version: 1,
-    },
-  }
+  return lexicalRoot(texts.map((t) => lexicalParagraphNode(t)))
 }
 
-function lexicalHeadingAndText(heading: string, paragraphs: string[], headingTag = 'h2') {
+function contentBlock(
+  children: Record<string, unknown>[],
+  sectionTone = 'default',
+) {
   return {
-    root: {
-      children: [
-        {
-          children: [{ detail: 0, format: 0, mode: 'normal', style: '', text: heading, type: 'text', version: 1 }],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          type: 'heading',
-          version: 1,
-          tag: headingTag,
-        },
-        ...paragraphs.map((text) => ({
-          children: [{ detail: 0, format: 0, mode: 'normal', style: '', text, type: 'text', version: 1 }],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          type: 'paragraph',
-          version: 1,
-          textFormat: 0,
-          textStyle: '',
-        })),
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      type: 'root',
-      version: 1,
-    },
+    blockType: 'content',
+    sectionTone,
+    columns: [
+      {
+        size: 'full',
+        richText: lexicalRoot(children),
+      },
+    ],
   }
 }
 
@@ -97,58 +102,72 @@ const PAGES: PageSeed[] = [
       subtitle: 'True Crime / Real Drama',
     },
     layout: [
-      {
-        blockType: 'worksScroll',
-        title: 'Our Work',
-        ctaLabel: 'see all',
-        ctaUrl: '/our-work',
-        sectionTone: 'warm',
-        items: [],
-      },
-      {
-        blockType: 'content',
-        sectionTone: 'dusk',
-        columns: [
-          {
-            size: 'full',
-            richText: lexicalHeadingAndText(
-              'Woman-owned. Story-driven. Built for impact.',
-              [
-                'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
-                'Elisabeth Rohm & Kara Feifer — two creators who refuse to play it safe.',
-              ],
-            ),
-          },
+      contentBlock(
+        [
+          lexicalBlockNode('worksScroll', {
+            title: 'Our Work',
+            ctaLabel: 'see all',
+            ctaUrl: '/our-work',
+            sectionTone: 'warm',
+            items: [],
+          }),
         ],
-      },
-      {
-        blockType: 'featuredWork',
-        quote: "Shirley MacLaine To Star In Matthew Weiner's Margret and Stevie",
-        attribution: 'Deadline, February 2026',
-        externalUrl: 'https://deadline.com/2026/02/shirley-maclaine-margret-and-stevie-matthew-weiner-1236729698/',
-        sectionTone: 'ember',
-      },
-      {
-        blockType: 'pressList',
-        title: 'Press',
-        limit: 3,
-        showViewAll: true,
-        viewAllUrl: '/press',
-        sectionTone: 'warm',
-      },
-      {
-        blockType: 'cta',
-        richText: lexicalParagraph('Ready to partner with us?'),
-        sectionTone: 'deep',
-        links: [
-          { label: 'Get in touch', url: '/contact', isExternal: false, appearance: 'gold' },
+        'warm',
+      ),
+      contentBlock(
+        [
+          lexicalHeadingNode('Woman-owned. Story-driven. Built for impact.'),
+          lexicalParagraphNode(
+            'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
+          ),
+          lexicalParagraphNode(
+            'Elisabeth Rohm & Kara Feifer — two creators who refuse to play it safe.',
+          ),
         ],
-      },
+        'dusk',
+      ),
+      contentBlock(
+        [
+          lexicalBlockNode('featuredWork', {
+            quote: "Shirley MacLaine To Star In Matthew Weiner's Margret and Stevie",
+            attribution: 'Deadline, February 2026',
+            externalUrl:
+              'https://deadline.com/2026/02/shirley-maclaine-margret-and-stevie-matthew-weiner-1236729698/',
+            sectionTone: 'ember',
+          }),
+        ],
+        'ember',
+      ),
+      contentBlock(
+        [
+          lexicalBlockNode('pressList', {
+            title: 'Press',
+            limit: 3,
+            showViewAll: true,
+            viewAllUrl: '/press',
+            sectionTone: 'warm',
+          }),
+        ],
+        'warm',
+      ),
+      contentBlock(
+        [
+          lexicalBlockNode('cta', {
+            richText: lexicalParagraph('Ready to partner with us?'),
+            sectionTone: 'deep',
+            links: [
+              { label: 'Get in touch', url: '/contact', isExternal: false, appearance: 'gold' },
+            ],
+          }),
+        ],
+        'deep',
+      ),
     ],
     meta: {
       title: 'RFE — a cinematic female gaze studio',
       description: 'stories that refuse to stay quiet.',
-      keywords: 'female gaze cinema, feminist film production, independent film studio, female director, women in film, auteur cinema, indie production company, Margret and Stevie, cinematic storytelling, female-led films',
+      keywords:
+        'female gaze cinema, feminist film production, independent film studio, female director, women in film, auteur cinema, indie production company, Margret and Stevie, cinematic storytelling, female-led films',
       jsonLdType: 'WebPage',
     },
   },
@@ -159,44 +178,31 @@ const PAGES: PageSeed[] = [
     hero: {
       type: 'page',
       headline: "There's always more to the story.",
-      subtitle: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
+      subtitle:
+        'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
       label: 'About Us',
       imagePosition: 'center top',
     },
     layout: [
-      {
-        blockType: 'content',
-        sectionTone: 'charcoal',
-        columns: [
-          {
-            size: 'full',
-            richText: lexicalHeadingAndText(
-              'Woman-owned. Story-driven. Built for impact.',
-              [
-                'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
-                "Rohm Feifer Entertainment's team has decades of experience creating high-quality, critically-acclaimed, award-winning and globally popular films and series, as well as nonscripted series, documentaries, and podcasts.",
-              ],
-            ),
-          },
+      contentBlock(
+        [
+          lexicalHeadingNode('Woman-owned. Story-driven. Built for impact.'),
+          lexicalParagraphNode(
+            'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
+          ),
+          lexicalParagraphNode(
+            "Rohm Feifer Entertainment's team has decades of experience creating high-quality, critically-acclaimed, award-winning and globally popular films and series, as well as nonscripted series, documentaries, and podcasts.",
+          ),
+          lexicalBlockNode('teamShowcase', {
+            title: 'The Founders',
+            showBios: true,
+            showPhotos: true,
+            sectionTone: 'warm',
+          }),
+          lexicalParagraphNode('Stories that refuse to stay quiet. That is the RFE promise.'),
         ],
-      },
-      {
-        blockType: 'teamShowcase',
-        title: 'The Founders',
-        showBios: true,
-        showPhotos: true,
-        sectionTone: 'warm',
-      },
-      {
-        blockType: 'content',
-        sectionTone: 'dusk',
-        columns: [
-          {
-            size: 'full',
-            richText: lexicalParagraph('Stories that refuse to stay quiet. That is the RFE promise.'),
-          },
-        ],
-      },
+        'charcoal',
+      ),
     ],
     meta: {
       title: 'About — RFE',
@@ -216,12 +222,16 @@ const PAGES: PageSeed[] = [
       imagePosition: 'center 20%',
     },
     layout: [
-      {
-        blockType: 'worksGrid',
-        showFilters: true,
-        showSubcategoryTabs: false,
-        sectionTone: 'charcoal',
-      },
+      contentBlock(
+        [
+          lexicalBlockNode('worksGrid', {
+            showFilters: true,
+            showSubcategoryTabs: false,
+            sectionTone: 'charcoal',
+          }),
+        ],
+        'charcoal',
+      ),
     ],
     meta: {
       title: 'Work — RFE',
@@ -236,28 +246,25 @@ const PAGES: PageSeed[] = [
     slug: 'development',
     hero: {
       type: 'page',
-      headline: 'What we\'re building next.',
+      headline: "What we're building next.",
       label: 'Development',
       imagePosition: 'center 30%',
     },
     layout: [
-      {
-        blockType: 'content',
-        sectionTone: 'charcoal',
-        columns: [
-          {
-            size: 'full',
-            richText: lexicalParagraph('RFE has a growing slate of projects in active development across film, series, and unscripted content.'),
-          },
+      contentBlock(
+        [
+          lexicalParagraphNode(
+            'RFE has a growing slate of projects in active development across film, series, and unscripted content.',
+          ),
+          lexicalBlockNode('worksGrid', {
+            category: 'film',
+            showFilters: false,
+            showSubcategoryTabs: true,
+            sectionTone: 'charcoal',
+          }),
         ],
-      },
-      {
-        blockType: 'worksGrid',
-        category: 'film',
-        showFilters: false,
-        showSubcategoryTabs: true,
-        sectionTone: 'charcoal',
-      },
+        'charcoal',
+      ),
     ],
     meta: {
       title: 'Development — RFE',
@@ -277,13 +284,17 @@ const PAGES: PageSeed[] = [
       imagePosition: 'center 20%',
     },
     layout: [
-      {
-        blockType: 'pressList',
-        title: 'Coverage',
-        limit: 100,
-        showViewAll: false,
-        sectionTone: 'charcoal',
-      },
+      contentBlock(
+        [
+          lexicalBlockNode('pressList', {
+            title: 'Coverage',
+            limit: 100,
+            showViewAll: false,
+            sectionTone: 'charcoal',
+          }),
+        ],
+        'charcoal',
+      ),
     ],
     meta: {
       title: 'Press — RFE',
@@ -302,29 +313,26 @@ const PAGES: PageSeed[] = [
       subtitle: "if it won't leave you alone, write to us.",
     },
     layout: [
-      {
-        blockType: 'twoColumnLayout',
-        leftColumn: null,
-        rightColumn: null,
-        sectionTone: 'default',
-      },
-      {
-        blockType: 'contactForm',
-        title: 'Get in touch',
-        subtitle: "Tell us about your project.",
-        nameLabel: 'Name',
-        emailLabel: 'Email',
-        messageLabel: 'Message',
-        submitLabel: 'Send',
-      },
-      {
-        blockType: 'contactInfo',
-        title: 'Find us',
-        showEmail: true,
-        showPhone: true,
-        showAddress: true,
-        showSocials: true,
-      },
+      contentBlock(
+        [
+          lexicalBlockNode('contactForm', {
+            title: 'Get in touch',
+            subtitle: 'Tell us about your project.',
+            nameLabel: 'Name',
+            emailLabel: 'Email',
+            messageLabel: 'Message',
+            submitLabel: 'Send',
+          }),
+          lexicalBlockNode('contactInfo', {
+            title: 'Find us',
+            showEmail: true,
+            showPhone: true,
+            showAddress: true,
+            showSocials: true,
+          }),
+        ],
+        'default',
+      ),
     ],
     meta: {
       title: 'Contact — RFE',
@@ -343,39 +351,46 @@ const PAGES: PageSeed[] = [
       subtitle: 'Publisher information, hosting, and terms of use.',
     },
     layout: [
-      {
-        blockType: 'legalSections',
-        sections: [
-          {
-            title: 'Publisher',
-            content: lexicalMultiParagraph([
-              'This website is published by Rohm Feifer Entertainment ("RFE"), a film and television production company.',
-              'Contact: elisabeth@rohmfeiferentertainment.com',
-              'Address: Los Angeles, California, United States.',
-            ]),
-          },
-          {
-            title: 'Hosting',
-            content: lexicalParagraph('This site is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, United States (vercel.com).'),
-          },
-          {
-            title: 'Intellectual property',
-            content: lexicalParagraph('Unless otherwise stated, text, images, logos, trailers, and other content on this site are owned by or licensed to RFE and are protected by applicable copyright and trademark laws. You may not copy, reproduce, or distribute site content without prior written permission, except for private viewing or as allowed by law.'),
-          },
-          {
-            title: 'Disclaimer',
-            content: lexicalMultiParagraph([
-              'Information on this website is provided for general information only and may change without notice. RFE makes no warranties as to accuracy or completeness and is not liable for any loss arising from use of the site or reliance on its content.',
-              'Links to third-party sites are provided for convenience; RFE does not control or endorse those sites.',
-            ]),
-          },
+      contentBlock(
+        [
+          lexicalBlockNode('legalSections', {
+            sections: [
+              {
+                title: 'Publisher',
+                content: lexicalMultiParagraph([
+                  'This website is published by Rohm Feifer Entertainment ("RFE"), a film and television production company.',
+                  'Contact: elisabeth@rohmfeiferentertainment.com',
+                  'Address: Los Angeles, California, United States.',
+                ]),
+              },
+              {
+                title: 'Hosting',
+                content: lexicalParagraph(
+                  'This site is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, United States (vercel.com).',
+                ),
+              },
+              {
+                title: 'Intellectual property',
+                content: lexicalParagraph(
+                  'Unless otherwise stated, text, images, logos, trailers, and other content on this site are owned by or licensed to RFE and are protected by applicable copyright and trademark laws. You may not copy, reproduce, or distribute site content without prior written permission, except for private viewing or as allowed by law.',
+                ),
+              },
+              {
+                title: 'Disclaimer',
+                content: lexicalMultiParagraph([
+                  'Information on this website is provided for general information only and may change without notice. RFE makes no warranties as to accuracy or completeness and is not liable for any loss arising from use of the site or reliance on its content.',
+                  'Links to third-party sites are provided for convenience; RFE does not control or endorse those sites.',
+                ]),
+              },
+            ],
+          }),
+          lexicalBlockNode('cta', {
+            richText: lexicalParagraph('Questions? Get in touch.'),
+            links: [{ label: 'Contact', url: '/contact', isExternal: false, appearance: 'default' }],
+          }),
         ],
-      },
-      {
-        blockType: 'cta',
-        richText: lexicalParagraph('Questions? Get in touch.'),
-        links: [{ label: 'Contact', url: '/contact', isExternal: false, appearance: 'default' }],
-      },
+        'default',
+      ),
     ],
     meta: {
       title: 'Legal notice — RFE',
@@ -388,6 +403,7 @@ const PAGES: PageSeed[] = [
 
 export async function seedPages(payload: Payload): Promise<void> {
   console.log('[seed-pages] Seeding pages...')
+  blockIdCounter = 0
 
   for (const page of PAGES) {
     const existing = await payload.find({

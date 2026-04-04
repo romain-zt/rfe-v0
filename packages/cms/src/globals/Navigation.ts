@@ -3,6 +3,9 @@ import type { GlobalConfig } from 'payload'
 export const Navigation: GlobalConfig = {
   slug: 'navigation',
   label: 'Navigation',
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: 'header',

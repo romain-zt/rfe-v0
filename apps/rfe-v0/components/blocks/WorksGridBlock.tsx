@@ -17,7 +17,6 @@ type Props = {
   selectedWorks?: RelationRef[] | null
   worksGroup?: WorksGroupRef
   category?: string
-  showFilters?: boolean
   showSubcategoryTabs?: boolean
   limit?: number
   sectionTone?: string
@@ -50,38 +49,26 @@ export function WorksGridComponent(props: Props) {
     return extractIds(props.selectedWorks) ?? extractIds(props.worksGroup)
   }, [props.sourceType, props.selectedWorks, props.worksGroup])
 
-  const { works, filterMode, showFilters } = useMemo(() => {
+  const works = useMemo(() => {
     if (curatedIds) {
       const worksById = new Map(allWorks.map((w) => [w.id, w]))
       const ordered = curatedIds.map((id) => worksById.get(id)).filter(Boolean) as typeof allWorks
-      return { works: ordered, filterMode: 'tags' as const, showFilters: false }
+      return ordered
     }
 
     if (props.category) {
       const filtered = allWorks.filter(w => w.category === props.category)
-      return {
-        works: props.limit ? filtered.slice(0, props.limit) : filtered,
-        filterMode: props.showSubcategoryTabs ? 'category' as const : 'tags' as const,
-        showFilters: props.showSubcategoryTabs || (props.showFilters ?? false),
-      }
+      return props.limit ? filtered.slice(0, props.limit) : filtered
     }
 
     if (props.showSubcategoryTabs) {
       const devWorks = allWorks.filter(w => w.category)
-      return {
-        works: props.limit ? devWorks.slice(0, props.limit) : devWorks,
-        filterMode: 'category' as const,
-        showFilters: true,
-      }
+      return props.limit ? devWorks.slice(0, props.limit) : devWorks
     }
 
     const ourWorks = allWorks.filter(w => !w.category)
-    return {
-      works: props.limit ? ourWorks.slice(0, props.limit) : ourWorks,
-      filterMode: 'tags' as const,
-      showFilters: props.showFilters !== false,
-    }
-  }, [allWorks, curatedIds, props.showSubcategoryTabs, props.category, props.showFilters, props.limit])
+    return props.limit ? ourWorks.slice(0, props.limit) : ourWorks
+  }, [allWorks, curatedIds, props.showSubcategoryTabs, props.category, props.limit])
 
   return (
     <section className={`relative px-6 lg:px-16 xl:px-24 py-12 lg:py-20 ${toneClass}`}>
@@ -99,7 +86,7 @@ export function WorksGridComponent(props: Props) {
           </h2>
         </div>
       )}
-      <WorkGrid works={works} filterMode={filterMode} showFilters={showFilters} />
+      <WorkGrid works={works} />
     </section>
   )
 }

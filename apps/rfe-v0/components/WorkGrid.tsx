@@ -10,8 +10,6 @@ import { getWorkSlug } from '@/lib/works'
 
 export type WorkGridProps = {
   works: WorkItem[]
-  filterMode?: 'tags' | 'category'
-  showFilters?: boolean
 }
 
 function extractYouTubeId(url: string): string | null {
@@ -276,26 +274,44 @@ function WorkCard({
   )
 }
 
-export function WorkGrid({ works, filterMode = 'tags', showFilters = true }: WorkGridProps) {
+export function WorkGrid({ works }: WorkGridProps) {
   const { lang, t } = useLanguage()
 
-  const filterOptions = useMemo(() => {
-    if (filterMode === 'category') {
-      return [
-        { key: 'film', label: t.development?.films || 'Films' },
-        { key: 'series', label: t.development?.series || 'Series' },
-        { key: 'unscripted', label: t.development?.unscripted || 'Unscripted' },
-      ]
+  const { filterOptions, filterMode } = useMemo(() => {
+    const categories = new Set(works.map(w => w.category).filter(Boolean))
+    if (categories.size >= 2) {
+      const categoryLabels: Record<string, string> = {
+        film: t.development?.films || 'Films',
+        series: t.development?.series || 'Series',
+        unscripted: t.development?.unscripted || 'Unscripted',
+      }
+      const opts = Array.from(categories).map(c => ({
+        key: c!,
+        label: categoryLabels[c!] || c!,
+      }))
+      return { filterOptions: opts, filterMode: 'category' as const }
     }
-    return [
-      { key: 'drama', label: t.work?.drama || 'Drama' },
-      { key: 'thriller', label: t.work?.thriller || 'Thriller' },
-    ]
-  }, [filterMode, t])
 
-  const [filter, setFilter] = useState(filterOptions[0].key)
+    const allTags = new Set(works.flatMap(w => w.tags))
+    if (allTags.size >= 2) {
+      const opts = Array.from(allTags).map(tag => ({ key: tag, label: tag }))
+      return { filterOptions: opts, filterMode: 'tags' as const }
+    }
+
+    return { filterOptions: [] as { key: string; label: string }[], filterMode: 'tags' as const }
+  }, [works, t])
+
+  const showFilters = filterOptions.length >= 2
+
+  const [filter, setFilter] = useState(filterOptions[0]?.key ?? '')
   const [activePreviewId, setActivePreviewId] = useState<number | null>(null)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (filterOptions.length > 0 && !filterOptions.some(o => o.key === filter)) {
+      setFilter(filterOptions[0].key)
+    }
+  }, [filterOptions, filter])
 
   const reducedMotion = useReducedMotion()
   const saveData = useSaveData()
@@ -304,18 +320,13 @@ export function WorkGrid({ works, filterMode = 'tags', showFilters = true }: Wor
   const cardRefsMap = useRef<Map<number, HTMLElement>>(new Map())
 
   const filteredWorks = useMemo(() => {
-    if (!showFilters) return works
+    if (!showFilters || !filter) return works
 
     if (filterMode === 'category') {
       return works.filter((work) => work.category === filter)
     }
 
-    const tagMap: Record<string, string[]> = {
-      drama: ['Drama', 'Drame'],
-      thriller: ['Thriller'],
-    }
-    const matchTags = tagMap[filter] || []
-    return works.filter((work) => work.tags.some(tag => matchTags.includes(tag)))
+    return works.filter((work) => work.tags.includes(filter))
   }, [filter, works, filterMode, showFilters])
 
   const staggerDelays = useStaggeredReveal(filteredWorks.length, 0, 80)

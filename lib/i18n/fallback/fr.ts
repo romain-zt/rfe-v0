@@ -1,5 +1,5 @@
 import type { SiteContent } from '../types'
-import { MEDIA } from '../../../app/[locale]/content'
+import { MEDIA } from '../../../app/(frontend)/[locale]/content'
 
 export const fallbackFr: SiteContent = {
   lang: 'fr',

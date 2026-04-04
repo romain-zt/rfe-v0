@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useLanguage } from './LanguageContext'
-import { MEDIA } from '@/app/[locale]/content'
+import { MEDIA } from '@/app/(frontend)/[locale]/content'
 import { useReveal, useStaggeredReveal } from '@/hooks/useReveal'
 
 function BeforeAfterCard({

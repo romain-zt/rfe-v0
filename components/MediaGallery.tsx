@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import Image from 'next/image'
 import { useLanguage } from './LanguageContext'
-import { MEDIA, type MediaItem } from '@/app/[locale]/content'
+import { MEDIA, type MediaItem } from '@/app/(frontend)/[locale]/content'
 
 // ============================================
 // CONFIGURATION

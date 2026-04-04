@@ -4,13 +4,11 @@ const locales = ['en', 'fr']
 const defaultLocale = 'en'
 
 function getLocale(request: NextRequest): string {
-  // Check cookie first (user preference)
   const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value
   if (cookieLocale && locales.includes(cookieLocale)) {
     return cookieLocale
   }
 
-  // Check Accept-Language header
   const acceptLanguage = request.headers.get('Accept-Language')
   if (acceptLanguage) {
     const preferredLocale = acceptLanguage
@@ -29,16 +27,15 @@ function getLocale(request: NextRequest): string {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Skip static files, API routes, and sitemaps
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname.includes('.') // static files
+    pathname.startsWith('/admin') ||
+    pathname.includes('.')
   ) {
     return NextResponse.next()
   }
 
-  // Check if pathname already has a locale
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   )
@@ -47,7 +44,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Redirect to locale-prefixed path
   const locale = getLocale(request)
   const newUrl = new URL(`/${locale}${pathname}`, request.url)
   
@@ -55,5 +51,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|.*\\..*).*)'],
+  matcher: ['/((?!_next|api|admin|.*\\..*).*)'],
 }

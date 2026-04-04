@@ -7,6 +7,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import sharp from 'sharp'
 import { collections } from './collections'
 import { globals } from './globals'
+import { seedResetEndpoint } from './endpoints/seed-reset'
 import { generatePreviewPath } from './utilities/generatePreviewPath'
 
 export type RfeConfigOptions = {
@@ -39,7 +40,11 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
           { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
         ],
       },
+      components: {
+        afterDashboard: ['@rfe/cms/components/ResetContentButton#ResetContentButton'],
+      },
     },
+    endpoints: [seedResetEndpoint],
     collections,
     globals,
     secret: opts.secret,

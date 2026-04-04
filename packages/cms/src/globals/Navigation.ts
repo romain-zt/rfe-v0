@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateFrontend } from '../utilities/revalidateFrontend'
 
 export const Navigation: GlobalConfig = {
   slug: 'navigation',
@@ -8,6 +9,11 @@ export const Navigation: GlobalConfig = {
   },
   admin: {
     group: 'Settings',
+  },
+  hooks: {
+    afterChange: [
+      () => { revalidateFrontend({ global: 'navigation' }) },
+    ],
   },
   fields: [
     {

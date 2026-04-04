@@ -9,6 +9,7 @@ import {
 import { hero } from '../fields/hero'
 import { blocks } from '../blocks'
 import { generatePreviewPath } from '../utilities/generatePreviewPath'
+import { revalidateFrontend } from '../utilities/revalidateFrontend'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -23,12 +24,12 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     useAsTitle: 'title',
     livePreview: {
-      url: ({ data, req }) =>
-        generatePreviewPath({
-          slug: typeof data?.slug === 'string' ? data.slug : '',
-          collection: 'pages',
-          req,
-        }),
+      url: ({ data, req }) => {
+        const base = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+        const locale = req.locale || 'en'
+        const slug = typeof data?.slug === 'string' ? data.slug : ''
+        return slug === 'home' ? `${base}/${locale}` : `${base}/${locale}/${slug}`
+      },
     },
     preview: (data, { req }) =>
       generatePreviewPath({
@@ -186,6 +187,18 @@ export const Pages: CollectionConfig = {
           data.publishedAt = new Date().toISOString()
         }
         return data
+      },
+    ],
+    afterChange: [
+      ({ doc, previousDoc }) => {
+        const wasPublished = doc._status === 'published'
+        const slugChanged = doc.slug !== previousDoc?.slug
+        if (wasPublished || slugChanged) {
+          revalidateFrontend({ collection: 'pages', slug: doc.slug })
+          if (slugChanged && previousDoc?.slug) {
+            revalidateFrontend({ collection: 'pages', slug: previousDoc.slug })
+          }
+        }
       },
     ],
   },

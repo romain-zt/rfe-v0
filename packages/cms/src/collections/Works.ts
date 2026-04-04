@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateFrontend } from '../utilities/revalidateFrontend'
 
 export const Works: CollectionConfig = {
   slug: 'works',
@@ -9,6 +10,14 @@ export const Works: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'year', 'category', 'tags'],
     group: 'Content',
+  },
+  hooks: {
+    afterChange: [
+      () => {
+        revalidateFrontend({ collection: 'works' })
+        revalidateFrontend({ collection: 'pages' })
+      },
+    ],
   },
   fields: [
     { name: 'title', type: 'text', required: true },

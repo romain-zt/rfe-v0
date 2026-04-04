@@ -153,11 +153,12 @@ export async function getPageBySlug(slug: string, draft = false) {
   if (draft) {
     params.set('draft', 'true')
   }
-  const skipCache = draft || process.env.NODE_ENV === 'development'
   const apiUrl = process.env.CMS_API_URL || 'http://localhost:3001'
   const res = await fetch(`${apiUrl}/api/pages?${params}`, {
     headers: { 'Content-Type': 'application/json' },
-    ...(skipCache ? { cache: 'no-store' as const } : { next: { revalidate: 60 } }),
+    ...(draft
+      ? { cache: 'no-store' as const }
+      : { next: { revalidate: 60, tags: ['cms', 'cms:pages', `cms:pages:${slug}`] } }),
   })
   if (!res.ok) return null
   const data = await res.json()

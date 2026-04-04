@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateFrontend } from '../utilities/revalidateFrontend'
 
 export const SiteConfig: GlobalConfig = {
   slug: 'site-config',
@@ -8,6 +9,11 @@ export const SiteConfig: GlobalConfig = {
   },
   admin: {
     group: 'Settings',
+  },
+  hooks: {
+    afterChange: [
+      () => { revalidateFrontend({ global: 'site-config' }) },
+    ],
   },
   fields: [
     {

@@ -28,6 +28,8 @@ Specs are numbered sequentially: `NN-feature-name.md`
 
 | Spec | Phase | Status |
 |------|-------|--------|
-| `00-monorepo-foundation.md` | Phase 1 | Pending |
-| `01-extract-design-tokens.md` | Phase 2 | Pending |
-| `02-extract-ui.md` | Phase 3 | Pending |
+| `00-monorepo-foundation.md` | Phase 1 | Done |
+| `01-extract-design-tokens.md` | Phase 2 | Done |
+| `02-extract-ui.md` | Phase 3 | Done |
+| `03-extract-cms-package.md` | Phase 4 | Done |
+| `03-split-payload-to-admin-app.md` | Phase 5 | Pending |

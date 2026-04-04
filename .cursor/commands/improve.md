@@ -1,45 +1,45 @@
-# Command: improve
+# Command: /improve
 
-You are a senior maintainer.
+Improve existing code adjacent to the migration — clean up safely.
 
-Goal:
-Take the output of the `review` command (STATUS + punchlist) and apply the smallest safe set of changes to make the PR pass the change policy.
+## Inputs
+- **What to improve** (e.g., "clean up content.ts", "simplify Header props", "remove unused Google Sheets loader")
 
-Inputs you will receive:
-- Review output (STATUS + punchlist)
-- Current git diff (or list of changed files)
-- Optionally: failing command output
+## Pre-flight checks
 
-Process (strict):
-1. Parse the punchlist and classify each item:
-   - boundary violation
-   - event compatibility
-   - SQS retry-safety / idempotency
-   - PII/logging
-   - lint/types
-   - tests
-2. Fix items in this order (highest risk first):
-   a) Domain purity / boundary imports
-   b) Event compatibility + versioning
-   c) SQS retry-safety + idempotency
-   d) PII in logs/events
-   e) Types/lint/format
-   f) Tests (prefer `@test-utils/builders/*` and `@test-utils/fixtures/*`; avoid hardcoded payloads)
-3. Keep diffs minimal:
-   - no refactors unless required to fix the issue
-   - preserve existing public APIs unless the review requires changes
-4. After changes:
-   - run the narrowest safe tests: `pnpm test <FILE>` if isolated, else `pnpm test`
-   - run `pnpm check:fix`
-5. Produce output:
-   - what changed + why
-   - files touched
-   - commands run + results
-   - updated STATUS: PASS / NEEDS_FIXES
+1. **Is the improvement adjacent to a migration step?**
+   - Only improve code that you are already modifying for migration
+   - Do not refactor unrelated files
 
-Constraints:
-- Must respect `.cursor/rules/*` (hex boundaries, eventing, testing, change policy).
-- Never introduce PII in logs or event payloads.
-- Never silently drop logic during conflict-like edits.
+2. **Is it safe?**
+   - Will other pages/features break?
+   - Is the old code still needed by un-migrated features?
 
-Use skill `improve-from-review`.
+3. **Is it small?**
+   - If the improvement would create a large diff, split it
+
+## Safe improvements
+
+- Remove dead imports in files you're modifying
+- Consolidate duplicate data (e.g., `POSTER_ITEMS` used twice with same data)
+- Simplify component props after replacing hardcoded data
+- Remove Google Sheets CSV loader once strings are in Payload
+- Delete `styles/globals.css` (unused — app uses `app/[locale]/globals.css`)
+- Fix `components.json` CSS path reference
+- Remove `base.md` from repo root (project notes, not app code)
+- Improve TypeScript types (add missing types, remove `any`)
+- Add `alt` text to images that lack it
+
+## Unsafe improvements (do NOT do without explicit request)
+
+- Rename routes or URL paths
+- Change component hierarchy
+- Modify cinematic CSS effects
+- Restructure the entire app directory
+- Upgrade major dependencies
+- Change the build or deployment pipeline
+
+## Output
+- Apply the improvement
+- Verify `pnpm build` still passes
+- Note what was changed and why in the commit message

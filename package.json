@@ -10,6 +10,7 @@
     "seed": "pnpm --filter @rfe/v0 seed"
   },
   "devDependencies": {
+    "next": "catalog:",
     "turbo": "^2.5.4"
   },
   "pnpm": {

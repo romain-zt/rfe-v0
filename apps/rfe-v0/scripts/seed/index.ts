@@ -1,14 +1,10 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
-import { seedAdmin } from './seed-admin'
+import { runSeed } from '@rfe/cms/seed'
 
 async function seed() {
   const payload = await getPayload({ config })
-
-  console.log('Seeding…')
-  await seedAdmin(payload)
-  console.log('Seed complete.')
-
+  await runSeed(payload)
   process.exit(0)
 }
 

@@ -86,18 +86,12 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.72.1(react@19.2.0))
-      '@payloadcms/db-postgres':
-        specifier: 'catalog:'
-        version: 3.81.0(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))
       '@payloadcms/graphql':
         specifier: 'catalog:'
         version: 3.81.0(graphql@16.13.2)(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(typescript@5.9.3)
       '@payloadcms/next':
         specifier: 'catalog:'
         version: 3.81.0(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
-      '@payloadcms/richtext-lexical':
-        specifier: 'catalog:'
-        version: 3.81.0(@faceless-ui/modal@3.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@payloadcms/next@3.81.0(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(yjs@13.6.30)
       '@payloadcms/storage-s3':
         specifier: 'catalog:'
         version: 3.81.0(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
@@ -185,6 +179,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: 1.1.6
         version: 1.1.6(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@rfe/cms':
+        specifier: workspace:*
+        version: link:../../packages/cms
       '@rfe/design-tokens':
         specifier: workspace:*
         version: link:../../packages/design-tokens
@@ -248,9 +245,6 @@ importers:
       recharts:
         specifier: 2.15.4
         version: 2.15.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      sharp:
-        specifier: 'catalog:'
-        version: 0.34.5
       sonner:
         specifier: ^1.7.4
         version: 1.7.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -300,6 +294,31 @@ importers:
       tw-animate-css:
         specifier: 1.3.3
         version: 1.3.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/cms:
+    dependencies:
+      '@payloadcms/db-postgres':
+        specifier: 'catalog:'
+        version: 3.81.0(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))
+      '@payloadcms/richtext-lexical':
+        specifier: 'catalog:'
+        version: 3.81.0(@faceless-ui/modal@3.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@payloadcms/next@3.81.0(graphql@16.13.2)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(yjs@13.6.30)
+      '@payloadcms/storage-s3':
+        specifier: 'catalog:'
+        version: 3.81.0(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      payload:
+        specifier: 'catalog:'
+        version: 3.81.0(graphql@16.13.2)(typescript@5.9.3)
+      sharp:
+        specifier: 'catalog:'
+        version: 0.34.5
+    devDependencies:
+      '@rfe/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -6164,7 +6183,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@payloadcms/richtext-lexical@3.81.0(@faceless-ui/modal@3.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@payloadcms/next@3.81.0(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(yjs@13.6.30)':
+  '@payloadcms/richtext-lexical@3.81.0(@faceless-ui/modal@3.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@faceless-ui/scroll-info@2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@payloadcms/next@3.81.0(graphql@16.13.2)(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(next@16.2.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(sass@1.99.0))(payload@3.81.0(graphql@16.13.2)(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(yjs@13.6.30)':
     dependencies:
       '@faceless-ui/modal': 3.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@faceless-ui/scroll-info': 2.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)

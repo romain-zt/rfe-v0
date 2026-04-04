@@ -33,3 +33,4 @@ Specs are numbered sequentially: `NN-feature-name.md`
 | `02-extract-ui.md` | Phase 3 | Done |
 | `03-extract-cms-package.md` | Phase 4 | Done |
 | `03-split-payload-to-admin-app.md` | Phase 5 | Pending |
+| `04-content-migration.md` | Phase 6 | Pending |

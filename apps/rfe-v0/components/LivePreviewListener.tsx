@@ -5,7 +5,7 @@ import { RefreshRouteOnSave } from '@payloadcms/live-preview-react'
 
 export function LivePreviewListener() {
   const router = useRouter()
-  const serverURL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
+  const serverURL = process.env.NEXT_PUBLIC_SITE_URL || ''
 
   return (
     <RefreshRouteOnSave

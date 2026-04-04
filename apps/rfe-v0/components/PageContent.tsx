@@ -10,7 +10,7 @@ type Props = {
 }
 
 export function PageContent({ initialData }: Props) {
-  const serverURL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
+  const serverURL = process.env.NEXT_PUBLIC_SITE_URL || ''
 
   const { data: page } = useLivePreview<PageData>({
     initialData,

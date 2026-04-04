@@ -54,8 +54,7 @@ export function PressListComponent({ title, limit = 100, showViewAll, viewAllUrl
   const toneClass = sectionTone && sectionTone !== 'default' ? `section-tone-${sectionTone}` : ''
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001'
-    fetch(`${apiUrl}/api/press-items?sort=-date&limit=${limit}&depth=0`)
+    fetch(`/api/press-items?sort=-date&limit=${limit}&depth=0`)
       .then(r => r.json())
       .then(data => setItems(data.docs || []))
       .catch(() => {})

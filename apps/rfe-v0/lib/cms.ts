@@ -1,6 +1,9 @@
-import { createPayloadClient } from '@rfe/cms/client'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 
-const cms = createPayloadClient(process.env.CMS_API_URL || 'http://localhost:3001')
+async function getPayloadClient() {
+  return getPayload({ config })
+}
 
 export type Work = {
   id: number
@@ -85,39 +88,6 @@ export type NavigationData = {
   }
 }
 
-export async function getWorks(query?: Record<string, string>) {
-  return cms.find<Work>('works', { limit: '100', sort: 'sortOrder', depth: '1', ...query })
-}
-
-export async function getWorkBySlug(slug: string) {
-  return cms.findBySlug<Work>('works', slug)
-}
-
-export async function getWorksByCategory(category: string) {
-  return cms.find<Work>('works', {
-    'where[category][equals]': category,
-    limit: '100',
-    sort: 'sortOrder',
-    depth: '1',
-  })
-}
-
-export async function getTeamMembers() {
-  return cms.find<TeamMember>('team-members', { sort: 'sortOrder', depth: '1' })
-}
-
-export async function getPressItems() {
-  return cms.find<PressItem>('press-items', { sort: '-date', depth: '0' })
-}
-
-export async function getSiteConfig() {
-  return cms.findGlobal<SiteConfig>('site-config')
-}
-
-export async function getNavigation() {
-  return cms.findGlobal<NavigationData>('navigation')
-}
-
 export type PageData = {
   id: number
   title: string
@@ -144,31 +114,6 @@ export type PageData = {
   updatedAt?: string
 }
 
-export async function getPageBySlug(slug: string, draft = false) {
-  const params = new URLSearchParams({
-    'where[slug][equals]': slug,
-    limit: '1',
-    depth: '2',
-  })
-  if (draft) {
-    params.set('draft', 'true')
-  }
-  const apiUrl = process.env.CMS_API_URL || 'http://localhost:3001'
-  const res = await fetch(`${apiUrl}/api/pages?${params}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...(draft
-      ? { cache: 'no-store' as const }
-      : { next: { revalidate: 60, tags: ['cms', 'cms:pages', `cms:pages:${slug}`] } }),
-  })
-  if (!res.ok) return null
-  const data = await res.json()
-  return (data.docs?.[0] as PageData) ?? null
-}
-
-export async function getAllPages() {
-  return cms.find<PageData>('pages', { limit: '100', depth: '0' })
-}
-
 export type WorksGroupData = {
   id: number
   name: string
@@ -176,6 +121,100 @@ export type WorksGroupData = {
   items: Work[]
 }
 
+export async function getWorks(query?: { category?: string }) {
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'works',
+    limit: 100,
+    sort: 'sortOrder',
+    depth: 1,
+    ...(query?.category ? { where: { category: { equals: query.category } } } : {}),
+  })
+  return result as unknown as { docs: Work[]; totalDocs: number }
+}
+
+export async function getWorkBySlug(slug: string) {
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'works',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 1,
+  })
+  return (result.docs[0] as unknown as Work) ?? null
+}
+
+export async function getWorksByCategory(category: string) {
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'works',
+    where: { category: { equals: category } },
+    limit: 100,
+    sort: 'sortOrder',
+    depth: 1,
+  })
+  return result as unknown as { docs: Work[]; totalDocs: number }
+}
+
+export async function getTeamMembers() {
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'team-members',
+    sort: 'sortOrder',
+    depth: 1,
+  })
+  return result as unknown as { docs: TeamMember[]; totalDocs: number }
+}
+
+export async function getPressItems() {
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'press-items',
+    sort: '-date',
+    depth: 0,
+  })
+  return result as unknown as { docs: PressItem[]; totalDocs: number }
+}
+
+export async function getSiteConfig() {
+  const payload = await getPayloadClient()
+  return payload.findGlobal({ slug: 'site-config' }) as unknown as SiteConfig
+}
+
+export async function getNavigation() {
+  const payload = await getPayloadClient()
+  return payload.findGlobal({ slug: 'navigation' }) as unknown as NavigationData
+}
+
+export async function getPageBySlug(slug: string, draft = false) {
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'pages',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+    draft,
+  })
+  return (result.docs[0] as unknown as PageData) ?? null
+}
+
+export async function getAllPages() {
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'pages',
+    limit: 100,
+    depth: 0,
+  })
+  return result as unknown as { docs: PageData[]; totalDocs: number }
+}
+
 export async function getWorksGroup(slug: string) {
-  return cms.findBySlug<WorksGroupData>('works-groups', slug)
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'works-groups',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+  })
+  return (result.docs[0] as unknown as WorksGroupData) ?? null
 }

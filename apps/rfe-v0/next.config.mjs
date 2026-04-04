@@ -1,6 +1,6 @@
-/** @type {import('next').NextConfig} */
-const cmsUrl = (process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3001').replace(/\/$/, '')
+import { withPayload } from '@payloadcms/next/withPayload'
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -8,14 +8,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/media/:path*',
-        destination: `${cmsUrl}/api/media/:path*`,
-      },
-    ]
-  },
 }
 
-export default nextConfig
+export default withPayload(nextConfig)

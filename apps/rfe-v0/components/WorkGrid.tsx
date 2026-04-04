@@ -8,7 +8,11 @@ import type { WorkItem } from '@/lib/i18n/types'
 import { useReveal, useStaggeredReveal } from '@/hooks/useReveal'
 import { getWorkSlug } from '@/lib/works'
 
-type FilterType = 'drama' | 'thriller'
+export type WorkGridProps = {
+  works: WorkItem[]
+  filterMode?: 'tags' | 'category'
+  showFilters?: boolean
+}
 
 function extractYouTubeId(url: string): string | null {
   if (!url) return null
@@ -210,13 +214,19 @@ function WorkCard({
                   : 'grayscale(1) brightness(0.9)',
             }}
           >
-            <Image
-              src={work.src}
-              alt={work.title}
-              fill
-              className="object-cover transition-transform duration-[1.2s] group-hover:scale-[1.03]"
-              sizes={size === 'full' ? '100vw' : size === 'large' ? '(max-width: 640px) 100vw, 50vw' : '(max-width: 640px) 50vw, 33vw'}
-            />
+            {work.src ? (
+              <Image
+                src={work.src}
+                alt={work.title}
+                fill
+                className="object-cover transition-transform duration-[1.2s] group-hover:scale-[1.03]"
+                sizes={size === 'full' ? '100vw' : size === 'large' ? '(max-width: 640px) 100vw, 50vw' : '(max-width: 640px) 50vw, 33vw'}
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'var(--tone-charcoal)' }}>
+                <span className="font-serif text-sm font-light" style={{ color: 'rgba(245, 240, 235, 0.25)' }}>{work.title}</span>
+              </div>
+            )}
           </div>
 
           {hasVideo && (
@@ -266,9 +276,24 @@ function WorkCard({
   )
 }
 
-export function WorkGrid() {
-  const { lang, t, content } = useLanguage()
-  const [filter, setFilter] = useState<FilterType>('drama')
+export function WorkGrid({ works, filterMode = 'tags', showFilters = true }: WorkGridProps) {
+  const { lang, t } = useLanguage()
+
+  const filterOptions = useMemo(() => {
+    if (filterMode === 'category') {
+      return [
+        { key: 'film', label: t.development?.films || 'Films' },
+        { key: 'series', label: t.development?.series || 'Series' },
+        { key: 'unscripted', label: t.development?.unscripted || 'Unscripted' },
+      ]
+    }
+    return [
+      { key: 'drama', label: t.work?.drama || 'Drama' },
+      { key: 'thriller', label: t.work?.thriller || 'Thriller' },
+    ]
+  }, [filterMode, t])
+
+  const [filter, setFilter] = useState(filterOptions[0].key)
   const [activePreviewId, setActivePreviewId] = useState<number | null>(null)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
 
@@ -278,17 +303,20 @@ export function WorkGrid() {
 
   const cardRefsMap = useRef<Map<number, HTMLElement>>(new Map())
 
-  const posters = content?.ourWork || []
-
   const filteredWorks = useMemo(() => {
-    return posters.filter((work) => {
-      const dramaTags = ['Drama', 'Drame']
-      const thrillerTags = ['Thriller']
-      if (filter === 'drama') return work.tags.some(tag => dramaTags.includes(tag))
-      if (filter === 'thriller') return work.tags.some(tag => thrillerTags.includes(tag))
-      return false
-    })
-  }, [filter, posters])
+    if (!showFilters) return works
+
+    if (filterMode === 'category') {
+      return works.filter((work) => work.category === filter)
+    }
+
+    const tagMap: Record<string, string[]> = {
+      drama: ['Drama', 'Drame'],
+      thriller: ['Thriller'],
+    }
+    const matchTags = tagMap[filter] || []
+    return works.filter((work) => work.tags.some(tag => matchTags.includes(tag)))
+  }, [filter, works, filterMode, showFilters])
 
   const staggerDelays = useStaggeredReveal(filteredWorks.length, 0, 80)
 
@@ -310,34 +338,30 @@ export function WorkGrid() {
     setActivePreviewId((prev) => prev === workId ? null : prev)
   }, [])
 
-  const filterLabels: Record<FilterType, string> = {
-    drama: t.work.drama,
-    thriller: t.work.thriller,
-  }
-
   return (
     <>
-      {/* Filters — sticky; z-50 keeps filters above site header (z-30) when scrolled */}
-      <div
-        className="sticky top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-4 mb-14 sm:mb-16 border-b border-border/30"
-        style={{ backgroundColor: 'var(--tone-charcoal)' }}
-      >
-        <div className="flex justify-center gap-6 sm:gap-8">
-          {(['drama', 'thriller'] as FilterType[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`text-[11px] tracking-[0.15em] uppercase transition-all duration-500 pb-1 border-b ${
-                filter === f
-                  ? 'text-foreground border-foreground/40'
-                  : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20'
-              }`}
-            >
-              {filterLabels[f]}
-            </button>
-          ))}
+      {showFilters && (
+        <div
+          className="sticky top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-4 mb-14 sm:mb-16 border-b border-border/30"
+          style={{ backgroundColor: 'var(--tone-charcoal)' }}
+        >
+          <div className="flex justify-center gap-6 sm:gap-8">
+            {filterOptions.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                className={`text-[11px] tracking-[0.15em] uppercase transition-all duration-500 pb-1 border-b ${
+                  filter === f.key
+                    ? 'text-foreground border-foreground/40'
+                    : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20'
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Staggered masonry grid — editorial magazine layout */}
       <div className="grid grid-cols-2 sm:grid-cols-6 lg:grid-cols-12 gap-4 sm:gap-5 lg:gap-6 auto-rows-auto">

@@ -42,7 +42,7 @@ export default async function HomePage({ params }: Props) {
 
       <RenderHero hero={page.hero} />
 
-      <div className="relative z-10" style={{ background: 'var(--background)' }}>
+      <div className="relative" style={{ background: 'var(--background)' }}>
         <div
           className="absolute top-0 left-0 right-0 -translate-y-full pointer-events-none"
           style={{

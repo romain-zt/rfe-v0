@@ -7,7 +7,14 @@ import { useLanguage } from '@/components/LanguageContext'
 
 export function CinematicHero() {
   const [phase, setPhase] = useState(0)
-  const { lang } = useLanguage()
+  const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({})
+  const { lang, content } = useLanguage()
+
+  const teamMembers = content?.teamMembers || []
+  const elisabeth = teamMembers.find(m => m.name.includes('Elisabeth'))
+  const kara = teamMembers.find(m => m.name.includes('Kara'))
+  const lizPhoto = elisabeth?.photo || '/assets/team/liz-rohm-hero.png'
+  const karaPhoto = kara?.photo || '/assets/team/kara.png'
   const sectionRef = useRef<HTMLElement>(null)
   const imgLizRef = useRef<HTMLDivElement>(null)
   const imgKaraRef = useRef<HTMLDivElement>(null)
@@ -85,14 +92,17 @@ export function CinematicHero() {
               transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1)',
             }}
           >
-            <Image
-              src="/assets/team/liz-rohm-hero.png"
-              alt="Elisabeth Rohm"
-              fill
-              className="object-cover object-top"
-              priority
-              sizes="50vw"
-            />
+            {!imgErrors.liz && lizPhoto && (
+              <Image
+                src={lizPhoto}
+                alt="Elisabeth Rohm"
+                fill
+                className="object-cover object-top"
+                priority
+                sizes="50vw"
+                onError={() => setImgErrors(prev => ({ ...prev, liz: true }))}
+              />
+            )}
           </div>
 
           {/* Kara — right half */}
@@ -105,14 +115,17 @@ export function CinematicHero() {
               transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s',
             }}
           >
-            <Image
-              src="/assets/team/kara.png"
-              alt="Kara Feifer"
-              fill
-              className="object-cover object-top"
-              priority
-              sizes="50vw"
-            />
+            {!imgErrors.kara && karaPhoto && (
+              <Image
+                src={karaPhoto}
+                alt="Kara Feifer"
+                fill
+                className="object-cover object-top"
+                priority
+                sizes="50vw"
+                onError={() => setImgErrors(prev => ({ ...prev, kara: true }))}
+              />
+            )}
           </div>
         </div>
 

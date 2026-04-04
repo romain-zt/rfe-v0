@@ -92,6 +92,7 @@ export default async function RootLayout({
     name: m.name,
     role: m.role,
     bio: m.bio,
+    photo: typeof m.photo === 'object' && m.photo ? (m.photo as { url?: string }).url || '' : '',
   }))
 
   const content = {

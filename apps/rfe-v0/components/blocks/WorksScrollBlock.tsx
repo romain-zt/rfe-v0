@@ -41,7 +41,7 @@ export function WorksScrollComponent({ title, items, ctaLabel, ctaUrl, sectionTo
   const { ref: titleRef, isVisible: titleVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
   const scrollRef = useRef<HTMLDivElement>(null)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const { lang } = useLanguage()
+  const { lang, content } = useLanguage()
   const toneClass = sectionTone && sectionTone !== 'default' ? `section-tone-${sectionTone}` : 'section-tone-warm'
 
   const handleScroll = useCallback(() => {
@@ -58,7 +58,17 @@ export function WorksScrollComponent({ title, items, ctaLabel, ctaUrl, sectionTo
     return () => el.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
-  if (!items || items.length === 0) return null
+  const displayItems: ScrollItem[] = items && items.length > 0
+    ? items
+    : (content?.ourWork || [])
+        .filter(w => !w.category && w.src)
+        .slice(0, 10)
+        .map((w, i) => ({
+          work: { title: w.title, year: w.year, poster: { url: w.src }, slug: w.slug },
+          size: (i % 3 === 0 ? 'large' : i % 3 === 1 ? 'medium' : 'small') as ScrollItem['size'],
+        }))
+
+  if (displayItems.length === 0) return null
 
   return (
     <section className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
@@ -79,7 +89,7 @@ export function WorksScrollComponent({ title, items, ctaLabel, ctaUrl, sectionTo
         </div>
 
         <div ref={scrollRef} className="flex gap-4 md:gap-6 overflow-x-auto overflow-y-hidden px-6 lg:px-16 pb-4 snap-x snap-mandatory no-scrollbar">
-          {items.map((item, i) => {
+          {displayItems.map((item, i) => {
             const imgUrl = getImageUrl(item)
             const itemTitle = getTitle(item)
             const year = getYear(item)

@@ -257,7 +257,6 @@ const PAGES: PageSeed[] = [
             'RFE has a growing slate of projects in active development across film, series, and unscripted content.',
           ),
           lexicalBlockNode('worksGrid', {
-            category: 'film',
             showFilters: false,
             showSubcategoryTabs: true,
             sectionTone: 'charcoal',

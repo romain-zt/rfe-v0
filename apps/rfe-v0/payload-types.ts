@@ -1728,6 +1728,12 @@ export interface SiteConfig {
     heroSubheadline?: string | null;
     heroParagraph?: string | null;
   };
+  ui?: {
+    workView?: string | null;
+    developmentFilms?: string | null;
+    developmentSeries?: string | null;
+    developmentUnscripted?: string | null;
+  };
   legal?: {
     title?: string | null;
     subtitle?: string | null;
@@ -1743,12 +1749,6 @@ export interface SiteConfig {
           id?: string | null;
         }[]
       | null;
-  };
-  ui?: {
-    workView?: string | null;
-    developmentFilms?: string | null;
-    developmentSeries?: string | null;
-    developmentUnscripted?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1863,6 +1863,14 @@ export interface SiteConfigSelect<T extends boolean = true> {
         heroSubheadline?: T;
         heroParagraph?: T;
       };
+  ui?:
+    | T
+    | {
+        workView?: T;
+        developmentFilms?: T;
+        developmentSeries?: T;
+        developmentUnscripted?: T;
+      };
   legal?:
     | T
     | {
@@ -1880,14 +1888,6 @@ export interface SiteConfigSelect<T extends boolean = true> {
                   };
               id?: T;
             };
-      };
-  ui?:
-    | T
-    | {
-        workView?: T;
-        developmentFilms?: T;
-        developmentSeries?: T;
-        developmentUnscripted?: T;
       };
   updatedAt?: T;
   createdAt?: T;

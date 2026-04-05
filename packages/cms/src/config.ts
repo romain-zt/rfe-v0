@@ -28,6 +28,20 @@ export type RfeConfigOptions = {
   overrides?: Partial<Config>
 }
 
+function normalizeDatabaseUrl(url: string): string {
+  if (!url) return url
+  try {
+    const u = new URL(url)
+    const mode = u.searchParams.get('sslmode')
+    if (mode && ['prefer', 'require', 'verify-ca'].includes(mode)) {
+      u.searchParams.set('sslmode', 'verify-full')
+    }
+    return u.toString()
+  } catch {
+    return url
+  }
+}
+
 export function buildRfeConfig(opts: RfeConfigOptions) {
   const siteUrl = opts.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
@@ -63,7 +77,9 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
     globals,
     secret: opts.secret,
     db: postgresAdapter({
-      pool: { connectionString: opts.databaseUrl },
+      pool: {
+        connectionString: normalizeDatabaseUrl(opts.databaseUrl),
+      },
       migrationDir: path.join(opts.dirname, 'migrations'),
       ...(opts.prodMigrations ? { prodMigrations: opts.prodMigrations } : {}),
     }),

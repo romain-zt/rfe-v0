@@ -117,21 +117,25 @@ export async function seedMedia(payload: Payload): Promise<Map<string, number>> 
     }
 
     const fileBuffer = fs.readFileSync(fullPath)
-    const doc = await payload.create({
-      collection: 'media',
-      data: {
-        alt: filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
-      },
-      file: {
-        data: fileBuffer,
-        name: filename,
-        mimetype: getMimeType(ext),
-        size: fileBuffer.length,
-      },
-    })
+    try {
+      const doc = await payload.create({
+        collection: 'media',
+        data: {
+          alt: filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+        },
+        file: {
+          data: fileBuffer,
+          name: filename,
+          mimetype: getMimeType(ext),
+          size: fileBuffer.length,
+        },
+      })
 
-    mediaMap.set(imgPath, doc.id as number)
-    console.log(`[seed-media] Uploaded: ${filename}`)
+      mediaMap.set(imgPath, doc.id as number)
+      console.log(`[seed-media] Uploaded: ${filename}`)
+    } catch (err) {
+      console.error(`[seed-media] Failed to upload ${filename}:`, err instanceof Error ? err.message : err)
+    }
   }
 
   console.log(`[seed-media] Done. ${mediaMap.size} media items available.`)

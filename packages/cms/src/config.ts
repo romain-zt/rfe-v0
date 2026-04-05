@@ -1,6 +1,6 @@
 import path from 'path'
 import { buildConfig, type Config } from 'payload'
-import { postgresAdapter } from '@payloadcms/db-postgres'
+import { postgresAdapter, type PostgresAdapterArgs } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { seoPlugin } from '@payloadcms/plugin-seo'
@@ -14,6 +14,8 @@ export type RfeConfigOptions = {
   dirname: string
   secret: string
   databaseUrl: string
+  /** Bundled migrations for production runtime (import from app `migrations/index.ts`). */
+  prodMigrations?: PostgresAdapterArgs['prodMigrations']
   s3: {
     bucket: string
     accessKeyId: string
@@ -51,6 +53,8 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
     secret: opts.secret,
     db: postgresAdapter({
       pool: { connectionString: opts.databaseUrl },
+      migrationDir: path.join(opts.dirname, 'migrations'),
+      ...(opts.prodMigrations ? { prodMigrations: opts.prodMigrations } : {}),
     }),
     editor: lexicalEditor(),
     localization: {

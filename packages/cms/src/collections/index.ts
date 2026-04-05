@@ -5,7 +5,8 @@ import { WorksGroups } from './WorksGroups.ts'
 import { TeamMembers } from './TeamMembers.ts'
 import { PressItems } from './PressItems.ts'
 import { Pages } from './Pages.ts'
+import { AIConversations } from './AIConversations.ts'
 
-export { Users, Media, Works, WorksGroups, TeamMembers, PressItems, Pages }
+export { Users, Media, Works, WorksGroups, TeamMembers, PressItems, Pages, AIConversations }
 
-export const collections = [Pages, WorksGroups, Works, TeamMembers, PressItems, Users, Media]
+export const collections = [Pages, WorksGroups, Works, TeamMembers, PressItems, Users, Media, AIConversations]

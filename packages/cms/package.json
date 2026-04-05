@@ -36,6 +36,10 @@
       "types": "./src/components/BeforeLogin/index.tsx",
       "default": "./src/components/BeforeLogin/index.tsx"
     },
+    "./components/AIChat": {
+      "types": "./src/components/AIChat/index.tsx",
+      "default": "./src/components/AIChat/index.tsx"
+    },
     "./styles/admin.css": "./src/styles/admin.css"
   },
   "files": [

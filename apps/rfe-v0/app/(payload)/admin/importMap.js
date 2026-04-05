@@ -27,7 +27,11 @@ import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { Icon as Icon_30f9b97464cd6aed523463ee2909896b } from '@rfe/cms/components/Icon'
+import { Logo as Logo_3ca2ef1bfffa22c2c98fe79e696bd43a } from '@rfe/cms/components/Logo'
 import { ResetContentButton as ResetContentButton_6d7f831c498f5cf69f683793a423ac96 } from '@rfe/cms/components/ResetContentButton'
+import { BeforeLogin as BeforeLogin_19cab8d18d87a257caf83044140e9955 } from '@rfe/cms/components/BeforeLogin'
+import { AIChatProvider as AIChatProvider_0fa9ffe9895347091baf1827835b9c80 } from '@rfe/cms/components/AIChat'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -61,7 +65,11 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@rfe/cms/components/Icon#Icon": Icon_30f9b97464cd6aed523463ee2909896b,
+  "@rfe/cms/components/Logo#Logo": Logo_3ca2ef1bfffa22c2c98fe79e696bd43a,
   "@rfe/cms/components/ResetContentButton#ResetContentButton": ResetContentButton_6d7f831c498f5cf69f683793a423ac96,
+  "@rfe/cms/components/BeforeLogin#BeforeLogin": BeforeLogin_19cab8d18d87a257caf83044140e9955,
+  "@rfe/cms/components/AIChat#AIChatProvider": AIChatProvider_0fa9ffe9895347091baf1827835b9c80,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

@@ -131,6 +131,22 @@ export const SiteConfig: GlobalConfig = {
       ],
     },
     {
+      name: 'admin',
+      type: 'group',
+      label: 'Admin Panel',
+      fields: [
+        {
+          name: 'aiAssistantEnabled',
+          type: 'checkbox',
+          defaultValue: false,
+          label: 'Enable AI Assistant',
+          admin: {
+            description: 'Show the AI chat widget in the admin panel. Requires an OpenAI API key in environment variables.',
+          },
+        },
+      ],
+    },
+    {
       name: 'legal',
       type: 'group',
       fields: [

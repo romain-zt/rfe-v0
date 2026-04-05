@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const locales = ['en', 'fr']
+/** Public locales only — FR disabled until launch */
+const locales = ['en']
 const defaultLocale = 'en'
 
 function getLocale(request: NextRequest): string {
@@ -13,7 +14,7 @@ function getLocale(request: NextRequest): string {
   if (acceptLanguage) {
     const preferredLocale = acceptLanguage
       .split(',')
-      .map((lang) => lang.split(';')[0].trim().substring(0, 2).toLowerCase())
+      .map((lang) => (lang.split(';')[0] ?? '').trim().slice(0, 2).toLowerCase())
       .find((lang) => locales.includes(lang))
     
     if (preferredLocale) {
@@ -35,6 +36,14 @@ export function middleware(request: NextRequest) {
     pathname.includes('.')
   ) {
     return NextResponse.next()
+  }
+
+  // Legacy / bookmarked French URLs → English
+  if (/^\/fr(?:\/|$)/.test(pathname)) {
+    const dest = pathname.replace(/^\/fr(?=\/|$)/, '/en')
+    const res = NextResponse.redirect(new URL(dest + request.nextUrl.search, request.url))
+    res.cookies.set('NEXT_LOCALE', 'en', { path: '/' })
+    return res
   }
 
   const pathnameHasLocale = locales.some(

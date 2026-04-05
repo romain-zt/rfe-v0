@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
 import { SITE_CONFIG } from '@/lib/seo'
 import { fallbackEn } from '@/lib/i18n/fallback/en'
-import { fallbackFr } from '@/lib/i18n/fallback/fr'
 import { getWorkSlug } from '@/lib/works'
-import type { Language } from '@/lib/i18n/types'
 
 export const runtime = 'nodejs'
 
@@ -18,13 +16,10 @@ function esc(s: string) {
 
 export async function GET() {
   const base = SITE_CONFIG.url.replace(/\/$/, '')
-  const locales: Language[] = ['en', 'fr']
-
   const urls: string[] = []
 
-  for (const locale of locales) {
-    const site = locale === 'fr' ? fallbackFr : fallbackEn
-    const works = site.ourWork
+  for (const locale of ['en'] as const) {
+    const works = fallbackEn.ourWork
     
     for (const work of works) {
       // Only include works with videos

@@ -4,7 +4,22 @@ import { fileURLToPath } from 'url'
 import type { Payload } from 'payload'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const ASSETS_BASE = path.resolve(__dirname, '../../../../apps/rfe-v0/public')
+
+/** Next/Vercel bundles this file under `.next/server/chunks`; __dirname is not `packages/cms/src/seed`. */
+function resolvePublicRoot(): string {
+  const fromEnv = process.env.RFE_SEED_PUBLIC_DIR
+  if (fromEnv) return path.resolve(fromEnv)
+
+  const cwdPublic = path.join(process.cwd(), 'public')
+  if (fs.existsSync(path.join(cwdPublic, 'assets'))) return cwdPublic
+
+  const monorepoPublic = path.resolve(__dirname, '../../../../apps/rfe-v0/public')
+  if (fs.existsSync(path.join(monorepoPublic, 'assets'))) return monorepoPublic
+
+  return cwdPublic
+}
+
+const ASSETS_BASE = resolvePublicRoot()
 
 const IMAGE_PATHS = [
   '/assets/works/out-for-love.png',

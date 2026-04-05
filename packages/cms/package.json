@@ -23,7 +23,20 @@
     "./components/ResetContentButton": {
       "types": "./src/components/ResetContentButton/index.tsx",
       "default": "./src/components/ResetContentButton/index.tsx"
-    }
+    },
+    "./components/Icon": {
+      "types": "./src/components/Icon/index.tsx",
+      "default": "./src/components/Icon/index.tsx"
+    },
+    "./components/Logo": {
+      "types": "./src/components/Logo/index.tsx",
+      "default": "./src/components/Logo/index.tsx"
+    },
+    "./components/BeforeLogin": {
+      "types": "./src/components/BeforeLogin/index.tsx",
+      "default": "./src/components/BeforeLogin/index.tsx"
+    },
+    "./styles/admin.css": "./src/styles/admin.css"
   },
   "files": [
     "src"

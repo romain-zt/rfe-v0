@@ -1,0 +1,83 @@
+/*
+ * RFE Admin Panel Theme
+ *
+ * Overrides Payload's default CSS variables to match the RFE brand:
+ * - Near-black backgrounds with warm tones
+ * - Gold (#B5975A) as primary accent
+ * - Warm off-white (#F5F0EB) text
+ * - Inter font stack
+ *
+ * Payload wraps its defaults in @layer payload-default,
+ * so our un-layered CSS wins automatically.
+ */
+
+:root {
+  --color-base-0: #070708;
+  --color-base-50: #0a0a0c;
+  --color-base-100: #0e0e11;
+  --color-base-150: #131316;
+  --color-base-200: #18181c;
+  --color-base-250: #1e1e22;
+  --color-base-300: #252529;
+  --color-base-350: #2d2d32;
+  --color-base-400: #36363c;
+  --color-base-450: #404046;
+  --color-base-500: #4b4b52;
+  --color-base-550: #5a5a61;
+  --color-base-600: #6a6a71;
+  --color-base-650: #7a7a81;
+  --color-base-700: #8c8c92;
+  --color-base-750: #9f9fa4;
+  --color-base-800: #b3b3b7;
+  --color-base-850: #c7c5c1;
+  --color-base-900: #dbd8d3;
+  --color-base-950: #ece9e4;
+  --color-base-1000: #F5F0EB;
+
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+
+  --color-success-500: #B5975A;
+  --color-success-400: #c4a86e;
+  --color-success-350: #B5975A;
+  --color-success-300: #a38750;
+  --color-success-250: #917746;
+  --color-success-200: #7f683d;
+  --color-success-150: #6d5933;
+  --color-success-100: #5b4a2a;
+  --color-success-50: #493b21;
+}
+
+html[data-theme='dark'] {
+  --color-base-0: #070708;
+  --color-base-50: #0a0a0c;
+  --color-base-100: #0e0e11;
+  --color-base-150: #131316;
+  --color-base-200: #18181c;
+  --color-base-250: #1e1e22;
+  --color-base-300: #252529;
+  --color-base-350: #2d2d32;
+  --color-base-400: #36363c;
+  --color-base-450: #404046;
+  --color-base-500: #4b4b52;
+  --color-base-550: #5a5a61;
+  --color-base-600: #6a6a71;
+  --color-base-650: #7a7a81;
+  --color-base-700: #8c8c92;
+  --color-base-750: #9f9fa4;
+  --color-base-800: #b3b3b7;
+  --color-base-850: #c7c5c1;
+  --color-base-900: #dbd8d3;
+  --color-base-950: #ece9e4;
+  --color-base-1000: #F5F0EB;
+
+  --color-success-500: #B5975A;
+  --color-success-400: #c4a86e;
+  --color-success-350: #B5975A;
+  --color-success-300: #a38750;
+  --color-success-250: #917746;
+  --color-success-200: #7f683d;
+  --color-success-150: #6d5933;
+  --color-success-100: #5b4a2a;
+  --color-success-50: #493b21;
+}

@@ -35,7 +35,11 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
     cors: [siteUrl, 'http://localhost:3000'],
     admin: {
       user: 'users',
-      meta: { titleSuffix: '— RFE' },
+      meta: {
+        titleSuffix: '— RFE',
+        favicon: '/icon.svg',
+        ogImage: '/logo-rfe.svg',
+      },
       importMap: { baseDir: opts.dirname },
       livePreview: {
         breakpoints: [
@@ -45,6 +49,11 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
         ],
       },
       components: {
+        graphics: {
+          Icon: '@rfe/cms/components/Icon#Icon',
+          Logo: '@rfe/cms/components/Logo#Logo',
+        },
+        beforeLogin: ['@rfe/cms/components/BeforeLogin#BeforeLogin'],
         afterDashboard: ['@rfe/cms/components/ResetContentButton#ResetContentButton'],
       },
     },

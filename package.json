@@ -11,8 +11,7 @@
   },
   "devDependencies": {
     "next": "catalog:",
-    "turbo": "^2.5.4",
-    "next-sitemap": "catalog:"
+    "turbo": "^2.5.4"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

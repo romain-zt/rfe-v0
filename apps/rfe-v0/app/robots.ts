@@ -1,14 +1,14 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next'
+
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rohmfeiferentertainment.com').replace(/\/$/, '')
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: '/admin/',
     },
-    sitemap: [
-      'https://www.rohmfeiferentertainment.com/sitemap.xml',
-      'https://www.rohmfeiferentertainment.com/video-sitemap.xml',
-    ],
-  };
+    sitemap: `${SITE_URL}/sitemap.xml`,
+  }
 }

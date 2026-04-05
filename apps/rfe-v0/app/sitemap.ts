@@ -1,47 +1,56 @@
-import { MetadataRoute } from 'next'
-import { SITE_CONFIG } from '@/lib/seo'
-import { fallbackEn } from '@/lib/i18n/fallback/en'
-import { getWorkSlug } from '@/lib/works'
+import type { MetadataRoute } from 'next'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
 
-const locales = ['en'] as const
-const pages = ['', 'about', 'contact', 'our-work', 'legal'] as const
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.rohmfeiferentertainment.com').replace(/\/$/, '')
 
-function isoDateOnly(d: Date) {
-  // Google-friendly: YYYY-MM-DD
-  return d.toISOString().split('T')[0]
-}
+const LOCALES = ['en'] as const
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = SITE_CONFIG.url.replace(/\/$/, '') // no trailing slash
-  const lastModified = isoDateOnly(new Date())
+  const payload = await getPayload({ config })
 
-  const sitemapEntries: MetadataRoute.Sitemap = []
+  const [pagesResult, worksResult] = await Promise.all([
+    payload.find({
+      collection: 'pages',
+      draft: false,
+      limit: 1000,
+      pagination: false,
+      where: { _status: { equals: 'published' } },
+      select: { slug: true, updatedAt: true },
+    }),
+    payload.find({
+      collection: 'works',
+      draft: false,
+      limit: 1000,
+      pagination: false,
+      select: { slug: true, updatedAt: true },
+    }),
+  ])
 
-  // Add main pages
-  for (const locale of locales) {
-    for (const page of pages) {
-      const path = page === '' ? '' : `/${page}`
-      sitemapEntries.push({
-        url: `${baseUrl}/${locale}${path}`,
-        lastModified,
-        changeFrequency: page === '' ? 'daily' : 'weekly',
-        priority: page === '' ? 1.0 : 0.8,
+  const entries: MetadataRoute.Sitemap = []
+
+  for (const locale of LOCALES) {
+    for (const page of pagesResult.docs) {
+      if (!page.slug) continue
+      const path = page.slug === 'home' ? '' : `/${page.slug}`
+      entries.push({
+        url: `${SITE_URL}/${locale}${path}`,
+        lastModified: page.updatedAt ? new Date(page.updatedAt) : new Date(),
+        changeFrequency: page.slug === 'home' ? 'daily' : 'weekly',
+        priority: page.slug === 'home' ? 1.0 : 0.8,
       })
     }
-  }
 
-  // Add work pages for SEO
-  for (const locale of locales) {
-    for (const work of fallbackEn.ourWork) {
-      const slug = getWorkSlug(work)
-      sitemapEntries.push({
-        url: `${baseUrl}/${locale}/our-work/${slug}`,
-        lastModified,
+    for (const work of worksResult.docs) {
+      if (!work.slug) continue
+      entries.push({
+        url: `${SITE_URL}/${locale}/our-work/${work.slug}`,
+        lastModified: work.updatedAt ? new Date(work.updatedAt) : new Date(),
         changeFrequency: 'monthly',
         priority: 0.7,
       })
     }
   }
 
-  return sitemapEntries
+  return entries
 }

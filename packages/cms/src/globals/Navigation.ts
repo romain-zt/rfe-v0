@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend'
+import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 
 export const Navigation: GlobalConfig = {
   slug: 'navigation',

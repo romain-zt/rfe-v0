@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend'
+import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 
 export const Works: CollectionConfig = {
   slug: 'works',

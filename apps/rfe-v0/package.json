@@ -2,8 +2,9 @@
   "name": "@rfe/v0",
   "version": "1.3.2",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && next build",
+    "build": "echo y | cross-env NODE_OPTIONS=--no-deprecation payload migrate && next build",
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start",

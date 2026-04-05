@@ -5,10 +5,10 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import sharp from 'sharp'
-import { collections } from './collections/index.js'
-import { globals } from './globals/index.js'
-import { seedResetEndpoint } from './endpoints/seed-reset'
-import { generatePreviewPath } from './utilities/generatePreviewPath'
+import { collections } from './collections/index.ts'
+import { globals } from './globals/index.ts'
+import { seedResetEndpoint } from './endpoints/seed-reset.ts'
+import { generatePreviewPath } from './utilities/generatePreviewPath.ts'
 
 export type RfeConfigOptions = {
   dirname: string

@@ -1,5 +1,5 @@
 import type { Endpoint } from 'payload'
-import { runSeed } from '../seed/run-seed'
+import { runSeed } from '../seed/run-seed.ts'
 
 export const seedResetEndpoint: Endpoint = {
   path: '/seed/reset',

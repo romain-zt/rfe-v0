@@ -1,13 +1,13 @@
 import type { Payload } from 'payload'
-import { seedAdmin } from './seed-admin'
-import { seedMedia } from './seed-media'
-import { seedWorks } from './seed-works'
-import { seedWorksGroups } from './seed-works-groups'
-import { seedTeam } from './seed-team'
-import { seedPress } from './seed-press'
-import { seedSiteConfig } from './seed-site-config'
-import { seedNavigation } from './seed-navigation'
-import { seedPages } from './seed-pages'
+import { seedAdmin } from './seed-admin.ts'
+import { seedMedia } from './seed-media.ts'
+import { seedWorks } from './seed-works.ts'
+import { seedWorksGroups } from './seed-works-groups.ts'
+import { seedTeam } from './seed-team.ts'
+import { seedPress } from './seed-press.ts'
+import { seedSiteConfig } from './seed-site-config.ts'
+import { seedNavigation } from './seed-navigation.ts'
+import { seedPages } from './seed-pages.ts'
 
 export async function runSeed(payload: Payload): Promise<void> {
   console.log('[seed] Starting full seed...')

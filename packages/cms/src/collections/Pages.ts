@@ -6,10 +6,10 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { hero } from '../fields/hero'
-import { blocks } from '../blocks'
-import { generatePreviewPath } from '../utilities/generatePreviewPath'
-import { revalidateFrontend } from '../utilities/revalidateFrontend'
+import { hero } from '../fields/hero.ts'
+import { blocks } from '../blocks/index.ts'
+import { generatePreviewPath } from '../utilities/generatePreviewPath.ts'
+import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',

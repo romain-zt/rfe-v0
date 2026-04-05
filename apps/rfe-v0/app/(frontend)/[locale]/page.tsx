@@ -5,6 +5,9 @@ import { getPageBySlug, getSiteConfig } from '@/lib/cms'
 import { generatePageMeta, generatePageJsonLd } from '@/lib/generate-meta'
 import { PageContent } from '@/components/PageContent'
 
+/** Home is not in `[slug]` static params; avoid caching an empty page before seed runs. */
+export const dynamic = 'force-dynamic'
+
 type Props = {
   params: Promise<{ locale: Language }>
 }

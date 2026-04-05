@@ -10,6 +10,7 @@ import { TeamShowcaseComponent } from './TeamShowcaseBlock'
 import { PressListComponent } from './PressListBlock'
 import { ContactInfoComponent } from './ContactInfoBlock'
 import { ContactFormComponent } from './ContactFormBlock'
+import { EmbeddedFormBlock } from './EmbeddedFormBlock'
 import { LegalSectionsComponent } from './LegalSectionsBlock'
 import { MediaBlockComponent } from './MediaBlockComponent'
 import { TwoColumnLayoutComponent } from './TwoColumnLayoutBlock'
@@ -23,6 +24,7 @@ const embeddedBlockComponents: Record<string, React.ComponentType<any>> = {
   pressList: PressListComponent,
   contactInfo: ContactInfoComponent,
   contactForm: ContactFormComponent,
+  embeddedForm: EmbeddedFormBlock,
   legalSections: LegalSectionsComponent,
   mediaBlock: MediaBlockComponent,
   twoColumnLayout: TwoColumnLayoutComponent,

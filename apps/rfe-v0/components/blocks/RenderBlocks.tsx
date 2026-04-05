@@ -10,6 +10,7 @@ import { TeamShowcaseComponent } from './TeamShowcaseBlock'
 import { PressListComponent } from './PressListBlock'
 import { ContactInfoComponent } from './ContactInfoBlock'
 import { ContactFormComponent } from './ContactFormBlock'
+import { EmbeddedFormBlock } from './EmbeddedFormBlock'
 import { LegalSectionsComponent } from './LegalSectionsBlock'
 
 const blockComponents: Record<string, React.ComponentType<any>> = {
@@ -24,6 +25,7 @@ const blockComponents: Record<string, React.ComponentType<any>> = {
   pressList: PressListComponent,
   contactInfo: ContactInfoComponent,
   contactForm: ContactFormComponent,
+  embeddedForm: EmbeddedFormBlock,
   legalSections: LegalSectionsComponent,
 }
 

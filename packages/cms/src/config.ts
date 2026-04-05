@@ -4,6 +4,7 @@ import { postgresAdapter, type PostgresAdapterArgs } from '@payloadcms/db-postgr
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import sharp from 'sharp'
 import { collections } from './collections/index.ts'
 import { globals } from './globals/index.ts'
@@ -64,6 +65,8 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
     },
     plugins: [
       s3Storage({
+        /** Allow local temp files so sharp can generate `imageSizes` before upload to S3. */
+        disableLocalStorage: false,
         collections: { media: { prefix: 'media' } },
         bucket: opts.s3.bucket,
         config: {
@@ -81,6 +84,29 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
           doc?.title ? `${doc.title} — RFE` : 'RFE — a cinematic female gaze studio',
         generateURL: ({ doc }) =>
           doc?.slug ? `${siteUrl}/${doc.slug}` : siteUrl,
+      }),
+      formBuilderPlugin({
+        fields: {
+          text: true,
+          textarea: true,
+          email: true,
+          checkbox: true,
+          message: true,
+          select: false,
+          radio: false,
+          state: false,
+          country: false,
+          number: false,
+          date: false,
+          payment: false,
+        },
+        redirectRelationships: ['pages'],
+        formOverrides: {
+          admin: { group: 'Forms' },
+        },
+        formSubmissionOverrides: {
+          admin: { group: 'Forms' },
+        },
       }),
     ],
     sharp,

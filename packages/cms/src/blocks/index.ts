@@ -10,6 +10,7 @@ import { TeamShowcase } from './TeamShowcase.ts'
 import { PressList } from './PressList.ts'
 import { ContactInfo } from './ContactInfo.ts'
 import { ContactForm } from './ContactForm.ts'
+import { EmbeddedForm } from './EmbeddedForm.ts'
 import { LegalSections } from './LegalSections.ts'
 
 export {
@@ -24,6 +25,7 @@ export {
   PressList,
   ContactInfo,
   ContactForm,
+  EmbeddedForm,
   LegalSections,
 }
 
@@ -39,5 +41,6 @@ export const blocks: Block[] = [
   PressList,
   ContactInfo,
   ContactForm,
+  EmbeddedForm,
   LegalSections,
 ]

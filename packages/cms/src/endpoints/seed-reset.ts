@@ -10,12 +10,16 @@ export const seedResetEndpoint: Endpoint = {
     }
 
     try {
-      await runSeed(req.payload)
-      return Response.json({ success: true })
+      const { logs } = await runSeed(req.payload)
+      return Response.json({ success: true, logs })
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
+      const logs =
+        error && typeof error === 'object' && 'logs' in error && Array.isArray((error as { logs: unknown }).logs)
+          ? ((error as { logs: string[] }).logs as string[])
+          : []
       console.error('[seed/reset] Error:', message)
-      return Response.json({ success: false, error: message }, { status: 500 })
+      return Response.json({ success: false, error: message, logs }, { status: 500 })
     }
   },
 }

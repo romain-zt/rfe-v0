@@ -7,6 +7,7 @@ import { TeamShowcase } from './TeamShowcase.ts'
 import { PressList } from './PressList.ts'
 import { ContactInfo } from './ContactInfo.ts'
 import { ContactForm } from './ContactForm.ts'
+import { EmbeddedForm } from './EmbeddedForm.ts'
 import { LegalSections } from './LegalSections.ts'
 import { CallToAction } from './CallToAction.ts'
 import { MediaBlock } from './MediaBlock.ts'
@@ -20,6 +21,7 @@ const inlineBlocks: Block[] = [
   PressList,
   ContactInfo,
   ContactForm,
+  EmbeddedForm,
   LegalSections,
   CallToAction,
   MediaBlock,

@@ -2,16 +2,40 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
+const SEED_LOGS_KEY = 'rfe-seed-logs'
+
 type State = 'idle' | 'confirm' | 'loading' | 'success' | 'error'
 
 export const ResetContentButton: React.FC = () => {
   const [state, setState] = useState<State>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [logs, setLogs] = useState<string[]>([])
+  const [logPanelOpen, setLogPanelOpen] = useState(true)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(SEED_LOGS_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw) as unknown
+        if (Array.isArray(parsed) && parsed.every((x) => typeof x === 'string')) {
+          setLogs(parsed)
+        }
+      }
+    } catch {
+      /* ignore */
+    }
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  const persistLogs = useCallback((next: string[]) => {
+    setLogs(next)
+    try {
+      sessionStorage.setItem(SEED_LOGS_KEY, JSON.stringify(next))
+    } catch {
+      /* ignore quota */
     }
   }, [])
 
@@ -37,19 +61,32 @@ export const ResetContentButton: React.FC = () => {
         credentials: 'include',
       })
 
+      const data = (await res.json().catch(() => ({}))) as {
+        error?: string
+        logs?: string[]
+      }
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
+        if (Array.isArray(data.logs) && data.logs.length) {
+          persistLogs(data.logs)
+        }
         throw new Error(data.error || `Failed with status ${res.status}`)
       }
 
+      if (Array.isArray(data.logs)) {
+        persistLogs(data.logs)
+      }
+
       setState('success')
-      timeoutRef.current = setTimeout(() => setState('idle'), 5_000)
+      setLogPanelOpen(true)
+      timeoutRef.current = setTimeout(() => setState('idle'), 12_000)
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : 'Unknown error')
       setState('error')
-      timeoutRef.current = setTimeout(() => setState('idle'), 8_000)
+      setLogPanelOpen(true)
+      timeoutRef.current = setTimeout(() => setState('idle'), 12_000)
     }
-  }, [])
+  }, [persistLogs])
 
   return (
     <div style={styles.wrapper}>
@@ -78,6 +115,23 @@ export const ResetContentButton: React.FC = () => {
             anytime.
           </p>
         </div>
+
+        {logs.length > 0 && (
+          <div style={styles.logSection}>
+            <button
+              type="button"
+              onClick={() => setLogPanelOpen((o) => !o)}
+              style={styles.logToggle}
+            >
+              {logPanelOpen ? '▼' : '▶'} Seed log ({logs.length} lines)
+            </button>
+            {logPanelOpen && (
+              <pre style={styles.logPre}>
+                {logs.join('\n')}
+              </pre>
+            )}
+          </div>
+        )}
 
         {state === 'idle' && (
           <button type="button" onClick={handleFirstClick} style={styles.button}>
@@ -174,6 +228,37 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 13,
     color: 'var(--theme-elevation-400, #999)',
     lineHeight: 1.5,
+  },
+  logSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  logToggle: {
+    alignSelf: 'flex-start',
+    padding: '6px 10px',
+    fontSize: 12,
+    fontWeight: 500,
+    color: 'var(--theme-text, #fff)',
+    background: 'var(--theme-elevation-100, #2a2a3e)',
+    border: '1px solid var(--theme-elevation-200, #3a3a4e)',
+    borderRadius: 6,
+    cursor: 'pointer',
+  },
+  logPre: {
+    margin: 0,
+    maxHeight: 280,
+    overflow: 'auto',
+    padding: 12,
+    fontSize: 11,
+    lineHeight: 1.45,
+    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+    color: 'var(--theme-elevation-800, #ccc)',
+    background: 'var(--theme-elevation-0, #0f0f18)',
+    border: '1px solid var(--theme-elevation-100, #2a2a3e)',
+    borderRadius: 6,
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   button: {
     alignSelf: 'flex-start',

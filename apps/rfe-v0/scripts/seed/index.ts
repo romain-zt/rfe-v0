@@ -7,7 +7,8 @@ async function seed() {
   const { runSeed } = await import('@rfe/cms/seed')
 
   const payload = await getPayload({ config })
-  await runSeed(payload)
+  const { logs } = await runSeed(payload)
+  console.log(`Done (${logs.length} log lines).`)
   process.exit(0)
 }
 

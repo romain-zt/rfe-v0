@@ -4,26 +4,49 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": { "types": "./src/index.ts", "default": "./src/index.ts" },
-    "./seed": { "types": "./src/seed/index.ts", "default": "./src/seed/index.ts" },
-    "./config": { "types": "./src/config.ts", "default": "./src/config.ts" },
-    "./client": { "types": "./src/client.ts", "default": "./src/client.ts" },
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./seed": {
+      "types": "./src/seed/index.ts",
+      "default": "./src/seed/index.ts"
+    },
+    "./config": {
+      "types": "./src/config.ts",
+      "default": "./src/config.ts"
+    },
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./src/client.ts"
+    },
     "./components/ResetContentButton": {
       "types": "./src/components/ResetContentButton/index.tsx",
       "default": "./src/components/ResetContentButton/index.tsx"
     }
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
   "dependencies": {
-    "payload": "catalog:",
     "@payloadcms/db-postgres": "catalog:",
+    "@payloadcms/plugin-form-builder": "catalog:",
+    "@payloadcms/plugin-seo": "catalog:",
     "@payloadcms/richtext-lexical": "catalog:",
     "@payloadcms/storage-s3": "catalog:",
-    "@payloadcms/plugin-seo": "catalog:",
+    "payload": "catalog:",
     "sharp": "catalog:"
   },
   "devDependencies": {
     "@rfe/tsconfig": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }

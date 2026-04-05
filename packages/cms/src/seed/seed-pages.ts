@@ -400,7 +400,10 @@ const PAGES: PageSeed[] = [
   },
 ]
 
-export async function seedPages(payload: Payload): Promise<void> {
+export async function seedPages(
+  payload: Payload,
+  opts?: { contactFormId?: number | null },
+): Promise<void> {
   console.log('[seed-pages] Seeding pages...')
   blockIdCounter = 0
 
@@ -411,11 +414,34 @@ export async function seedPages(payload: Payload): Promise<void> {
       limit: 1,
     })
 
+    let layout = page.layout
+    if (page.slug === 'contact' && opts?.contactFormId != null) {
+      layout = [
+        contentBlock(
+          [
+            lexicalBlockNode('embeddedForm', {
+              title: 'Get in touch',
+              subtitle: 'Tell us about your project.',
+              form: opts.contactFormId,
+            }),
+            lexicalBlockNode('contactInfo', {
+              title: 'Find us',
+              showEmail: true,
+              showPhone: true,
+              showAddress: true,
+              showSocials: true,
+            }),
+          ],
+          'default',
+        ),
+      ]
+    }
+
     const data = {
       title: page.title,
       slug: page.slug,
       hero: page.hero,
-      layout: page.layout,
+      layout,
       meta: page.meta,
       _status: 'published' as const,
     }

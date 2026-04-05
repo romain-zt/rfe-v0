@@ -16,7 +16,18 @@
         "NEXT_PUBLIC_CMS_URL",
         "NEXT_PUBLIC_SITE_URL",
         "PREVIEW_SECRET",
-        "REVALIDATION_SECRET"
+        "REVALIDATION_SECRET",
+        "PAYLOAD_ADMIN_EMAIL",
+        "PAYLOAD_ADMIN_PASSWORD",
+        "POSTGRES_USER",
+        "DATABASE_URL_UNPOOLED",
+        "NEON_PROJECT_ID",
+        "POSTGRES_URL_NON_POOLING",
+        "PGPASSWORD",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_DATABASE",
+        "POSTGRES_HOST",
+        "POSTGRES_URL"
       ]
     },
     "dev": {

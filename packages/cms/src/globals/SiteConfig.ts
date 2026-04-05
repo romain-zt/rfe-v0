@@ -5,8 +5,8 @@ import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 // Helpers
 // ---------------------------------------------------------------------------
 
-const COLOR_FIELD_COMPONENT = '@rfe/cms/components/ColorPickerField#ColorPickerField'
-const SECRET_FIELD_COMPONENT = '@rfe/cms/components/SecretTextField#SecretTextField'
+const COLOR_FIELD_COMPONENT = '@rfe/cms/fields/client#ColorPickerField'
+const SECRET_FIELD_COMPONENT = '@rfe/cms/fields/client#SecretTextField'
 
 function colorField(name: string, label: string, defaultValue: string, width?: string): Field {
   return {

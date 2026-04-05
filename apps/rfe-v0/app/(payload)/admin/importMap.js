@@ -27,8 +27,8 @@ import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
-import { ColorPickerField as ColorPickerField_aaaeb28ff1e9c172ca07fa57a77c0f57 } from '@rfe/cms/components/ColorPickerField'
-import { SecretTextField as SecretTextField_4c25e15047d714b590ea899e3984e6c2 } from '@rfe/cms/components/SecretTextField'
+import { ColorPickerField as ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac } from '@rfe/cms/fields/client'
+import { SecretTextField as SecretTextField_aa22b64f10c5e420411c7f67ce2bd4ac } from '@rfe/cms/fields/client'
 import { Icon as Icon_30f9b97464cd6aed523463ee2909896b } from '@rfe/cms/components/Icon'
 import { Logo as Logo_3ca2ef1bfffa22c2c98fe79e696bd43a } from '@rfe/cms/components/Logo'
 import { ResetContentButton as ResetContentButton_6d7f831c498f5cf69f683793a423ac96 } from '@rfe/cms/components/ResetContentButton'
@@ -67,8 +67,8 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
-  "@rfe/cms/components/ColorPickerField#ColorPickerField": ColorPickerField_aaaeb28ff1e9c172ca07fa57a77c0f57,
-  "@rfe/cms/components/SecretTextField#SecretTextField": SecretTextField_4c25e15047d714b590ea899e3984e6c2,
+  "@rfe/cms/fields/client#ColorPickerField": ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac,
+  "@rfe/cms/fields/client#SecretTextField": SecretTextField_aa22b64f10c5e420411c7f67ce2bd4ac,
   "@rfe/cms/components/Icon#Icon": Icon_30f9b97464cd6aed523463ee2909896b,
   "@rfe/cms/components/Logo#Logo": Logo_3ca2ef1bfffa22c2c98fe79e696bd43a,
   "@rfe/cms/components/ResetContentButton#ResetContentButton": ResetContentButton_6d7f831c498f5cf69f683793a423ac96,

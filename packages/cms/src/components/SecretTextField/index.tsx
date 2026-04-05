@@ -1,34 +1,30 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useField } from '@payloadcms/ui'
-import type { TextFieldClientComponent } from 'payload'
+import { FieldLabel, useField } from '@payloadcms/ui'
 
-export const SecretTextField: TextFieldClientComponent = ({ field, path, readOnly }) => {
-  const { value, setValue } = useField<string>({ path })
+export const SecretTextField: React.FC<any> = () => {
+  const {
+    customComponents: { Label } = {},
+    path,
+    setValue,
+    value,
+  } = useField()
+
   const [visible, setVisible] = useState(false)
   const text = typeof value === 'string' ? value : ''
-  const label = typeof field?.label === 'string' ? field.label : field?.name ?? ''
-  const description =
-    field?.admin && 'description' in field.admin && typeof field.admin.description === 'string'
-      ? field.admin.description
-      : null
 
   return (
-    <div style={{ marginBottom: 0 }}>
-      <label
-        htmlFor={`field-${path}`}
-        style={{ display: 'block', marginBottom: 6, fontSize: '0.8125rem', fontWeight: 500 }}
-      >
-        {label}
-      </label>
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 6 }}>
+        {Label ?? <FieldLabel path={path} />}
+      </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'stretch' }}>
         <input
           id={`field-${path}`}
           type={visible ? 'text' : 'password'}
           value={text}
           onChange={(e) => setValue(e.target.value)}
-          readOnly={readOnly}
           placeholder="Leave empty to use environment variable"
           autoComplete="off"
           style={{
@@ -39,9 +35,7 @@ export const SecretTextField: TextFieldClientComponent = ({ field, path, readOnl
             fontFamily: 'var(--font-mono, monospace)',
             border: '1px solid var(--theme-elevation-150)',
             borderRadius: 'var(--style-radius-s, 4px)',
-            background: readOnly
-              ? 'var(--theme-elevation-50)'
-              : 'var(--theme-input-bg, var(--theme-elevation-0))',
+            background: 'var(--theme-input-bg, var(--theme-elevation-0))',
             color: 'var(--theme-text)',
             outline: 'none',
           }}
@@ -66,11 +60,6 @@ export const SecretTextField: TextFieldClientComponent = ({ field, path, readOnl
           {visible ? 'Hide' : 'Show'}
         </button>
       </div>
-      {description && (
-        <p style={{ marginTop: 6, fontSize: '0.75rem', color: 'var(--theme-elevation-500)', lineHeight: 1.5 }}>
-          {description}
-        </p>
-      )}
     </div>
   )
 }

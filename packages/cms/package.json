@@ -40,13 +40,9 @@
       "types": "./src/components/AIChat/index.tsx",
       "default": "./src/components/AIChat/index.tsx"
     },
-    "./components/ColorPickerField": {
-      "types": "./src/components/ColorPickerField/index.tsx",
-      "default": "./src/components/ColorPickerField/index.tsx"
-    },
-    "./components/SecretTextField": {
-      "types": "./src/components/SecretTextField/index.tsx",
-      "default": "./src/components/SecretTextField/index.tsx"
+    "./fields/client": {
+      "types": "./src/fields/client.ts",
+      "default": "./src/fields/client.ts"
     },
     "./styles/admin.css": "./src/styles/admin.css"
   },

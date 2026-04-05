@@ -1,11 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { useLanguage } from '@/components/LanguageContext'
-
 export function BottomLogoReveal() {
-  const { lang, t } = useLanguage()
-
   return (
     <div
       className="fixed inset-0 z-0 flex flex-col items-center justify-center gap-6 md:gap-8 pointer-events-none"

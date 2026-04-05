@@ -76,6 +76,12 @@ export type SiteConfig = {
     subtitle: string
     sections: { title: string; paragraphs: { text: string }[] }[]
   }
+  ui?: {
+    workView?: string
+    developmentFilms?: string
+    developmentSeries?: string
+    developmentUnscripted?: string
+  }
 }
 
 export type NavigationData = {

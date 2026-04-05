@@ -15,8 +15,6 @@
  * ============================================
  */
 
-import { fallbackEn } from './fallback/en'
-import { fallbackFr } from './fallback/fr'
 import { generateSlug } from '@/lib/works'
 import type {
   Language,
@@ -292,11 +290,28 @@ function parseOurWork(csv: string): WorkItem[] {
     .filter(item => item.title && item.src)
 }
 
-/**
- * Get fallback content for a locale
- */
+/** Empty shell when Sheets are unreachable (site content comes from Payload). */
 function getFallback(locale: Language): SiteContent {
-  return locale === 'en' ? fallbackEn : fallbackFr
+  const emptyContact: ContactInfo = {
+    email: '',
+    phone: '',
+    address: '',
+    social: { instagram: '', linkedin: '', vimeo: '', tiktok: '', imdb: '' },
+  }
+  const minimalT: Dictionary = {
+    nav: { home: ' ', news: ' ', ourWork: ' ', ourTeam: ' ', aboutUs: ' ', contact: ' ' },
+    hero: { headline: ' ', subheadline: ' ', paragraph: ' ', tagline: ' ', cta: ' ' },
+    footer: { contact: ' ', bottomRevealCta: ' ', followUs: ' ', rights: ' ', legal: ' ' },
+  }
+  return {
+    lang: locale,
+    t: minimalT,
+    aboutContent: [],
+    teamMembers: [],
+    awardsNews: [],
+    contactInfo: emptyContact,
+    ourWork: [],
+  }
 }
 
 /**

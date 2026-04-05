@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { SITE_CONFIG } from '@/lib/seo'
-import { fallbackEn } from '@/lib/i18n/fallback/en'
+import { getWorks } from '@/lib/cms'
 import { getWorkSlug } from '@/lib/works'
 
 export const runtime = 'nodejs'
@@ -17,18 +17,19 @@ function esc(s: string) {
 export async function GET() {
   const base = SITE_CONFIG.url.replace(/\/$/, '')
   const urls: string[] = []
+  const { docs: works } = await getWorks()
 
   for (const locale of ['en'] as const) {
-    const works = fallbackEn.ourWork
-    
     for (const work of works) {
       // Only include works with videos
       if (!work.videoUrl) continue
 
       const slug = getWorkSlug(work)
       const loc = `${base}/${locale}/our-work/${slug}`
-      const thumb = work.src.startsWith('http') ? work.src : `${base}${work.src}`
-      const description = work.description || work.title
+      const posterUrl =
+        typeof work.poster === 'object' && work.poster?.url ? work.poster.url : ''
+      const thumb = posterUrl.startsWith('http') ? posterUrl : `${base}${posterUrl}`
+      const description = work.description || work.title || ''
       
       urls.push(`  <url>
     <loc>${esc(loc)}</loc>

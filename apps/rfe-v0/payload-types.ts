@@ -1744,6 +1744,12 @@ export interface SiteConfig {
         }[]
       | null;
   };
+  ui?: {
+    workView?: string | null;
+    developmentFilms?: string | null;
+    developmentSeries?: string | null;
+    developmentUnscripted?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1874,6 +1880,14 @@ export interface SiteConfigSelect<T extends boolean = true> {
                   };
               id?: T;
             };
+      };
+  ui?:
+    | T
+    | {
+        workView?: T;
+        developmentFilms?: T;
+        developmentSeries?: T;
+        developmentUnscripted?: T;
       };
   updatedAt?: T;
   createdAt?: T;

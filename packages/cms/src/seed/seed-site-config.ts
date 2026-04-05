@@ -65,6 +65,12 @@ export async function seedSiteConfig(payload: Payload): Promise<void> {
         heroSubheadline: 'True Crime / Real Drama',
         heroParagraph: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
       },
+      ui: {
+        workView: 'View',
+        developmentFilms: 'Films',
+        developmentSeries: 'Series',
+        developmentUnscripted: 'Unscripted',
+      },
       legal: {
         title: 'Legal notice',
         subtitle: 'Publisher information, hosting, and terms of use.',

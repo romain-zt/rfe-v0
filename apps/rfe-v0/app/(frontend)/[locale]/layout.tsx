@@ -7,8 +7,15 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { BottomLogoReveal } from '@/components/BottomLogoReveal'
 import { generateSiteJsonLd } from '@/lib/generate-meta'
-import { fallbackEn } from '@/lib/i18n/fallback/en'
-import { getWorks, getTeamMembers, getSiteConfig, getNavigation } from '@/lib/cms'
+import { buildUiDictionary } from '@/lib/build-ui-dictionary'
+import { siteThemeToStyleVars } from '@/lib/site-theme'
+import {
+  getWorks,
+  getTeamMembers,
+  getSiteConfig,
+  getNavigation,
+  getPressItems,
+} from '@/lib/cms'
 import type { Language } from '@/lib/i18n/types'
 import './globals.css'
 
@@ -48,10 +55,14 @@ export async function generateMetadata({ params }: Props) {
   }
 }
 
-export const viewport: Viewport = {
-  themeColor: '#070708',
-  width: 'device-width',
-  initialScale: 1,
+export async function generateViewport({ params }: Props): Promise<Viewport> {
+  await params
+  const siteConfig = await getSiteConfig().catch(() => null)
+  return {
+    themeColor: siteConfig?.colors?.background ?? '#070708',
+    width: 'device-width',
+    initialScale: 1,
+  }
 }
 
 export function generateStaticParams() {
@@ -67,11 +78,12 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params
 
-  const [siteConfig, navigation, worksRes, teamRes] = await Promise.all([
+  const [siteConfig, navigation, worksRes, teamRes, pressRes] = await Promise.all([
     getSiteConfig().catch(() => null),
     getNavigation().catch(() => null),
     getWorks().catch(() => ({ docs: [] })),
     getTeamMembers().catch(() => ({ docs: [] })),
+    getPressItems().catch(() => ({ docs: [] })),
   ])
 
   const works = worksRes.docs.map((w) => ({
@@ -95,49 +107,48 @@ export default async function RootLayout({
     photo: typeof m.photo === 'object' && m.photo ? (m.photo as { url?: string }).url || '' : '',
   }))
 
+  const pressDateYm = (d: string | undefined) => (d ? d.slice(0, 7) : '')
+
   const content = {
-    aboutContent: siteConfig?.about?.paragraphs?.map((p) => p.text) ?? fallbackEn.aboutContent,
-    teamMembers: teamMembers.length ? teamMembers : fallbackEn.teamMembers,
-    awardsNews: fallbackEn.awardsNews,
-    contactInfo: siteConfig
-      ? {
-          email: siteConfig.contact.email,
-          phone: siteConfig.contact.phone ?? '',
-          address: siteConfig.contact.address,
-          social: {
-            instagram: siteConfig.social.instagram ?? '',
-            linkedin: siteConfig.social.linkedin ?? '',
-            vimeo: siteConfig.social.vimeo ?? '',
-            tiktok: siteConfig.social.tiktok ?? '',
-            imdb: siteConfig.social.imdb ?? '',
-          },
-        }
-      : fallbackEn.contactInfo,
-    ourWork: works.length ? works : fallbackEn.ourWork,
+    aboutContent: siteConfig?.about?.paragraphs?.map((p) => p.text) ?? [],
+    teamMembers,
+    awardsNews: pressRes.docs.map((p) => ({
+      id: p.id,
+      date: pressDateYm(p.date),
+      source: p.source,
+      title: p.title,
+      content: p.description ?? '',
+    })),
+    contactInfo: {
+      email: siteConfig?.contact?.email ?? '',
+      phone: siteConfig?.contact?.phone ?? '',
+      address: siteConfig?.contact?.address ?? '',
+      social: {
+        instagram: siteConfig?.social?.instagram ?? '',
+        linkedin: siteConfig?.social?.linkedin ?? '',
+        vimeo: siteConfig?.social?.vimeo ?? '',
+        tiktok: siteConfig?.social?.tiktok ?? '',
+        imdb: siteConfig?.social?.imdb ?? '',
+      },
+    },
+    ourWork: works,
   }
 
-  const navItems = navigation?.header?.items ?? [
-    { label: 'About Us', href: '/about', isExternal: false },
-    { label: 'Our Work', href: '/our-work', isExternal: false },
-    { label: 'Development', href: '/development', isExternal: false },
-    { label: 'Press', href: '/press', isExternal: false },
-    { label: 'Contact', href: '/contact', isExternal: false },
-  ]
+  const navItems = navigation?.header?.items
+  const themeStyle = siteThemeToStyleVars(siteConfig)
+  const t = buildUiDictionary(siteConfig, navigation)
 
   return (
     <html
       lang={locale}
       className={`dark ${_inter.variable} ${_fraunces.variable}`}
+      style={themeStyle}
     >
       <head>
-        {generateSiteJsonLd(siteConfig, navItems, locale)}
+        {generateSiteJsonLd(siteConfig, navItems ?? [], locale)}
       </head>
       <body className="font-sans antialiased min-h-screen cinema-root max-w-[100dvw] overflow-x-hidden">
-        <LanguageProvider
-          locale={locale}
-          t={fallbackEn.t}
-          content={content}
-        >
+        <LanguageProvider locale={locale} t={t} content={content}>
           {/* Cinematic depth layers */}
           <div className="cinema-hole" aria-hidden="true" />
           <div className="cinema-lens" aria-hidden="true" />

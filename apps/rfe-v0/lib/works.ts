@@ -22,7 +22,7 @@ export function generateSlug(title: string): string {
     .replace(/^-|-$/g, '') // Remove leading/trailing dashes
 }
 
-export function getWorkSlug(work: WorkItem): string {
+export function getWorkSlug(work: Pick<WorkItem, 'slug' | 'title'>): string {
   const slug = (work.slug || '').trim()
   return slug ? slug : generateSlug(work.title)
 }

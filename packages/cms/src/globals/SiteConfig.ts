@@ -120,6 +120,17 @@ export const SiteConfig: GlobalConfig = {
       ],
     },
     {
+      name: 'ui',
+      type: 'group',
+      label: 'UI labels',
+      fields: [
+        { name: 'workView', type: 'text', defaultValue: 'View' },
+        { name: 'developmentFilms', type: 'text', defaultValue: 'Films' },
+        { name: 'developmentSeries', type: 'text', defaultValue: 'Series' },
+        { name: 'developmentUnscripted', type: 'text', defaultValue: 'Unscripted' },
+      ],
+    },
+    {
       name: 'legal',
       type: 'group',
       fields: [

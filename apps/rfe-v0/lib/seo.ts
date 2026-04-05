@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import type { Language } from '@/app/(frontend)/[locale]/content'
+import type { Language } from '@/lib/i18n/types'
 
 export const SITE_CONFIG = {
   name: 'RFE',

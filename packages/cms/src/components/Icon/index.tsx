@@ -8,7 +8,7 @@ export const Icon: React.FC = () => (
     height={20}
     aria-label="RFE"
   >
-    <rect width="512" height="512" rx="108" fill="#070708" />
+    <rect width="512" height="512" rx="108" fill="#1c1b19" />
     <g
       fill="none"
       stroke="#B5975A"

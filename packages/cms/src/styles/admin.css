@@ -1,38 +1,35 @@
 /*
- * RFE Admin Panel Theme
+ * RFE Admin Panel Theme — Light
  *
- * Overrides Payload's default CSS variables to match the RFE brand:
- * - Near-black backgrounds with warm tones
- * - Gold (#B5975A) as primary accent
- * - Warm off-white (#F5F0EB) text
- * - Inter font stack
+ * Clean white/light-gray backgrounds with gold (#B5975A) accent.
+ * Keeps the white-labeled feel without the dark cinema look.
  *
  * Payload wraps its defaults in @layer payload-default,
  * so our un-layered CSS wins automatically.
  */
 
 :root {
-  --color-base-0: #070708;
-  --color-base-50: #0a0a0c;
-  --color-base-100: #0e0e11;
-  --color-base-150: #131316;
-  --color-base-200: #18181c;
-  --color-base-250: #1e1e22;
-  --color-base-300: #252529;
-  --color-base-350: #2d2d32;
-  --color-base-400: #36363c;
-  --color-base-450: #404046;
-  --color-base-500: #4b4b52;
-  --color-base-550: #5a5a61;
-  --color-base-600: #6a6a71;
-  --color-base-650: #7a7a81;
-  --color-base-700: #8c8c92;
-  --color-base-750: #9f9fa4;
-  --color-base-800: #b3b3b7;
-  --color-base-850: #c7c5c1;
-  --color-base-900: #dbd8d3;
-  --color-base-950: #ece9e4;
-  --color-base-1000: #F5F0EB;
+  --color-base-0: #ffffff;
+  --color-base-50: #fafaf9;
+  --color-base-100: #f5f4f2;
+  --color-base-150: #eeedeb;
+  --color-base-200: #e6e5e3;
+  --color-base-250: #dddcd9;
+  --color-base-300: #d1d0cd;
+  --color-base-350: #c2c1be;
+  --color-base-400: #aeadaa;
+  --color-base-450: #9a9996;
+  --color-base-500: #868582;
+  --color-base-550: #74736f;
+  --color-base-600: #62615e;
+  --color-base-650: #51504d;
+  --color-base-700: #41403e;
+  --color-base-750: #333230;
+  --color-base-800: #262523;
+  --color-base-850: #1c1b19;
+  --color-base-900: #131211;
+  --color-base-950: #0b0a09;
+  --color-base-1000: #070708;
 
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
@@ -42,42 +39,42 @@
   --color-success-350: #B5975A;
   --color-success-300: #a38750;
   --color-success-250: #917746;
-  --color-success-200: #7f683d;
-  --color-success-150: #6d5933;
-  --color-success-100: #5b4a2a;
-  --color-success-50: #493b21;
+  --color-success-200: #d4c49e;
+  --color-success-150: #e2d7ba;
+  --color-success-100: #f0ead6;
+  --color-success-50: #f8f5ee;
 }
 
-html[data-theme='dark'] {
-  --color-base-0: #070708;
-  --color-base-50: #0a0a0c;
-  --color-base-100: #0e0e11;
-  --color-base-150: #131316;
-  --color-base-200: #18181c;
-  --color-base-250: #1e1e22;
-  --color-base-300: #252529;
-  --color-base-350: #2d2d32;
-  --color-base-400: #36363c;
-  --color-base-450: #404046;
-  --color-base-500: #4b4b52;
-  --color-base-550: #5a5a61;
-  --color-base-600: #6a6a71;
-  --color-base-650: #7a7a81;
-  --color-base-700: #8c8c92;
-  --color-base-750: #9f9fa4;
-  --color-base-800: #b3b3b7;
-  --color-base-850: #c7c5c1;
-  --color-base-900: #dbd8d3;
-  --color-base-950: #ece9e4;
-  --color-base-1000: #F5F0EB;
+html[data-theme='light'] {
+  --color-base-0: #ffffff;
+  --color-base-50: #fafaf9;
+  --color-base-100: #f5f4f2;
+  --color-base-150: #eeedeb;
+  --color-base-200: #e6e5e3;
+  --color-base-250: #dddcd9;
+  --color-base-300: #d1d0cd;
+  --color-base-350: #c2c1be;
+  --color-base-400: #aeadaa;
+  --color-base-450: #9a9996;
+  --color-base-500: #868582;
+  --color-base-550: #74736f;
+  --color-base-600: #62615e;
+  --color-base-650: #51504d;
+  --color-base-700: #41403e;
+  --color-base-750: #333230;
+  --color-base-800: #262523;
+  --color-base-850: #1c1b19;
+  --color-base-900: #131211;
+  --color-base-950: #0b0a09;
+  --color-base-1000: #070708;
 
   --color-success-500: #B5975A;
   --color-success-400: #c4a86e;
   --color-success-350: #B5975A;
   --color-success-300: #a38750;
   --color-success-250: #917746;
-  --color-success-200: #7f683d;
-  --color-success-150: #6d5933;
-  --color-success-100: #5b4a2a;
-  --color-success-50: #493b21;
+  --color-success-200: #d4c49e;
+  --color-success-150: #e2d7ba;
+  --color-success-100: #f0ead6;
+  --color-success-50: #f8f5ee;
 }

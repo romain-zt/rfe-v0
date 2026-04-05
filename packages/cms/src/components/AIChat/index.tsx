@@ -29,7 +29,8 @@ const SUGGESTIONS = [
   'How do I create a new page?',
   'Where do I edit the homepage?',
   'How do I add a new team member?',
-  'How do I change the site colors?',
+  'Create a new draft page called "Test"',
+  'List all works in the database',
 ]
 
 const OPEN_KEY = 'rfe-ai-chat-open'
@@ -241,7 +242,7 @@ function renderMarkdown(text: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = []
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+    const line = lines[i] ?? ''
 
     if (line.startsWith('### ')) {
       nodes.push(
@@ -267,7 +268,7 @@ function renderMarkdown(text: string): React.ReactNode[] {
       if (match) {
         nodes.push(
           <div key={i} style={{ paddingLeft: 12, margin: '2px 0' }}>
-            {match[1]}. {renderInline(match[2])}
+            {match[1]}. {renderInline(match[2] ?? '')}
           </div>,
         )
       }
@@ -304,7 +305,7 @@ function renderInline(text: string): React.ReactNode[] {
           key={`${match.index}-link`}
           href={href}
           style={{
-            color: 'var(--theme-success-500, #22c55e)',
+            color: 'var(--theme-success-500, #B5975A)',
             textDecoration: 'underline',
             textUnderlineOffset: 2,
           }}
@@ -320,7 +321,7 @@ function renderInline(text: string): React.ReactNode[] {
         <code
           key={`${match.index}-code`}
           style={{
-            background: 'var(--theme-elevation-100, #2a2a3e)',
+            background: 'var(--theme-elevation-100, #f0efed)',
             padding: '1px 5px',
             borderRadius: 3,
             fontSize: '0.9em',
@@ -388,7 +389,6 @@ function AIChatWidget() {
     try { sessionStorage.setItem(OPEN_KEY, open ? '1' : '0') } catch { /* ignore */ }
   }, [open])
 
-  // Restore active conversation on first open
   useEffect(() => {
     if (open && !restoredRef.current) {
       restoredRef.current = true
@@ -513,7 +513,7 @@ function AIChatWidget() {
           </button>
 
           {isLoadingList && (
-            <div style={S.listEmpty}>Loading…</div>
+            <div style={S.listEmpty}>Loading...</div>
           )}
 
           {!isLoadingList && conversations.length === 0 && (
@@ -566,6 +566,7 @@ function AIChatWidget() {
             <path d="M9 22h6" />
           </svg>
           <span style={{ fontWeight: 600, fontSize: 13 }}>AI Assistant</span>
+          <span style={S.betaBadge}>Beta</span>
         </div>
         <div style={{ display: 'flex', gap: 4 }}>
           <button type="button" onClick={openHistory} style={S.headerBtn} title="Conversation history">
@@ -594,7 +595,13 @@ function AIChatWidget() {
         {messages.length === 0 && (
           <div style={S.empty}>
             <p style={S.emptyTitle}>How can I help?</p>
-            <p style={S.emptySubtitle}>Ask me anything about managing your content.</p>
+            <p style={S.emptySubtitle}>
+              Ask me anything about managing your content, or ask me to create and edit content for you.
+            </p>
+            <div style={S.betaNotice}>
+              <strong>Beta</strong> — AI assistant with $50/mo usage included in your plan.
+              Responses may be imperfect. Always review AI-created content before publishing.
+            </div>
             <div style={S.suggestions}>
               {SUGGESTIONS.map((s) => (
                 <button key={s} type="button" onClick={() => handleSuggestion(s)} style={S.suggestion}>
@@ -633,7 +640,7 @@ function AIChatWidget() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask something…"
+          placeholder="Ask something..."
           rows={1}
           style={S.textarea}
           disabled={isLoading}
@@ -664,7 +671,6 @@ export const AIChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     (async () => {
       try {
-        // Check the site-config global for the admin.aiAssistantEnabled toggle
         const cfgRes = await fetch('/api/globals/site-config?depth=0', {
           credentials: 'include',
         })
@@ -672,7 +678,6 @@ export const AIChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const cfg = await cfgRes.json()
         if (!cfg?.admin?.aiAssistantEnabled) return
 
-        // Also verify the server-side AI route is available (env key set)
         const headRes = await fetch('/api/ai/chat', {
           method: 'HEAD',
           credentials: 'include',
@@ -693,7 +698,7 @@ export const AIChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 }
 
 // ---------------------------------------------------------------------------
-// Styles
+// Styles — light theme compatible
 // ---------------------------------------------------------------------------
 
 const S: Record<string, React.CSSProperties> = {
@@ -705,14 +710,14 @@ const S: Record<string, React.CSSProperties> = {
     width: 48,
     height: 48,
     borderRadius: '50%',
-    border: '1px solid var(--theme-elevation-200, #3a3a4e)',
-    background: 'var(--theme-elevation-50, #1a1a2e)',
-    color: 'var(--theme-text, #fff)',
+    border: '1px solid var(--theme-elevation-200, #e0e0e0)',
+    background: 'var(--theme-elevation-50, #fafaf9)',
+    color: 'var(--theme-text, #1a1a1a)',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
     transition: 'transform 0.15s, box-shadow 0.15s',
   },
   panel: {
@@ -725,11 +730,11 @@ const S: Record<string, React.CSSProperties> = {
     height: 520,
     maxHeight: 'calc(100vh - 40px)',
     borderRadius: 12,
-    border: '1px solid var(--theme-elevation-150, #2e2e42)',
-    background: 'var(--theme-elevation-0, #0f0f18)',
+    border: '1px solid var(--theme-elevation-150, #e0e0e0)',
+    background: 'var(--theme-elevation-0, #ffffff)',
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
+    boxShadow: '0 8px 40px rgba(0,0,0,0.15)',
     overflow: 'hidden',
   },
   header: {
@@ -737,25 +742,38 @@ const S: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '10px 14px',
-    borderBottom: '1px solid var(--theme-elevation-100, #2a2a3e)',
-    background: 'var(--theme-elevation-50, #1a1a2e)',
+    borderBottom: '1px solid var(--theme-elevation-100, #eee)',
+    background: 'var(--theme-elevation-50, #fafaf9)',
     flexShrink: 0,
   },
   headerTitle: {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    color: 'var(--theme-text, #fff)',
+    color: 'var(--theme-text, #1a1a1a)',
   },
   headerBtn: {
     padding: 6,
     border: 'none',
     background: 'transparent',
-    color: 'var(--theme-elevation-400, #999)',
+    color: 'var(--theme-elevation-500, #666)',
     cursor: 'pointer',
     borderRadius: 4,
     display: 'flex',
     alignItems: 'center',
+  },
+  betaBadge: {
+    display: 'inline-block',
+    padding: '1px 6px',
+    fontSize: 10,
+    fontWeight: 600,
+    letterSpacing: '0.04em',
+    color: '#8a6e2f',
+    background: '#f8f1e0',
+    borderRadius: 4,
+    border: '1px solid #e8d9b4',
+    lineHeight: '16px',
+    textTransform: 'uppercase' as const,
   },
 
   // -- Chat view --
@@ -781,12 +799,23 @@ const S: Record<string, React.CSSProperties> = {
     margin: 0,
     fontSize: 15,
     fontWeight: 600,
-    color: 'var(--theme-text, #fff)',
+    color: 'var(--theme-text, #1a1a1a)',
   },
   emptySubtitle: {
     margin: 0,
     fontSize: 12,
-    color: 'var(--theme-elevation-400, #999)',
+    color: 'var(--theme-elevation-500, #666)',
+  },
+  betaNotice: {
+    margin: '10px 0 4px',
+    padding: '8px 12px',
+    fontSize: 11,
+    lineHeight: 1.5,
+    color: '#7a6530',
+    background: '#fdf8ee',
+    border: '1px solid #ecdcb0',
+    borderRadius: 8,
+    textAlign: 'left' as const,
   },
   suggestions: {
     display: 'flex',
@@ -798,9 +827,9 @@ const S: Record<string, React.CSSProperties> = {
   suggestion: {
     padding: '8px 12px',
     fontSize: 12,
-    color: 'var(--theme-text, #fff)',
-    background: 'var(--theme-elevation-50, #1a1a2e)',
-    border: '1px solid var(--theme-elevation-100, #2a2a3e)',
+    color: 'var(--theme-text, #1a1a1a)',
+    background: 'var(--theme-elevation-50, #fafaf9)',
+    border: '1px solid var(--theme-elevation-150, #e0e0e0)',
     borderRadius: 8,
     cursor: 'pointer',
     textAlign: 'left',
@@ -811,8 +840,8 @@ const S: Record<string, React.CSSProperties> = {
     maxWidth: '85%',
     padding: '8px 12px',
     borderRadius: '12px 12px 4px 12px',
-    background: 'var(--theme-elevation-150, #2e2e42)',
-    color: 'var(--theme-text, #fff)',
+    background: 'var(--theme-elevation-100, #f0efed)',
+    color: 'var(--theme-text, #1a1a1a)',
     fontSize: 13,
     lineHeight: 1.5,
     wordBreak: 'break-word' as const,
@@ -822,9 +851,9 @@ const S: Record<string, React.CSSProperties> = {
     maxWidth: '90%',
     padding: '8px 12px',
     borderRadius: '12px 12px 12px 4px',
-    background: 'var(--theme-elevation-50, #1a1a2e)',
-    border: '1px solid var(--theme-elevation-100, #2a2a3e)',
-    color: 'var(--theme-text, #fff)',
+    background: 'var(--theme-elevation-50, #fafaf9)',
+    border: '1px solid var(--theme-elevation-100, #eee)',
+    color: 'var(--theme-text, #1a1a1a)',
     fontSize: 13,
     lineHeight: 1.55,
     wordBreak: 'break-word' as const,
@@ -842,7 +871,7 @@ const S: Record<string, React.CSSProperties> = {
     width: 6,
     height: 6,
     borderRadius: '50%',
-    background: 'var(--theme-elevation-300, #666)',
+    background: 'var(--theme-elevation-300, #ccc)',
     animation: 'ai-dot-pulse 1s ease-in-out infinite',
   },
   inputArea: {
@@ -850,8 +879,8 @@ const S: Record<string, React.CSSProperties> = {
     alignItems: 'flex-end',
     gap: 8,
     padding: '10px 14px',
-    borderTop: '1px solid var(--theme-elevation-100, #2a2a3e)',
-    background: 'var(--theme-elevation-50, #1a1a2e)',
+    borderTop: '1px solid var(--theme-elevation-100, #eee)',
+    background: 'var(--theme-elevation-50, #fafaf9)',
     flexShrink: 0,
   },
   textarea: {
@@ -859,9 +888,9 @@ const S: Record<string, React.CSSProperties> = {
     padding: '8px 12px',
     fontSize: 13,
     lineHeight: 1.4,
-    color: 'var(--theme-text, #fff)',
-    background: 'var(--theme-elevation-0, #0f0f18)',
-    border: '1px solid var(--theme-elevation-150, #2e2e42)',
+    color: 'var(--theme-text, #1a1a1a)',
+    background: 'var(--theme-elevation-0, #ffffff)',
+    border: '1px solid var(--theme-elevation-200, #ddd)',
     borderRadius: 8,
     resize: 'none' as const,
     outline: 'none',
@@ -877,8 +906,8 @@ const S: Record<string, React.CSSProperties> = {
     justifyContent: 'center',
     border: 'none',
     borderRadius: 8,
-    background: 'var(--theme-elevation-150, #2e2e42)',
-    color: 'var(--theme-text, #fff)',
+    background: 'var(--theme-elevation-150, #e6e5e3)',
+    color: 'var(--theme-text, #1a1a1a)',
     cursor: 'pointer',
     transition: 'opacity 0.1s',
   },
@@ -896,7 +925,7 @@ const S: Record<string, React.CSSProperties> = {
     padding: '24px 12px',
     textAlign: 'center',
     fontSize: 12,
-    color: 'var(--theme-elevation-400, #999)',
+    color: 'var(--theme-elevation-500, #666)',
   },
   newChatBtn: {
     display: 'flex',
@@ -905,9 +934,9 @@ const S: Record<string, React.CSSProperties> = {
     padding: '10px 12px',
     fontSize: 13,
     fontWeight: 500,
-    color: 'var(--theme-text, #fff)',
-    background: 'var(--theme-elevation-100, #2a2a3e)',
-    border: '1px solid var(--theme-elevation-150, #2e2e42)',
+    color: 'var(--theme-text, #1a1a1a)',
+    background: 'var(--theme-elevation-100, #f0efed)',
+    border: '1px solid var(--theme-elevation-150, #e0e0e0)',
     borderRadius: 8,
     cursor: 'pointer',
     marginBottom: 6,
@@ -922,12 +951,12 @@ const S: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     background: 'transparent',
     textAlign: 'left',
-    color: 'var(--theme-text, #fff)',
+    color: 'var(--theme-text, #1a1a1a)',
     transition: 'background 0.1s',
   },
   convItemActive: {
-    background: 'var(--theme-elevation-50, #1a1a2e)',
-    border: '1px solid var(--theme-elevation-100, #2a2a3e)',
+    background: 'var(--theme-elevation-50, #fafaf9)',
+    border: '1px solid var(--theme-elevation-150, #e0e0e0)',
   },
   convTitle: {
     fontSize: 13,
@@ -941,13 +970,13 @@ const S: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'space-between',
     fontSize: 11,
-    color: 'var(--theme-elevation-400, #999)',
+    color: 'var(--theme-elevation-500, #666)',
   },
   convDeleteBtn: {
     padding: 4,
     border: 'none',
     background: 'transparent',
-    color: 'var(--theme-elevation-400, #999)',
+    color: 'var(--theme-elevation-500, #666)',
     cursor: 'pointer',
     borderRadius: 4,
     display: 'flex',
@@ -957,7 +986,6 @@ const S: Record<string, React.CSSProperties> = {
   },
 }
 
-/* Inject animation keyframes */
 if (typeof document !== 'undefined' && !document.getElementById('ai-chat-keyframes')) {
   const style = document.createElement('style')
   style.id = 'ai-chat-keyframes'

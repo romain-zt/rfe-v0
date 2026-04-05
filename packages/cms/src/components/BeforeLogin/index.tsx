@@ -13,7 +13,7 @@ export const BeforeLogin: React.FC = () => (
         fontSize: 13,
         fontWeight: 300,
         letterSpacing: '0.15em',
-        color: '#C4A0A0',
+        color: '#8a6060',
         textTransform: 'uppercase',
         margin: 0,
       }}

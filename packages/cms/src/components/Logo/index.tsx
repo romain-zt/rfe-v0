@@ -16,7 +16,7 @@ export const Logo: React.FC = () => (
       height={56}
       aria-hidden="true"
     >
-      <rect width="512" height="512" rx="108" fill="#070708" />
+      <rect width="512" height="512" rx="108" fill="#1c1b19" />
       <g
         fill="none"
         stroke="#B5975A"
@@ -37,7 +37,7 @@ export const Logo: React.FC = () => (
         fontSize: 32,
         fontWeight: 300,
         letterSpacing: '0.3em',
-        color: '#B5975A',
+        color: '#8a7a4a',
       }}
     >
       RFE

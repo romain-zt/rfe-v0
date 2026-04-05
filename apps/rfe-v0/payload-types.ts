@@ -1707,6 +1707,9 @@ export interface SiteConfig {
     logo?: (number | null) | Media;
     favicon?: (number | null) | Media;
   };
+  /**
+   * Primary brand palette.
+   */
   colors?: {
     background?: string | null;
     foreground?: string | null;
@@ -1714,6 +1717,9 @@ export interface SiteConfig {
     rfeRose?: string | null;
     rfeGold?: string | null;
   };
+  /**
+   * Near-black variants used as section backgrounds.
+   */
   sectionTones?: {
     deep?: string | null;
     charcoal?: string | null;
@@ -1724,9 +1730,59 @@ export interface SiteConfig {
     dusk?: string | null;
   };
   typography?: {
-    brandFont?: string | null;
-    sansFont?: string | null;
-    serifFont?: string | null;
+    /**
+     * "Sackers Gothic" is a custom local font. Other options load from Google Fonts.
+     */
+    brandFont?:
+      | (
+          | 'Sackers Gothic'
+          | 'Cinzel'
+          | 'Playfair Display'
+          | 'Cormorant Garamond'
+          | 'Bodoni Moda'
+          | 'DM Serif Display'
+          | 'Josefin Sans'
+          | 'Italiana'
+          | 'Marcellus'
+          | 'Tenor Sans'
+          | 'Poiret One'
+        )
+      | null;
+    sansFont?:
+      | (
+          | 'Inter'
+          | 'DM Sans'
+          | 'Plus Jakarta Sans'
+          | 'Outfit'
+          | 'Space Grotesk'
+          | 'Montserrat'
+          | 'Poppins'
+          | 'Nunito Sans'
+          | 'Raleway'
+          | 'Open Sans'
+          | 'Lato'
+          | 'Roboto'
+          | 'Work Sans'
+          | 'Source Sans 3'
+          | 'Figtree'
+        )
+      | null;
+    serifFont?:
+      | (
+          | 'Fraunces'
+          | 'Lora'
+          | 'Merriweather'
+          | 'EB Garamond'
+          | 'Libre Baskerville'
+          | 'Crimson Pro'
+          | 'Bitter'
+          | 'Playfair Display'
+          | 'Cormorant Garamond'
+          | 'Noto Serif'
+          | 'Source Serif 4'
+          | 'IBM Plex Serif'
+        )
+      | null;
     radiusBase?: string | null;
   };
   easings?: {
@@ -1734,48 +1790,22 @@ export interface SiteConfig {
     quiet?: string | null;
     sharp?: string | null;
   };
-  seo?: {
-    titleTemplate?: string | null;
-    defaultTitle?: string | null;
-    defaultDescription?: string | null;
-    keywords?: string | null;
-    ogImage?: (number | null) | Media;
-    siteUrl?: string | null;
-  };
-  contact?: {
-    email?: string | null;
-    phone?: string | null;
-    address?: string | null;
-  };
-  social?: {
-    instagram?: string | null;
-    linkedin?: string | null;
-    vimeo?: string | null;
-    tiktok?: string | null;
-    imdb?: string | null;
-  };
   about?: {
+    heroHeadline?: string | null;
+    heroSubheadline?: string | null;
+    heroParagraph?: string | null;
     paragraphs?:
       | {
           text: string;
           id?: string | null;
         }[]
       | null;
-    heroHeadline?: string | null;
-    heroSubheadline?: string | null;
-    heroParagraph?: string | null;
   };
   ui?: {
     workView?: string | null;
     developmentFilms?: string | null;
     developmentSeries?: string | null;
     developmentUnscripted?: string | null;
-  };
-  admin?: {
-    /**
-     * Show the AI chat widget in the admin panel. Requires an OpenAI API key in environment variables.
-     */
-    aiAssistantEnabled?: boolean | null;
   };
   legal?: {
     title?: string | null;
@@ -1792,6 +1822,37 @@ export interface SiteConfig {
           id?: string | null;
         }[]
       | null;
+  };
+  seo?: {
+    titleTemplate?: string | null;
+    defaultTitle?: string | null;
+    defaultDescription?: string | null;
+    keywords?: string | null;
+    ogImage?: (number | null) | Media;
+    siteUrl?: string | null;
+  };
+  contact?: {
+    email?: string | null;
+    phone?: string | null;
+    address?: string | null;
+  };
+  social?: {
+    instagram?: string | null;
+    imdb?: string | null;
+    linkedin?: string | null;
+    vimeo?: string | null;
+    tiktok?: string | null;
+  };
+  admin?: {
+    /**
+     * Show the AI chat widget in the admin panel.
+     */
+    aiAssistantEnabled?: boolean | null;
+    /**
+     * Paste your OpenAI API key here. Leave empty to use the key from environment variables (OPENAI_API_KEY).
+     */
+    openaiApiKey?: string | null;
+    aiModel?: ('gpt-4o' | 'gpt-4o-mini' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano') | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1867,6 +1928,45 @@ export interface SiteConfigSelect<T extends boolean = true> {
         quiet?: T;
         sharp?: T;
       };
+  about?:
+    | T
+    | {
+        heroHeadline?: T;
+        heroSubheadline?: T;
+        heroParagraph?: T;
+        paragraphs?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+      };
+  ui?:
+    | T
+    | {
+        workView?: T;
+        developmentFilms?: T;
+        developmentSeries?: T;
+        developmentUnscripted?: T;
+      };
+  legal?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        sections?:
+          | T
+          | {
+              title?: T;
+              paragraphs?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
   seo?:
     | T
     | {
@@ -1888,54 +1988,17 @@ export interface SiteConfigSelect<T extends boolean = true> {
     | T
     | {
         instagram?: T;
+        imdb?: T;
         linkedin?: T;
         vimeo?: T;
         tiktok?: T;
-        imdb?: T;
-      };
-  about?:
-    | T
-    | {
-        paragraphs?:
-          | T
-          | {
-              text?: T;
-              id?: T;
-            };
-        heroHeadline?: T;
-        heroSubheadline?: T;
-        heroParagraph?: T;
-      };
-  ui?:
-    | T
-    | {
-        workView?: T;
-        developmentFilms?: T;
-        developmentSeries?: T;
-        developmentUnscripted?: T;
       };
   admin?:
     | T
     | {
         aiAssistantEnabled?: T;
-      };
-  legal?:
-    | T
-    | {
-        title?: T;
-        subtitle?: T;
-        sections?:
-          | T
-          | {
-              title?: T;
-              paragraphs?:
-                | T
-                | {
-                    text?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
+        openaiApiKey?: T;
+        aiModel?: T;
       };
   updatedAt?: T;
   createdAt?: T;

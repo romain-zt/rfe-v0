@@ -1,5 +1,5 @@
 import { streamText, stepCountIs } from 'ai'
-import { openai } from '@ai-sdk/openai'
+import { openai, createOpenAI } from '@ai-sdk/openai'
 import { getPayload } from 'payload'
 import { z } from 'zod'
 import type { Tool, ToolSet } from 'ai'
@@ -370,8 +370,14 @@ export async function POST(req: Request) {
 
   const tools = buildTools(payload)
 
+  const siteConfig = await payload.findGlobal({ slug: 'site-config', depth: 0 })
+  const adminCfg = (siteConfig as unknown as Record<string, unknown>)?.admin as Record<string, unknown> | undefined
+  const customKey = typeof adminCfg?.openaiApiKey === 'string' ? adminCfg.openaiApiKey.trim() : ''
+  const provider = customKey ? createOpenAI({ apiKey: customKey }) : openai
+  const modelName = (typeof adminCfg?.aiModel === 'string' && adminCfg.aiModel) || process.env.AI_MODEL || 'gpt-4o'
+
   const result = streamText({
-    model: openai(process.env.AI_MODEL || 'gpt-4o'),
+    model: provider(modelName),
     system: SYSTEM_PROMPT,
     messages,
     tools,

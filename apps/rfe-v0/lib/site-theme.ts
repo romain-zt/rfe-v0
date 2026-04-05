@@ -24,11 +24,24 @@ const EASING_DEFAULTS = {
   sharp: 'cubic-bezier(0.76, 0, 0.24, 1)',
 } as const
 
+const FONT_DEFAULTS = {
+  brandFont: 'Sackers Gothic',
+  sansFont: 'Inter',
+  serifFont: 'Fraunces',
+} as const
+
+const LOCAL_FONTS = new Set(['Sackers Gothic'])
+
 type ThemeInput = {
   colors?: Partial<Record<keyof typeof BRAND_DEFAULTS, string | null | undefined>> | null
   sectionTones?: Partial<Record<keyof typeof TONE_DEFAULTS, string | null | undefined>> | null
   easings?: Partial<Record<keyof typeof EASING_DEFAULTS, string | null | undefined>> | null
-  typography?: { radiusBase?: string | null } | null
+  typography?: {
+    brandFont?: string | null
+    sansFont?: string | null
+    serifFont?: string | null
+    radiusBase?: string | null
+  } | null
 } | null | undefined
 
 /** Inline vars on `<html>` so they override `.dark` shadcn defaults and reflect Payload Site Config. */
@@ -37,6 +50,10 @@ export function siteThemeToStyleVars(siteConfig: ThemeInput): CSSProperties {
   const st = { ...TONE_DEFAULTS, ...siteConfig?.sectionTones }
   const e = { ...EASING_DEFAULTS, ...siteConfig?.easings }
   const radius = siteConfig?.typography?.radiusBase || '0.25rem'
+
+  const brand = siteConfig?.typography?.brandFont || FONT_DEFAULTS.brandFont
+  const sans = siteConfig?.typography?.sansFont || FONT_DEFAULTS.sansFont
+  const serif = siteConfig?.typography?.serifFont || FONT_DEFAULTS.serifFont
 
   return {
     '--background': c.background ?? BRAND_DEFAULTS.background,
@@ -57,5 +74,28 @@ export function siteThemeToStyleVars(siteConfig: ThemeInput): CSSProperties {
     '--ease-quiet': e.quiet ?? EASING_DEFAULTS.quiet,
     '--ease-sharp': e.sharp ?? EASING_DEFAULTS.sharp,
     '--radius': radius,
+    '--font-sans': `'${brand}', '${sans}', system-ui, sans-serif`,
+    '--font-serif': `'${brand}', '${serif}', Georgia, serif`,
   } as CSSProperties
+}
+
+/** Build a Google Fonts stylesheet URL for any CMS-selected fonts that aren't locally hosted. */
+export function buildGoogleFontsUrl(siteConfig: ThemeInput): string | null {
+  const fonts = new Set<string>()
+
+  const brand = siteConfig?.typography?.brandFont || FONT_DEFAULTS.brandFont
+  const sans = siteConfig?.typography?.sansFont || FONT_DEFAULTS.sansFont
+  const serif = siteConfig?.typography?.serifFont || FONT_DEFAULTS.serifFont
+
+  if (!LOCAL_FONTS.has(brand)) fonts.add(brand)
+  if (!LOCAL_FONTS.has(sans)) fonts.add(sans)
+  if (!LOCAL_FONTS.has(serif)) fonts.add(serif)
+
+  if (fonts.size === 0) return null
+
+  const families = Array.from(fonts)
+    .map((f) => `family=${f.replace(/ /g, '+')}:wght@300;400;500;600;700`)
+    .join('&')
+
+  return `https://fonts.googleapis.com/css2?${families}&display=swap`
 }

@@ -40,6 +40,14 @@
       "types": "./src/components/AIChat/index.tsx",
       "default": "./src/components/AIChat/index.tsx"
     },
+    "./components/ColorPickerField": {
+      "types": "./src/components/ColorPickerField/index.tsx",
+      "default": "./src/components/ColorPickerField/index.tsx"
+    },
+    "./components/SecretTextField": {
+      "types": "./src/components/SecretTextField/index.tsx",
+      "default": "./src/components/SecretTextField/index.tsx"
+    },
     "./styles/admin.css": "./src/styles/admin.css"
   },
   "files": [
@@ -55,6 +63,7 @@
     "@payloadcms/plugin-seo": "catalog:",
     "@payloadcms/richtext-lexical": "catalog:",
     "@payloadcms/storage-s3": "catalog:",
+    "@payloadcms/ui": "catalog:",
     "payload": "catalog:",
     "sharp": "catalog:"
   },

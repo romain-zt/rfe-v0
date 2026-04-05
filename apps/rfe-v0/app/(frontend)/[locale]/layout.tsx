@@ -8,7 +8,7 @@ import { Footer } from '@/components/Footer'
 import { BottomLogoReveal } from '@/components/BottomLogoReveal'
 import { generateSiteJsonLd } from '@/lib/generate-meta'
 import { buildUiDictionary } from '@/lib/build-ui-dictionary'
-import { siteThemeToStyleVars } from '@/lib/site-theme'
+import { siteThemeToStyleVars, buildGoogleFontsUrl } from '@/lib/site-theme'
 import {
   getWorks,
   getTeamMembers,
@@ -136,6 +136,7 @@ export default async function RootLayout({
 
   const navItems = navigation?.header?.items
   const themeStyle = siteThemeToStyleVars(siteConfig)
+  const googleFontsUrl = buildGoogleFontsUrl(siteConfig)
   const t = buildUiDictionary(siteConfig, navigation)
 
   return (
@@ -145,6 +146,13 @@ export default async function RootLayout({
       style={themeStyle}
     >
       <head>
+        {googleFontsUrl && (
+          <>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+            <link href={googleFontsUrl} rel="stylesheet" />
+          </>
+        )}
         {generateSiteJsonLd(siteConfig, navItems ?? [], locale)}
       </head>
       <body className="font-sans antialiased min-h-screen cinema-root max-w-[100dvw] overflow-x-hidden">

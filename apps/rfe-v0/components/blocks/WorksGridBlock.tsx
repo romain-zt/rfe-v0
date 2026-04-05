@@ -71,7 +71,7 @@ export function WorksGridComponent(props: Props) {
   }, [allWorks, curatedIds, props.showSubcategoryTabs, props.category, props.limit])
 
   return (
-    <section className={`relative px-6 lg:px-16 xl:px-24 py-12 lg:py-20 ${toneClass}`}>
+    <section data-ai-element="works-grid" className={`relative px-6 lg:px-16 xl:px-24 py-12 lg:py-20 ${toneClass}`}>
       {props.title && (
         <div
           ref={ref}
@@ -81,7 +81,7 @@ export function WorksGridComponent(props: Props) {
             transition: 'opacity 1.5s var(--ease-quiet)',
           }}
         >
-          <h2 className="font-serif font-light text-2xl" style={{ color: 'var(--foreground)' }}>
+          <h2 data-ai-field="worksGrid.title" className="font-serif font-light text-2xl" style={{ color: 'var(--foreground)' }}>
             {props.title}
           </h2>
         </div>

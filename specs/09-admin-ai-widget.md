@@ -106,13 +106,58 @@ The AI system prompt will include:
 - Available actions and their parameters
 - Tone: helpful, concise, RFE-brand-aware
 
-### Live Preview Element Mapping
+### Live Preview Element Mapping — AI Selector Convention
 
-For Phase 3, frontend components need `data-payload-field` attributes:
+Frontend components use a layered data-attribute system for AI targeting, live preview editing, and dynamic anchoring.
+
+#### Block-level (on RenderBlocks wrapper `<div>`)
+| Attribute | Value | Purpose |
+|-----------|-------|---------|
+| `data-block-type` | Block slug (`content`, `cta`, …) | Identify block kind |
+| `data-block-id` | Payload auto-ID | Unique block identifier |
+| `data-block-index` | `0`, `1`, … | Position in layout array |
+| `id` | `block-{type}-{index}` or slugified `blockName` | Anchor link target |
+
+#### Element-level (on key inner elements)
+| Attribute | Example values | Purpose |
+|-----------|---------------|---------|
+| `data-ai-element` | `form`, `cta`, `cta-link`, `submit-button`, `team-member`, `featured-work`, … | Semantic role for AI targeting |
+| `data-ai-field` | `hero.headline`, `cta.richText`, `contactForm.title`, `teamMember.name` | Maps to Payload field path |
+| `data-ai-form-id` | Payload form ID | Identifies embedded form |
+| `data-ai-member-id` | Team member doc ID | Identifies team member |
+| `data-ai-section-index` | `0`, `1`, … | Index within legal sections |
+
+#### Page-level (on PageContent wrapper)
+| Attribute | Value | Purpose |
+|-----------|-------|---------|
+| `data-page-slug` | `home`, `about`, `contact` | Page identification |
+| `data-page-id` | Payload doc ID | Document reference |
+
+#### Hero-level
+| Attribute | Value |
+|-----------|-------|
+| `data-block-type` | `hero` |
+| `data-hero-type` | `cinematic` / `page` / `minimal` |
 
 ```tsx
-<h1 data-payload-field="hero.heading">{hero.heading}</h1>
-<p data-payload-field="hero.subHeading">{hero.subHeading}</p>
+// Block wrapper (RenderBlocks)
+<div id="block-cta-0" data-block-type="cta" data-block-id="abc123" data-block-index={0}>
+  <CTABlockComponent ... />
+</div>
+
+// Inner elements (CTABlock)
+<section data-ai-element="cta">
+  <p data-ai-field="cta.richText">...</p>
+  <a data-ai-element="cta-link" href="/contact">Get in touch</a>
+</section>
+
+// Form elements (ContactFormBlock)
+<div data-ai-element="contact-form">
+  <form data-ai-element="form">
+    <input data-ai-field="contactForm.name" />
+    <button data-ai-element="submit-button">Send</button>
+  </form>
+</div>
 ```
 
 The live preview bridge script reads these attributes on right-click to identify which form field to target.

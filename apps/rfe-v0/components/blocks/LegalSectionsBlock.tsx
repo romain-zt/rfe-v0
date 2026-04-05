@@ -20,11 +20,11 @@ export function LegalSectionsComponent({ sections }: Props) {
   if (!sections || sections.length === 0) return null
 
   return (
-    <div className="mx-auto max-w-3xl px-6 lg:px-8 py-8">
+    <div data-ai-element="legal-sections" className="mx-auto max-w-3xl px-6 lg:px-8 py-8">
       <div className="space-y-10 sm:space-y-12 text-sm sm:text-base leading-relaxed text-foreground/90">
         {sections.map((section, i) => (
-          <section key={i} className="space-y-4">
-            <h2 className="text-xs sm:text-sm tracking-[0.2em] uppercase text-foreground/60">
+          <section key={i} data-ai-element="legal-section" data-ai-section-index={i} className="space-y-4">
+            <h2 data-ai-field={`legalSections.sections.${i}.title`} className="text-xs sm:text-sm tracking-[0.2em] uppercase text-foreground/60">
               {section.title}
             </h2>
             {section.content?.root?.children?.map((node: any, j: number) => {

@@ -29,24 +29,24 @@ export function ContactFormComponent({ title, subtitle, recipientEmail, nameLabe
   }
 
   return (
-    <div>
-      {title && <h2 className="text-2xl lg:text-3xl font-light tracking-wide mb-2">{title}</h2>}
-      {subtitle && <p className="text-muted-foreground mb-8">{subtitle}</p>}
+    <div data-ai-element="contact-form">
+      {title && <h2 data-ai-field="contactForm.title" className="text-2xl lg:text-3xl font-light tracking-wide mb-2">{title}</h2>}
+      {subtitle && <p data-ai-field="contactForm.subtitle" className="text-muted-foreground mb-8">{subtitle}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" data-ai-element="form">
         <div>
           <label htmlFor="cf-name" className="block text-sm tracking-wide mb-2">{nameLabel}</label>
-          <input type="text" id="cf-name" value={name} onChange={(e) => setName(e.target.value)} required className="w-full px-4 py-3 bg-transparent border border-border focus:border-foreground outline-none transition-colors text-sm" />
+          <input type="text" id="cf-name" data-ai-field="contactForm.name" value={name} onChange={(e) => setName(e.target.value)} required className="w-full px-4 py-3 bg-transparent border border-border focus:border-foreground outline-none transition-colors text-sm" />
         </div>
         <div>
           <label htmlFor="cf-email" className="block text-sm tracking-wide mb-2">{emailLabel}</label>
-          <input type="email" id="cf-email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-4 py-3 bg-transparent border border-border focus:border-foreground outline-none transition-colors text-sm" />
+          <input type="email" id="cf-email" data-ai-field="contactForm.email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-4 py-3 bg-transparent border border-border focus:border-foreground outline-none transition-colors text-sm" />
         </div>
         <div>
           <label htmlFor="cf-message" className="block text-sm tracking-wide mb-2">{messageLabel}</label>
-          <textarea id="cf-message" rows={6} value={message} onChange={(e) => setMessage(e.target.value)} required className="w-full px-4 py-3 bg-transparent border border-border focus:border-foreground outline-none transition-colors text-sm resize-none" />
+          <textarea id="cf-message" data-ai-field="contactForm.message" rows={6} value={message} onChange={(e) => setMessage(e.target.value)} required className="w-full px-4 py-3 bg-transparent border border-border focus:border-foreground outline-none transition-colors text-sm resize-none" />
         </div>
-        <button type="submit" className="w-full text-sm tracking-wider uppercase border border-foreground px-8 py-3 hover:bg-foreground hover:text-background transition-colors duration-500">
+        <button type="submit" data-ai-element="submit-button" className="w-full text-sm tracking-wider uppercase border border-foreground px-8 py-3 hover:bg-foreground hover:text-background transition-colors duration-500">
           {submitLabel}
         </button>
       </form>

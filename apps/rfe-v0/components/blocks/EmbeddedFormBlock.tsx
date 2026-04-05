@@ -91,11 +91,11 @@ export function EmbeddedFormBlock({ title, subtitle, form }: Props) {
   }
 
   return (
-    <div>
-      {title && <h2 className="text-2xl lg:text-3xl font-light tracking-wide mb-2">{title}</h2>}
-      {subtitle && <p className="text-muted-foreground mb-8">{subtitle}</p>}
+    <div data-ai-element="embedded-form" data-ai-form-id={formId}>
+      {title && <h2 data-ai-field="embeddedForm.title" className="text-2xl lg:text-3xl font-light tracking-wide mb-2">{title}</h2>}
+      {subtitle && <p data-ai-field="embeddedForm.subtitle" className="text-muted-foreground mb-8">{subtitle}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" data-ai-element="form">
         {resolved.fields.map((field, i) => {
           if (!field.name || !field.blockType) return null
           const id = `emb-form-${formId}-${field.name}-${i}`
@@ -165,6 +165,7 @@ export function EmbeddedFormBlock({ title, subtitle, form }: Props) {
         <button
           type="submit"
           disabled={status === 'submitting'}
+          data-ai-element="submit-button"
           className="w-full text-sm tracking-wider uppercase border border-foreground px-8 py-3 hover:bg-foreground hover:text-background transition-colors duration-500 disabled:opacity-50"
         >
           {status === 'submitting' ? 'Sending…' : buttonLabel}

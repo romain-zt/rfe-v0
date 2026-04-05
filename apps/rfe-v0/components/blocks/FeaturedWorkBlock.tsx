@@ -34,7 +34,7 @@ export function FeaturedWorkComponent(props: Props) {
   const tags = work?.tags || []
 
   return (
-    <section className={`relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
+    <section data-ai-element="featured-work" className={`relative px-6 lg:px-16 xl:px-24 py-24 lg:py-36 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 75% 60% at 72% 38%, rgba(181, 151, 90, 0.06) 0%, transparent 55%), radial-gradient(ellipse 40% 40% at 15% 80%, rgba(139, 26, 26, 0.025) 0%, transparent 50%)' }} aria-hidden="true" />
 
       <div className="relative max-w-6xl mx-auto" style={{ zIndex: 2 }}>
@@ -55,14 +55,14 @@ export function FeaturedWorkComponent(props: Props) {
 
           <div ref={infoRef} className="lg:pt-6">
             <div style={{ overflow: 'hidden', paddingBottom: '5px', marginBottom: '1.5rem' }}>
-              <h2 className="font-serif font-light text-balance" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', lineHeight: 1.15, letterSpacing: '-0.01em', color: 'var(--foreground)', transform: infoVisible ? 'translateY(0)' : 'translateY(110%)', transition: 'transform 1.6s var(--ease-emerge)' }}>
+              <h2 data-ai-field="featuredWork.title" className="font-serif font-light text-balance" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', lineHeight: 1.15, letterSpacing: '-0.01em', color: 'var(--foreground)', transform: infoVisible ? 'translateY(0)' : 'translateY(110%)', transition: 'transform 1.6s var(--ease-emerge)' }}>
                 {title}
               </h2>
             </div>
 
             {props.quote && (
               <div className="border-l-2 pl-5 mb-10" style={{ borderColor: 'var(--rfe-gold)', opacity: infoVisible ? 0.8 : 0, transition: 'opacity 2s var(--ease-quiet) 0.5s' }}>
-                <blockquote className="font-serif font-light italic text-sm leading-relaxed mb-2" style={{ color: 'rgba(245, 240, 235, 0.65)' }}>
+                <blockquote data-ai-field="featuredWork.quote" className="font-serif font-light italic text-sm leading-relaxed mb-2" style={{ color: 'rgba(245, 240, 235, 0.65)' }}>
                   &ldquo;{props.quote}&rdquo;
                 </blockquote>
                 {props.attribution && props.externalUrl && (

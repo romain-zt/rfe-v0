@@ -31,6 +31,8 @@ const blockComponents: Record<string, React.ComponentType<any>> = {
 
 type Block = {
   blockType: string
+  id?: string
+  blockName?: string | null
   [key: string]: unknown
 }
 
@@ -42,13 +44,23 @@ export function RenderBlocks({ blocks }: { blocks: Block[] }) {
   return (
     <Fragment>
       {blocks.map((block, index) => {
-        const { blockType } = block
+        const { blockType, id: blockId, blockName } = block
         const Block = blockComponents[blockType]
 
         if (!Block) return null
 
+        const anchor = blockName
+          ? blockName.toLowerCase().replace(/\s+/g, '-')
+          : `block-${blockType}-${index}`
+
         return (
-          <div key={index}>
+          <div
+            key={blockId || index}
+            id={anchor}
+            data-block-type={blockType}
+            data-block-id={blockId}
+            data-block-index={index}
+          >
             <Block {...block} />
           </div>
         )

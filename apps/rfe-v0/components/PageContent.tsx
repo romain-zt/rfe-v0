@@ -19,7 +19,7 @@ export function PageContent({ initialData }: Props) {
   })
 
   return (
-    <>
+    <div data-page-slug={page.slug} data-page-id={page.id}>
       <RenderHero hero={page.hero} />
 
       <div className="relative" style={{ background: 'var(--background)' }}>
@@ -36,6 +36,6 @@ export function PageContent({ initialData }: Props) {
 
         <RenderBlocks blocks={page.layout} />
       </div>
-    </>
+    </div>
   )
 }

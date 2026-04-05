@@ -14,6 +14,12 @@ type PressItem = {
   description?: string
 }
 
+function formatPressDate(raw: string): string {
+  const d = new Date(raw)
+  if (isNaN(d.getTime())) return raw
+  return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}
+
 type Props = {
   title?: string
   limit?: number
@@ -31,7 +37,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
         <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-10">
           <div className="shrink-0 sm:w-36 lg:w-44">
             <span className="text-[10px] tracking-[0.25em] uppercase font-light block" style={{ color: 'var(--rfe-gold)' }}>{item.source}</span>
-            <span className="text-[10px] tracking-[0.12em] mt-1.5 font-light block" style={{ color: 'rgba(245, 240, 235, 0.25)' }}>{item.date}</span>
+            <span className="text-[10px] tracking-[0.12em] mt-1.5 font-light block" style={{ color: 'rgba(245, 240, 235, 0.25)' }}>{formatPressDate(item.date)}</span>
           </div>
           <div className="flex-1">
             <h3 className="font-serif font-light text-base md:text-lg leading-snug mb-3 transition-colors duration-700 group-hover:text-[rgba(245,240,235,0.95)]" style={{ color: 'rgba(245, 240, 235, 0.7)' }}>
@@ -61,11 +67,11 @@ export function PressListComponent({ title, limit = 100, showViewAll, viewAllUrl
   }, [limit])
 
   return (
-    <section className={`relative px-6 lg:px-16 xl:px-24 py-20 lg:py-32 ${toneClass}`}>
+    <section data-ai-element="press-list" className={`relative px-6 lg:px-16 xl:px-24 py-20 lg:py-32 ${toneClass}`}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 55% 40% at 15% 30%, rgba(181, 151, 90, 0.04) 0%, transparent 55%)' }} aria-hidden="true" />
       <div className="relative max-w-4xl mx-auto" style={{ zIndex: 2 }}>
         <div ref={headerRef} className="mb-4 flex items-end justify-between" style={{ opacity: headerVisible ? 1 : 0, transition: 'opacity 1.5s var(--ease-quiet)' }}>
-          <p className="text-[10px] uppercase font-light" style={{ color: 'var(--rfe-gold-dim)', letterSpacing: headerVisible ? '0.42em' : '0.08em', transition: 'letter-spacing 2.2s var(--ease-quiet)' }}>
+          <p data-ai-field="pressList.title" className="text-[10px] uppercase font-light" style={{ color: 'var(--rfe-gold-dim)', letterSpacing: headerVisible ? '0.42em' : '0.08em', transition: 'letter-spacing 2.2s var(--ease-quiet)' }}>
             {title || 'Coverage'}
           </p>
           {showViewAll && viewAllUrl && (

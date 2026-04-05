@@ -120,7 +120,7 @@ export function ContentBlockComponent({ columns, sectionTone }: Props) {
   }
 
   return (
-    <section className={`relative px-6 lg:px-16 xl:px-24 py-16 lg:py-24 ${toneClass}`}>
+    <section data-ai-element="content" className={`relative px-6 lg:px-16 xl:px-24 py-16 lg:py-24 ${toneClass}`}>
       <div
         ref={ref}
         className={`relative max-w-4xl mx-auto grid grid-cols-1 ${gridCols} gap-8`}

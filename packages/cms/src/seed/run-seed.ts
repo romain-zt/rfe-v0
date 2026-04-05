@@ -72,7 +72,7 @@ export async function runSeed(payload: Payload): Promise<RunSeedResult> {
     await seedSiteConfig(payload)
     await seedNavigation(payload)
     const { contactFormId } = await seedForms(payload)
-    await seedPages(payload, { contactFormId })
+    await seedPages(payload, { contactFormId, mediaMap })
     console.log('[seed] Full seed complete.')
     await revalidateFrontend({ collection: 'pages', slug: 'home' })
     await revalidateFrontend({ collection: 'pages', slug: 'contact' })

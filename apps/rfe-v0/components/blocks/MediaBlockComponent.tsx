@@ -19,7 +19,7 @@ export function MediaBlockComponent({ media, caption, size = 'full' }: Props) {
   const containerClass = size === 'full' ? 'w-full' : 'max-w-4xl mx-auto px-6 lg:px-16'
 
   return (
-    <section className="py-8 lg:py-12">
+    <section data-ai-element="media-block" className="py-8 lg:py-12">
       <div
         ref={ref}
         className={containerClass}

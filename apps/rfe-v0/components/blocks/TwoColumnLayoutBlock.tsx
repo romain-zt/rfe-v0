@@ -56,7 +56,7 @@ export function TwoColumnLayoutComponent({ leftColumn, leftMedia, rightColumn, r
   const reverseClass = reverseOnMobile ? 'flex-col-reverse lg:flex-row' : 'flex-col lg:flex-row'
 
   return (
-    <section className={`relative px-6 lg:px-16 xl:px-24 py-16 lg:py-24 ${toneClass}`}>
+    <section data-ai-element="two-column-layout" className={`relative px-6 lg:px-16 xl:px-24 py-16 lg:py-24 ${toneClass}`}>
       <div
         ref={ref}
         className={`relative max-w-6xl mx-auto flex ${reverseClass} gap-10 lg:gap-16`}

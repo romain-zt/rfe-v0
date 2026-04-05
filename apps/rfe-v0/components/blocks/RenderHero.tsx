@@ -20,38 +20,44 @@ export function RenderHero({ hero }: { hero: HeroData }) {
   if (!hero) return null
 
   if (hero.type === 'cinematic') {
-    return <CinematicHero />
+    return (
+      <div id="hero" data-block-type="hero" data-hero-type="cinematic">
+        <CinematicHero />
+      </div>
+    )
   }
 
   if (hero.type === 'page') {
     const mediaUrl = getMediaUrl(hero.media)
     return (
-      <PageCinematicHero
-        imageSrc={mediaUrl || '/assets/works/margret-stevie.png'}
-        imagePosition={hero.imagePosition || 'center 30%'}
-        label={hero.label || ''}
-        subtitle={hero.subtitle}
-      >
-        {hero.headline || ''}
-      </PageCinematicHero>
+      <div id="hero" data-block-type="hero" data-hero-type="page">
+        <PageCinematicHero
+          imageSrc={mediaUrl || '/assets/works/margret-stevie.png'}
+          imagePosition={hero.imagePosition || 'center 30%'}
+          label={hero.label || ''}
+          subtitle={hero.subtitle}
+        >
+          {hero.headline || ''}
+        </PageCinematicHero>
+      </div>
     )
   }
 
   if (hero.type === 'minimal') {
     return (
-      <div className="pt-32 pb-16 text-center">
+      <div id="hero" data-block-type="hero" data-hero-type="minimal" className="pt-32 pb-16 text-center">
         {hero.label && (
-          <p className="text-[9px] uppercase tracking-[0.42em] font-light mb-6" style={{ color: 'var(--rfe-gold-dim)' }}>
+          <p data-ai-field="hero.label" className="text-[9px] uppercase tracking-[0.42em] font-light mb-6" style={{ color: 'var(--rfe-gold-dim)' }}>
             {hero.label}
           </p>
         )}
         {hero.headline && (
-          <h1 className="text-3xl lg:text-4xl font-light tracking-wide mb-4">
+          <h1 data-ai-field="hero.headline" className="text-3xl lg:text-4xl font-light tracking-wide mb-4">
             {hero.headline}
           </h1>
         )}
         {hero.subtitle && (
-          <p className="text-muted-foreground">{hero.subtitle}</p>
+          <p data-ai-field="hero.subtitle" className="text-muted-foreground">{hero.subtitle}</p>
         )}
       </div>
     )

@@ -402,10 +402,42 @@ const PAGES: PageSeed[] = [
 
 export async function seedPages(
   payload: Payload,
-  opts?: { contactFormId?: number | null },
+  opts?: { contactFormId?: number | null; mediaMap?: Map<string, number> },
 ): Promise<void> {
   console.log('[seed-pages] Seeding pages...')
   blockIdCounter = 0
+
+  const mediaMap = opts?.mediaMap
+
+  async function resolveHeroMedia(
+    hero: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    if (hero.type === 'minimal' || hero.type === 'cinematic') return hero
+    if (!mediaMap) return hero
+
+    const candidates = [
+      '/assets/portfolio-medias/elisabeth-1.png',
+      '/assets/team/liz-rohm-hero.png',
+      '/assets/works/margret-stevie.png',
+    ]
+    for (const candidate of candidates) {
+      const id = mediaMap.get(candidate)
+      if (id) return { ...hero, media: id }
+    }
+    return hero
+  }
+
+  async function resolveFeaturedWorkId(): Promise<number | null> {
+    const result = await payload.find({
+      collection: 'works',
+      where: { slug: { equals: 'margret-and-stevie' } },
+      limit: 1,
+      depth: 0,
+    })
+    return result.docs[0] ? (result.docs[0].id as number) : null
+  }
+
+  const featuredWorkId = await resolveFeaturedWorkId()
 
   for (const page of PAGES) {
     const existing = await payload.find({
@@ -437,26 +469,60 @@ export async function seedPages(
       ]
     }
 
-    const data = {
+    const heroWithMedia = await resolveHeroMedia(page.hero)
+
+    if (featuredWorkId) {
+      layout = layout.map((block) => {
+        if (block.blockType !== 'content') return block
+        const columns = (block as Record<string, unknown>).columns as Array<Record<string, unknown>> | undefined
+        if (!columns) return block
+        return {
+          ...block,
+          columns: columns.map((col) => {
+            const rt = col.richText as { root?: { children?: Array<Record<string, unknown>> } } | undefined
+            if (!rt?.root?.children) return col
+            return {
+              ...col,
+              richText: {
+                ...rt,
+                root: {
+                  ...rt.root,
+                  children: rt.root.children.map((child) => {
+                    if (child.type !== 'block') return child
+                    const fields = child.fields as Record<string, unknown> | undefined
+                    if (fields?.blockType === 'featuredWork' && !fields.work) {
+                      return { ...child, fields: { ...fields, work: featuredWorkId } }
+                    }
+                    return child
+                  }),
+                },
+              },
+            }
+          }),
+        }
+      })
+    }
+
+    const data: Record<string, unknown> = {
       title: page.title,
       slug: page.slug,
-      hero: page.hero,
+      hero: heroWithMedia,
       layout,
       meta: page.meta,
-      _status: 'published' as const,
+      _status: 'published',
     }
 
     if (existing.docs.length > 0) {
       await payload.update({
         collection: 'pages',
         id: existing.docs[0]!.id,
-        data,
+        data: data as any,
       })
       console.log(`  Updated page: ${page.title}`)
     } else {
       await payload.create({
         collection: 'pages',
-        data,
+        data: data as any,
       })
       console.log(`  Created page: ${page.title}`)
     }

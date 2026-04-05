@@ -21,7 +21,7 @@ export function CTABlockComponent({ richText, links, sectionTone }: Props) {
   const toneClass = sectionTone && sectionTone !== 'default' ? `section-tone-${sectionTone}` : ''
 
   return (
-    <section className={`relative px-6 py-20 lg:py-32 flex flex-col items-center justify-center text-center ${toneClass}`}>
+    <section data-ai-element="cta" className={`relative px-6 py-20 lg:py-32 flex flex-col items-center justify-center text-center ${toneClass}`}>
       <div
         ref={ref}
         className="relative max-w-lg mx-auto"
@@ -35,7 +35,7 @@ export function CTABlockComponent({ richText, links, sectionTone }: Props) {
           if (node.type === 'paragraph') {
             const text = node.children?.map((c: any) => c.text).join('') || ''
             return (
-              <p key={i} className="font-serif font-light mb-6" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', color: 'rgba(245, 240, 235, 0.55)', lineHeight: 1.55 }}>
+              <p key={i} data-ai-field="cta.richText" className="font-serif font-light mb-6" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', color: 'rgba(245, 240, 235, 0.55)', lineHeight: 1.55 }}>
                 {text}
               </p>
             )
@@ -44,7 +44,7 @@ export function CTABlockComponent({ richText, links, sectionTone }: Props) {
         })}
 
         {links && links.length > 0 && (
-          <div className="flex flex-wrap gap-4 justify-center mt-8">
+          <div className="flex flex-wrap gap-4 justify-center mt-8" data-ai-element="cta-links">
             {links.map((link, i) => {
               const baseClasses = 'inline-block text-sm tracking-[0.15em] uppercase pb-1 border-b transition-all duration-500'
               const colorStyle = link.appearance === 'gold'
@@ -53,14 +53,14 @@ export function CTABlockComponent({ richText, links, sectionTone }: Props) {
 
               if (link.isExternal) {
                 return (
-                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className={baseClasses} style={colorStyle}>
+                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" data-ai-element="cta-link" className={baseClasses} style={colorStyle}>
                     {link.label} ↗
                   </a>
                 )
               }
 
               return (
-                <Link key={i} href={link.url} className={baseClasses} style={colorStyle}>
+                <Link key={i} href={link.url} data-ai-element="cta-link" className={baseClasses} style={colorStyle}>
                   {link.label}
                 </Link>
               )

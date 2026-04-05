@@ -2,7 +2,7 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-   CREATE TABLE "ai_conversations" (
+   CREATE TABLE IF NOT EXISTS "ai_conversations" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"title" varchar NOT NULL,
   	"messages" jsonb NOT NULL,
@@ -11,14 +11,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
-  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "ai_conversations_id" integer;
-  ALTER TABLE "site_config" ADD COLUMN "admin_ai_assistant_enabled" boolean DEFAULT false;
-  ALTER TABLE "ai_conversations" ADD CONSTRAINT "ai_conversations_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-  CREATE INDEX "ai_conversations_user_idx" ON "ai_conversations" USING btree ("user_id");
-  CREATE INDEX "ai_conversations_updated_at_idx" ON "ai_conversations" USING btree ("updated_at");
-  CREATE INDEX "ai_conversations_created_at_idx" ON "ai_conversations" USING btree ("created_at");
-  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_ai_conversations_fk" FOREIGN KEY ("ai_conversations_id") REFERENCES "public"."ai_conversations"("id") ON DELETE cascade ON UPDATE no action;
-  CREATE INDEX "payload_locked_documents_rels_ai_conversations_id_idx" ON "payload_locked_documents_rels" USING btree ("ai_conversations_id");`)
+  ALTER TABLE "payload_locked_documents_rels" ADD COLUMN IF NOT EXISTS "ai_conversations_id" integer;
+  ALTER TABLE "site_config" ADD COLUMN IF NOT EXISTS "admin_ai_assistant_enabled" boolean DEFAULT false;
+  DO $$ BEGIN ALTER TABLE "ai_conversations" ADD CONSTRAINT "ai_conversations_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  CREATE INDEX IF NOT EXISTS "ai_conversations_user_idx" ON "ai_conversations" USING btree ("user_id");
+  CREATE INDEX IF NOT EXISTS "ai_conversations_updated_at_idx" ON "ai_conversations" USING btree ("updated_at");
+  CREATE INDEX IF NOT EXISTS "ai_conversations_created_at_idx" ON "ai_conversations" USING btree ("created_at");
+  DO $$ BEGIN ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_ai_conversations_fk" FOREIGN KEY ("ai_conversations_id") REFERENCES "public"."ai_conversations"("id") ON DELETE cascade ON UPDATE no action; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+  CREATE INDEX IF NOT EXISTS "payload_locked_documents_rels_ai_conversations_id_idx" ON "payload_locked_documents_rels" USING btree ("ai_conversations_id");`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {

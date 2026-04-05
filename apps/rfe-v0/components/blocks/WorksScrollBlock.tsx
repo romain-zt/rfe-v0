@@ -110,13 +110,13 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
   if (displayItems.length === 0) return null
 
   return (
-    <section className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
+    <section data-ai-element="works-scroll" className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.035) 0%, transparent 60%)' }} aria-hidden="true" />
 
       <div className="relative">
         <div ref={titleRef} className="px-6 lg:px-16 mb-12 flex items-end justify-between">
           <div style={{ opacity: titleVisible ? 1 : 0, transition: 'opacity 1.5s var(--ease-quiet)' }}>
-            <span className="text-[9px] uppercase block mb-4 font-light" style={{ color: 'var(--rfe-gold-dim)', letterSpacing: titleVisible ? '0.42em' : '0.08em', transition: 'letter-spacing 2.2s var(--ease-quiet)' }}>
+            <span data-ai-field="worksScroll.title" className="text-[9px] uppercase block mb-4 font-light" style={{ color: 'var(--rfe-gold-dim)', letterSpacing: titleVisible ? '0.42em' : '0.08em', transition: 'letter-spacing 2.2s var(--ease-quiet)' }}>
               {title || 'Our Work'}
             </span>
           </div>

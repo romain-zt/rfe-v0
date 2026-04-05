@@ -1,5 +1,5 @@
-export { collections } from './collections'
-export { globals } from './globals'
-export { blocks } from './blocks'
+export { collections } from './collections/index.js'
+export { globals } from './globals/index.js'
+export { blocks } from './blocks/index.js'
 export { buildRfeConfig } from './config'
 export type { RfeConfigOptions } from './config'

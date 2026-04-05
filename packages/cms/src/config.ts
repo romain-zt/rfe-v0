@@ -66,7 +66,6 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
       s3Storage({
         collections: { media: { prefix: 'media' } },
         bucket: opts.s3.bucket,
-        acl: 'private',
         config: {
           credentials: {
             accessKeyId: opts.s3.accessKeyId,

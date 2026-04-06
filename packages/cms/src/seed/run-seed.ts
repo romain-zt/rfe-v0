@@ -63,6 +63,8 @@ export async function runSeed(payload: Payload): Promise<RunSeedResult> {
   const detach = attachLogCapture()
   console.log('[seed] Starting full seed...')
   try {
+    console.log('[seed] Applying pending DB migrations (if any)...')
+    await payload.db.migrate()
     await seedAdmin(payload)
     const mediaMap = await seedMedia(payload)
     await seedWorks(payload, mediaMap)

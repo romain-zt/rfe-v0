@@ -139,6 +139,21 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
     typescript: {
       outputFile: path.resolve(opts.dirname, 'payload-types.ts'),
     },
+    onInit: async (payload) => {
+      // Auto-run pending migrations on cold start using the bundled prodMigrations.
+      // This ensures the DB schema is always current before any request is served,
+      // even if the build-time `payload migrate` step was skipped or ran against a
+      // different database instance.
+      const db = payload.db as unknown as { prodMigrations?: { up: (args: unknown) => Promise<void>; down: (args: unknown) => Promise<void>; name: string }[] }
+      if (db.prodMigrations?.length) {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await payload.db.migrate({ migrations: db.prodMigrations as any[] })
+        } catch (err) {
+          payload.logger.error({ err }, '[onInit] Auto-migration failed — DB schema may be out of date')
+        }
+      }
+    },
     ...opts.overrides,
   })
 }

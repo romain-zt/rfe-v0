@@ -63,8 +63,15 @@ export async function runSeed(payload: Payload): Promise<RunSeedResult> {
   const detach = attachLogCapture()
   console.log('[seed] Starting full seed...')
   try {
-    console.log('[seed] Applying pending DB migrations (if any)...')
-    await payload.db.migrate()
+    // Run any pending migrations using the already-compiled prodMigrations
+    // (avoids importing raw .ts files from disk at runtime on serverless).
+    const prodMigrations = (payload.db as Record<string, unknown>).prodMigrations as
+      | Parameters<typeof payload.db.migrate>[0]['migrations']
+      | undefined
+    if (prodMigrations?.length) {
+      console.log('[seed] Running pending DB migrations...')
+      await payload.db.migrate({ migrations: prodMigrations })
+    }
     await seedAdmin(payload)
     const mediaMap = await seedMedia(payload)
     await seedWorks(payload, mediaMap)

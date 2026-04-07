@@ -7,7 +7,12 @@ async function seed() {
   const { runSeed } = await import('@rfe/cms/seed')
 
   const payload = await getPayload({ config })
-  const { logs } = await runSeed(payload)
+  const { logs } = await runSeed(payload, {
+    onLog: (line) => {
+      const fn = line.level === 'error' ? console.error : line.level === 'warn' ? console.warn : console.log
+      fn(`${line.ts} [${line.level}] ${line.text}`)
+    },
+  })
   console.log(`Done (${logs.length} log lines).`)
   process.exit(0)
 }

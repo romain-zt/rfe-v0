@@ -11,65 +11,52 @@ import { seedForms } from './seed-forms.ts'
 import { seedPages } from './seed-pages.ts'
 import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 
-function attachLogCapture(): () => string[] {
-  const lines: string[] = []
+export type SeedLogLevel = 'log' | 'warn' | 'error'
+export type SeedLogLine = { ts: string; level: SeedLogLevel; text: string }
+export type OnSeedLog = (line: SeedLogLine) => void
+
+function createLogger(onLog?: OnSeedLog) {
+  const lines: SeedLogLine[] = []
   const stamp = () => new Date().toISOString().slice(11, 19)
 
-  const push = (level: string, args: unknown[]) => {
+  const emit = (level: SeedLogLevel, args: unknown[]) => {
     const text = args
       .map((a) => {
         if (a instanceof Error) return a.stack || a.message
         if (typeof a === 'object' && a !== null) {
-          try {
-            return JSON.stringify(a)
-          } catch {
-            return String(a)
-          }
+          try { return JSON.stringify(a) } catch { return String(a) }
         }
         return String(a)
       })
       .join(' ')
-    lines.push(`${stamp()} [${level}] ${text}`)
+    const line: SeedLogLine = { ts: stamp(), level, text }
+    lines.push(line)
+    onLog?.(line)
   }
 
-  const origLog = console.log.bind(console)
-  const origWarn = console.warn.bind(console)
-  const origErr = console.error.bind(console)
-
-  console.log = (...args: unknown[]) => {
-    push('log', args)
-    origLog(...args)
-  }
-  console.warn = (...args: unknown[]) => {
-    push('warn', args)
-    origWarn(...args)
-  }
-  console.error = (...args: unknown[]) => {
-    push('error', args)
-    origErr(...args)
-  }
-
-  return () => {
-    console.log = origLog
-    console.warn = origWarn
-    console.error = origErr
-    return lines
+  return {
+    log: (...args: unknown[]) => emit('log', args),
+    warn: (...args: unknown[]) => emit('warn', args),
+    error: (...args: unknown[]) => emit('error', args),
+    getLines: () => lines,
   }
 }
 
 export type RunSeedResult = { logs: string[] }
 
-export async function runSeed(payload: Payload): Promise<RunSeedResult> {
-  const detach = attachLogCapture()
-  console.log('[seed] Starting full seed...')
+export async function runSeed(
+  payload: Payload,
+  opts?: { onLog?: OnSeedLog },
+): Promise<RunSeedResult> {
+  const logger = createLogger(opts?.onLog)
+  logger.log('[seed] Starting full seed...')
+
   try {
-    // Run any pending migrations using the already-compiled prodMigrations
-    // (avoids importing raw .ts files from disk at runtime on serverless).
     const prodMigrations = (payload.db as Record<string, unknown>).prodMigrations as
       | Parameters<typeof payload.db.migrate>[0]['migrations']
       | undefined
     if (prodMigrations?.length) {
-      console.log('[seed] Running pending DB migrations...')
+      logger.log('[seed] Running pending DB migrations...')
       await payload.db.migrate({ migrations: prodMigrations })
     }
     await seedAdmin(payload)
@@ -82,13 +69,13 @@ export async function runSeed(payload: Payload): Promise<RunSeedResult> {
     await seedNavigation(payload)
     const { contactFormId } = await seedForms(payload)
     await seedPages(payload, { contactFormId, mediaMap })
-    console.log('[seed] Full seed complete.')
+    logger.log('[seed] Full seed complete.')
     await revalidateFrontend({ collection: 'pages', slug: 'home' })
     await revalidateFrontend({ collection: 'pages', slug: 'contact' })
-    return { logs: detach() }
+    return { logs: logger.getLines().map((l) => `${l.ts} [${l.level}] ${l.text}`) }
   } catch (e) {
-    console.error('[seed] Failed:', e)
-    const logs = detach()
+    logger.error('[seed] Failed:', e)
+    const logs = logger.getLines().map((l) => `${l.ts} [${l.level}] ${l.text}`)
     throw Object.assign(e instanceof Error ? e : new Error(String(e)), { logs })
   }
 }

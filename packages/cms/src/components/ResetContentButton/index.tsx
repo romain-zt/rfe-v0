@@ -5,38 +5,33 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 const SEED_LOGS_KEY = 'rfe-seed-logs'
 
 type State = 'idle' | 'confirm' | 'loading' | 'success' | 'error'
+type LogLine = { ts: string; level: string; text: string }
 
 export const ResetContentButton: React.FC = () => {
   const [state, setState] = useState<State>('idle')
   const [errorMessage, setErrorMessage] = useState('')
-  const [logs, setLogs] = useState<string[]>([])
+  const [logs, setLogs] = useState<LogLine[]>([])
   const [logPanelOpen, setLogPanelOpen] = useState(true)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const logEndRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem(SEED_LOGS_KEY)
       if (raw) {
         const parsed = JSON.parse(raw) as unknown
-        if (Array.isArray(parsed) && parsed.every((x) => typeof x === 'string')) {
-          setLogs(parsed)
-        }
+        if (Array.isArray(parsed)) setLogs(parsed)
       }
-    } catch {
-      /* ignore */
-    }
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    }
+    } catch { /* ignore */ }
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current) }
   }, [])
 
-  const persistLogs = useCallback((next: string[]) => {
-    setLogs(next)
-    try {
-      sessionStorage.setItem(SEED_LOGS_KEY, JSON.stringify(next))
-    } catch {
-      /* ignore quota */
-    }
+  useEffect(() => {
+    logEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [logs])
+
+  const persistLogs = useCallback((next: LogLine[]) => {
+    try { sessionStorage.setItem(SEED_LOGS_KEY, JSON.stringify(next)) } catch { /* ignore */ }
   }, [])
 
   const reset = useCallback(() => {
@@ -54,6 +49,8 @@ export const ResetContentButton: React.FC = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     setState('loading')
     setErrorMessage('')
+    setLogs([])
+    setLogPanelOpen(true)
 
     try {
       const res = await fetch('/api/seed/reset', {
@@ -61,24 +58,51 @@ export const ResetContentButton: React.FC = () => {
         credentials: 'include',
       })
 
-      const data = (await res.json().catch(() => ({}))) as {
-        error?: string
-        logs?: string[]
+      if (!res.ok && !res.body) {
+        throw new Error(`Failed with status ${res.status}`)
       }
 
-      if (!res.ok) {
-        if (Array.isArray(data.logs) && data.logs.length) {
-          persistLogs(data.logs)
+      const reader = res.body?.getReader()
+      if (!reader) throw new Error('No response stream')
+
+      const decoder = new TextDecoder()
+      let buffer = ''
+      const accumulated: LogLine[] = []
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() ?? ''
+
+        for (const raw of lines) {
+          if (!raw.trim()) continue
+          try {
+            const parsed = JSON.parse(raw) as Record<string, unknown>
+            if (parsed.type === 'log') {
+              const line: LogLine = {
+                ts: String(parsed.ts ?? ''),
+                level: String(parsed.level ?? 'log'),
+                text: String(parsed.text ?? ''),
+              }
+              accumulated.push(line)
+              setLogs([...accumulated])
+            } else if (parsed.type === 'done') {
+              if (parsed.success) {
+                setState('success')
+              } else {
+                setErrorMessage(String(parsed.error || 'Unknown error'))
+                setState('error')
+              }
+            }
+          } catch { /* skip malformed lines */ }
         }
-        throw new Error(data.error || `Failed with status ${res.status}`)
       }
 
-      if (Array.isArray(data.logs)) {
-        persistLogs(data.logs)
-      }
-
-      setState('success')
-      setLogPanelOpen(true)
+      persistLogs(accumulated)
+      if (state === 'loading') setState('success')
       timeoutRef.current = setTimeout(() => setState('idle'), 12_000)
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : 'Unknown error')
@@ -87,6 +111,12 @@ export const ResetContentButton: React.FC = () => {
       timeoutRef.current = setTimeout(() => setState('idle'), 12_000)
     }
   }, [persistLogs])
+
+  const levelColor = (level: string) => {
+    if (level === 'error') return '#ef4444'
+    if (level === 'warn') return '#eab308'
+    return 'var(--theme-elevation-800, #ccc)'
+  }
 
   return (
     <div style={styles.wrapper}>
@@ -123,11 +153,18 @@ export const ResetContentButton: React.FC = () => {
               onClick={() => setLogPanelOpen((o) => !o)}
               style={styles.logToggle}
             >
-              {logPanelOpen ? '▼' : '▶'} Seed log ({logs.length} lines)
+              {logPanelOpen ? '\u25BC' : '\u25B6'} Seed log ({logs.length} lines)
             </button>
             {logPanelOpen && (
               <pre style={styles.logPre}>
-                {logs.join('\n')}
+                {logs.map((l, i) => (
+                  <div key={i} style={{ color: levelColor(l.level) }}>
+                    <span style={{ opacity: 0.5 }}>{l.ts}</span>{' '}
+                    <span style={{ fontWeight: l.level !== 'log' ? 600 : 400 }}>[{l.level}]</span>{' '}
+                    {l.text}
+                  </div>
+                ))}
+                <div ref={logEndRef} />
               </pre>
             )}
           </div>
@@ -247,11 +284,11 @@ const styles: Record<string, React.CSSProperties> = {
   },
   logPre: {
     margin: 0,
-    maxHeight: 280,
+    maxHeight: 360,
     overflow: 'auto',
     padding: 12,
     fontSize: 11,
-    lineHeight: 1.45,
+    lineHeight: 1.55,
     fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
     color: 'var(--theme-elevation-800, #ccc)',
     background: 'var(--theme-elevation-0, #0f0f18)',

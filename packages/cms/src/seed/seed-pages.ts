@@ -412,7 +412,7 @@ export async function seedPages(
   async function resolveHeroMedia(
     hero: Record<string, unknown>,
   ): Promise<Record<string, unknown>> {
-    if (hero.type === 'minimal' || hero.type === 'cinematic') return hero
+    if (hero.type === 'minimal') return hero
     if (!mediaMap) return hero
 
     const candidates = [

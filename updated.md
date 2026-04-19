@@ -41,7 +41,7 @@ Michael's full new bio is now in `packages/cms/src/seed/seed-team.ts` (Elisabeth
 
 ### ✅ Kara Feifer's bio — *interim, Michael flagged it as being reworked*
 
-We applied Michael's drafted Kara bio in `packages/cms/src/seed/seed-team.ts`. ⚠️ Marked in `to-refine.md #8` to swap with the final reworked version when ready.
+We applied Michael's drafted Kara bio in `packages/cms/src/seed/seed-team.ts`. ⚠️ Marked in `to-refine.md #7` to swap with the final reworked version when ready.
 
 ### ✅ Landing hero — switch to single composite photo — *Lis*
 
@@ -87,6 +87,27 @@ Michael's structure: **Produced / In Production / Paid Development / In Developm
 - **In Development — Movies** (10 of 11): Feather, Margret & Stevie, Murder-in-Law, Flower Girl, Trans Electric, Rescue of Jerusalem, If You Tell, Ruby Falls, Murder Your Darlings, Passing Love *(1% Better deferred — see `to-refine.md #5`; "Passing Falls" treated as a typo for "Passing Love" — see `to-refine.md #6`)*
 - **In Development — Series** (7 of 8): By Midnight, Undefeated, Icky, Diamonds and Deadlines, Two's Company, Matador, The Lobotomist's Wife *(Double Dealer deferred — see `to-refine.md #5`)*
 
+### ✅ Press items — 11 new entries seeded — *Michael*
+
+Michael provided 12 press URLs. 1 was already seeded (Margret & Stevie). The remaining 11 have been added to `packages/cms/src/seed/seed-press.ts` with titles, sources, dates, and descriptions extracted from each article. All 12 items are sorted by date descending.
+
+| # | Date | Source | Title |
+|---|---|---|---|
+| 1 | 2026-02-01 | Deadline | Shirley MacLaine / Margret and Stevie *(existing)* |
+| 2 | 2026-01-30 | Deadline | Lifetime Sets New Movie Slate (Dating App Killer) |
+| 3 | 2026-01-20 | Deadline | Murder Your Darlings adaptation |
+| 4 | 2025-02-20 | Deadline | Lifetime: Wife Stalker first look |
+| 5 | 2024-02-01 | NBC Los Angeles | California Live interview *(date approximate)* |
+| 6 | 2023-11-30 | Deadline | RFE company launch |
+| 7 | 2023-01-30 | People | Sarah Lawrence cult / Devil in the Dorm |
+| 8 | 2022-10-10 | The Wrap | Law & Order S22 directing return |
+| 9 | 2022-09-17 | People | Anne Heche remembered / Girl in Room 13 |
+| 10 | 2022-09-17 | The List | Girl in Room 13 exclusive interview |
+| 11 | 2021-06-29 | ET Online | Killer's Vault podcast |
+| 12 | 2021-06-05 | NY Post | Couple seduced serial killers by mail |
+
+`to-refine.md` §7 (press links) removed and remaining items renumbered.
+
 ### ✅ Lie Detector & Highlife & Icky — partial credit attribution
 
 Michael wanted **hyperlinked IMDB credits** (Ed Bernero on Lie Detector, Anne Clements + Lauralee Bell on Highlife, Ken Girotti + Wendy Coulas on Icky). Since the Works collection has no structured `credits` field yet, we **inlined the names in the description** as an interim measure. The structured `credits` field is open in `to-refine.md #4`.
@@ -103,9 +124,8 @@ Michael wanted **hyperlinked IMDB credits** (Ed Bernero on Lie Detector, Anne Cl
 | Structured `credits` field on Works (with IMDB links) | Schema change pending Romain's approval to add a `credits` array | §4 |
 | New dev works without provided posters: Blade, Sick Puppy, Bombsquad, The Chase, Nasty Business, 1% Better, Double Dealer | No poster files provided | §5 |
 | "Passing Falls" vs "Passing Love" | Suspected typo, not 100% sure | §6 |
-| 11 new press items (titles + dates + descriptions) | Michael provided URLs only; needs auto-fetch decision | §7 |
-| Final Kara bio | Michael flagged hers as "being reworked" | §8 |
-| Lis deck redesign | Out of scope (the deck is a separate Canva file) | §9 |
+| Final Kara bio | Michael flagged hers as "being reworked" | §7 |
+| Lis deck redesign | Out of scope (the deck is a separate Canva file) | §8 |
 
 ---
 

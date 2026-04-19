@@ -86,27 +86,7 @@ Michael's list item #12 under MOVIES & FEATURES is **"PASSING FALLS"**. The exis
 
 ---
 
-## 7. Michael — 11 new press links (titles + descriptions)
-
-Michael provided 12 press URLs. We currently have 1 in the seed (Margret & Stevie at Deadline). The other 11 are URLs only — no titles, no dates, no descriptions:
-
-1. https://deadline.com/2023/11/rohm-feifer-entertainment-elisabeth-rohm-kara-feifer-1235646344/
-2. https://deadline.com/2026/01/murder-your-darlings-adaptation-rohm-feifer-entertainment-1236685535/
-3. https://deadline.com/2026/01/lifetime-movie-slate-tami-roman-abigail-breslin-1236703969/
-4. https://deadline.com/2025/02/lifetime-keshia-knight-pulliam-d-b-woodside-movies-first-look-photos-1236295406/
-5. https://www.etonline.com/going-into-the-minds-of-serial-killers-with-killers-vault-podcast-168066
-6. https://www.nbclosangeles.com/video/california-live/catching-up-with-director-executive-producer-and-actress-elisabeth-rohm/3665271/
-7. https://nypost.com/2021/06/05/couple-seduced-serial-killers-ramirez-dahmer-gacy-by-mail/
-8. https://people.com/elisabeth-roehm-wanted-to-get-deeper-into-sarah-lawrence-cult-story-as-mother-and-alum-exclusive-8667708
-9. https://www.thewrap.com/law-order-star-elisabeth-rohm-returns-to-direct/
-10. https://people.com/tv/anne-heche-remembered-by-girl-in-room-13-director-elisabeth-rohm/
-11. https://www.thelist.com/979756/elisabeth-rohm-on-her-harrowing-new-lifetime-movie-girl-in-room-13-exclusive-interview/
-
-**Decision needed:** OK if we auto-extract title + source from each URL, write a generated description, and you review/edit in the admin panel? Or do you want to provide titles + summaries manually?
-
----
-
-## 8. Kara's bio — "being reworked"
+## 7. Kara's bio — "being reworked"
 
 **Quote (Michael):** *"Please note that Kara's bio was being reworked so don't worry about that for the moment."*
 
@@ -114,7 +94,7 @@ We applied Michael's drafted Kara bio anyway as an interim improvement over the 
 
 ---
 
-## 9. Lis — deck redesign
+## 8. Lis — deck redesign
 
 **Quote (Lis):** *"I wouldn't put my photograph on all of the pages of the slides of the deck."*
 

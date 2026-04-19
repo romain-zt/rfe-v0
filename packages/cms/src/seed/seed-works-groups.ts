@@ -1,13 +1,19 @@
 import type { Payload } from 'payload'
 
+type WorkLike = {
+  category?: string | null
+  productionStage?: string | null
+}
+
 type GroupDef = {
   name: string
   slug: string
-  filter: (w: { category?: string | null }) => boolean
+  filter: (w: WorkLike) => boolean
   limit?: number
 }
 
 const GROUPS: GroupDef[] = [
+  // Legacy groups — kept for backward compatibility with existing pages
   {
     name: 'Our Work',
     slug: 'our-work',
@@ -24,6 +30,32 @@ const GROUPS: GroupDef[] = [
     filter: (w) => !w.category,
     limit: 10,
   },
+  // New production-stage groups (Michael's structure)
+  {
+    name: 'Produced',
+    slug: 'produced',
+    filter: (w) => w.productionStage === 'produced',
+  },
+  {
+    name: 'In Production',
+    slug: 'in-production',
+    filter: (w) => w.productionStage === 'in-production',
+  },
+  {
+    name: 'Paid Development',
+    slug: 'paid-development',
+    filter: (w) => w.productionStage === 'paid-development',
+  },
+  {
+    name: 'In Development — Movies',
+    slug: 'movies-development',
+    filter: (w) => w.productionStage === 'movies-development',
+  },
+  {
+    name: 'In Development — Series',
+    slug: 'series-development',
+    filter: (w) => w.productionStage === 'series-development',
+  },
 ]
 
 export async function seedWorksGroups(payload: Payload): Promise<void> {
@@ -36,7 +68,9 @@ export async function seedWorksGroups(payload: Payload): Promise<void> {
   })
 
   for (const group of GROUPS) {
-    let matchingIds = allWorks.docs.filter(group.filter).map((w) => w.id)
+    let matchingIds = allWorks.docs
+      .filter((w) => group.filter(w as unknown as WorkLike))
+      .map((w) => w.id)
     if (group.limit) {
       matchingIds = matchingIds.slice(0, group.limit)
     }

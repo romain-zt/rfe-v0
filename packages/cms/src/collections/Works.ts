@@ -52,6 +52,21 @@ export const Works: CollectionConfig = {
       ],
       admin: { position: 'sidebar' },
     },
+    {
+      name: 'productionStage',
+      type: 'select',
+      options: [
+        { label: 'Produced', value: 'produced' },
+        { label: 'In Production', value: 'in-production' },
+        { label: 'Paid Development', value: 'paid-development' },
+        { label: 'In Development — Movies', value: 'movies-development' },
+        { label: 'In Development — Series', value: 'series-development' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description: 'Where this project sits in the production pipeline. Used to group works on the website.',
+      },
+    },
     { name: 'subcategory', type: 'text', admin: { position: 'sidebar' } },
     {
       name: 'seo',

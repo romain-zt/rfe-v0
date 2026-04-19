@@ -59,11 +59,11 @@ export async function seedSiteConfig(payload: Payload): Promise<void> {
       about: {
         paragraphs: [
           { text: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.' },
-          { text: "Rohm Feifer Entertainment's team has decades of experience creating high-quality, critically-acclaimed, award-winning and globally popular films and series, as well as nonscripted series, documentaries, and podcasts." },
+          { text: 'RFE is a production company dedicated to developing bold, elevated content with a focus on empowering voices and complex characters, especially those of women.' },
         ],
         heroHeadline: "There's always more to the story.",
         heroSubheadline: 'True Crime / Real Drama',
-        heroParagraph: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
+        heroParagraph: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
       },
       ui: {
         workView: 'View',

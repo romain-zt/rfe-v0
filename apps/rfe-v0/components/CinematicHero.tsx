@@ -5,19 +5,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from '@/components/LanguageContext'
 
+const HERO_IMAGE_SRC = '/assets/team/kara-and-elisabeth.jpg'
+
 export function CinematicHero() {
   const [phase, setPhase] = useState(0)
-  const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({})
-  const { lang, content } = useLanguage()
+  const [imgError, setImgError] = useState(false)
+  const { lang } = useLanguage()
 
-  const teamMembers = content?.teamMembers || []
-  const elisabeth = teamMembers.find(m => m.name.includes('Elisabeth'))
-  const kara = teamMembers.find(m => m.name.includes('Kara'))
-  const lizPhoto = elisabeth?.photo || '/assets/team/liz-rohm-hero.png'
-  const karaPhoto = kara?.photo || '/assets/team/kara.png'
   const sectionRef = useRef<HTMLElement>(null)
-  const imgLizRef = useRef<HTMLDivElement>(null)
-  const imgKaraRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLDivElement>(null)
   const vignetteRef = useRef<HTMLDivElement>(null)
   const orbRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -46,8 +42,7 @@ export function CinematicHero() {
     const grayscale = 0.5 - progress * 0.4
     const filterVal = `grayscale(${grayscale}) brightness(${brightness}) contrast(1.05)`
 
-    if (imgLizRef.current) imgLizRef.current.style.filter = filterVal
-    if (imgKaraRef.current) imgKaraRef.current.style.filter = filterVal
+    if (imgRef.current) imgRef.current.style.filter = filterVal
 
     if (vignetteRef.current) {
       vignetteRef.current.style.opacity = `${1 - progress * 0.55}`
@@ -79,66 +74,29 @@ export function CinematicHero() {
       style={{ height: '180vh', clipPath: 'inset(0)' }}
       aria-label="Hero"
     >
-      {/* Fixed background — two portraits side by side */}
+      {/* Fixed background — single composite photo of Elisabeth + Kara */}
       <div className="fixed inset-0 z-0" style={{ willChange: 'auto' }}>
-        <div className="absolute inset-0 flex">
-          {/* Elisabeth — left half */}
-          <div
-            ref={imgLizRef}
-            className="relative w-1/2 h-full"
-            style={{
-              filter: 'grayscale(0.5) brightness(0.4) contrast(1.05)',
-              opacity: phase >= 1 ? 1 : 0,
-              transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1)',
-            }}
-          >
-            {!imgErrors.liz && lizPhoto && (
-              <Image
-                src={lizPhoto}
-                alt="Elisabeth Rohm"
-                fill
-                className="object-cover object-top"
-                priority
-                sizes="50vw"
-                onError={() => setImgErrors(prev => ({ ...prev, liz: true }))}
-              />
-            )}
-          </div>
-
-          {/* Kara — right half */}
-          <div
-            ref={imgKaraRef}
-            className="relative w-1/2 h-full"
-            style={{
-              filter: 'grayscale(0.5) brightness(0.4) contrast(1.05)',
-              opacity: phase >= 1 ? 1 : 0,
-              transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s',
-            }}
-          >
-            {!imgErrors.kara && karaPhoto && (
-              <Image
-                src={karaPhoto}
-                alt="Kara Feifer"
-                fill
-                className="object-cover object-top"
-                priority
-                sizes="50vw"
-                onError={() => setImgErrors(prev => ({ ...prev, kara: true }))}
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Center divider — subtle gold line */}
         <div
-          className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px pointer-events-none"
+          ref={imgRef}
+          className="absolute inset-0"
           style={{
-            background: 'linear-gradient(to bottom, transparent, rgba(181, 151, 90, 0.25) 20%, rgba(181, 151, 90, 0.25) 80%, transparent)',
-            opacity: phase >= 2 ? 1 : 0,
-            transition: 'opacity 2s cubic-bezier(0.25, 0.1, 0.25, 1) 1.2s',
+            filter: 'grayscale(0.5) brightness(0.4) contrast(1.05)',
+            opacity: phase >= 1 ? 1 : 0,
+            transition: 'opacity 3s cubic-bezier(0.25, 0.1, 0.25, 1)',
           }}
-          aria-hidden="true"
-        />
+        >
+          {!imgError && (
+            <Image
+              src={HERO_IMAGE_SRC}
+              alt="Elisabeth Rohm and Kara Feifer"
+              fill
+              className="object-cover object-center"
+              priority
+              sizes="100vw"
+              onError={() => setImgError(true)}
+            />
+          )}
+        </div>
 
         {/* Vignette — loosens with scroll */}
         <div

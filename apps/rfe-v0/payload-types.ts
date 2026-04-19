@@ -463,6 +463,12 @@ export interface Work {
    */
   videoUrl?: string | null;
   category?: ('film' | 'series' | 'unscripted') | null;
+  /**
+   * Where this project sits in the production pipeline. Used to group works on the website.
+   */
+  productionStage?:
+    | ('produced' | 'in-production' | 'paid-development' | 'movies-development' | 'series-development')
+    | null;
   subcategory?: string | null;
   seo?: {
     title?: string | null;
@@ -1388,6 +1394,7 @@ export interface WorksSelect<T extends boolean = true> {
   description?: T;
   videoUrl?: T;
   category?: T;
+  productionStage?: T;
   subcategory?: T;
   seo?:
     | T

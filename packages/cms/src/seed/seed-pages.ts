@@ -118,10 +118,10 @@ const PAGES: PageSeed[] = [
         [
           lexicalHeadingNode('Woman-owned. Story-driven. Built for impact.'),
           lexicalParagraphNode(
-            'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
+            'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
           ),
           lexicalParagraphNode(
-            'Elisabeth Rohm & Kara Feifer — two creators who refuse to play it safe.',
+            'RFE is a production company dedicated to developing bold, elevated content with a focus on empowering voices and complex characters, especially those of women.',
           ),
         ],
         'dusk',
@@ -179,7 +179,7 @@ const PAGES: PageSeed[] = [
       type: 'page',
       headline: "There's always more to the story.",
       subtitle:
-        'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
+        'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
       label: 'About Us',
       imagePosition: 'center top',
     },
@@ -191,7 +191,7 @@ const PAGES: PageSeed[] = [
             'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
           ),
           lexicalParagraphNode(
-            "Rohm Feifer Entertainment's team has decades of experience creating high-quality, critically-acclaimed, award-winning and globally popular films and series, as well as nonscripted series, documentaries, and podcasts.",
+            'RFE is a production company dedicated to developing bold, elevated content with a focus on empowering voices and complex characters, especially those of women.',
           ),
           lexicalBlockNode('teamShowcase', {
             title: 'The Founders',

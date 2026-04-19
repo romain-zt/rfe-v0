@@ -3,6 +3,7 @@ import * as migration_20260405_104752_form_builder_forms from './20260405_104752
 import * as migration_20260405_114654_add_site_config_ui_labels from './20260405_114654_add_site_config_ui_labels';
 import * as migration_20260405_144134_add_ai_conversations from './20260405_144134_add_ai_conversations';
 import * as migration_20260407_064546_add_missing_admin_columns from './20260407_064546_add_missing_admin_columns';
+import * as migration_20260418_120000_works_production_stage from './20260418_120000_works_production_stage';
 
 export const migrations = [
   {
@@ -29,5 +30,10 @@ export const migrations = [
     up: migration_20260407_064546_add_missing_admin_columns.up,
     down: migration_20260407_064546_add_missing_admin_columns.down,
     name: '20260407_064546_add_missing_admin_columns',
+  },
+  {
+    up: migration_20260418_120000_works_production_stage.up,
+    down: migration_20260418_120000_works_production_stage.down,
+    name: '20260418_120000_works_production_stage',
   },
 ];

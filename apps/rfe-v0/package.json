@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "echo y | cross-env NODE_OPTIONS=--no-deprecation payload migrate && echo y | next build",
-    "dev": "next dev",
+    "dev": "echo y | next dev",
     "lint": "eslint .",
     "start": "next start",
     "typecheck": "tsc --noEmit",

@@ -9,7 +9,8 @@ type NavItem = { label: string; href: string; isExternal?: boolean }
 export function Header({ navItems: navItemsProp }: { navItems?: NavItem[] }) {
   const [visible, setVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const { lang } = useLanguage()
+  const { lang, content } = useLanguage()
+  const logoUrl = content.brandLogoUrl || '/favicon.png'
   const ticking = useRef(false)
   const SCROLL_THRESHOLD = 300
 
@@ -71,7 +72,7 @@ export function Header({ navItems: navItemsProp }: { navItems?: NavItem[] }) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/favicon.png"
+              src={logoUrl}
               alt="RFE"
               className="h-7 w-auto object-contain transition-opacity duration-500 group-hover:opacity-80"
             />

@@ -48,10 +48,25 @@ export function ContactInfoComponent({ title, showEmail = true, showPhone = true
       )}
 
       {showSocials && info.social && (
-        <div className="flex gap-4 mt-4">
+        <div className="flex flex-wrap gap-4 mt-4">
           {info.social.instagram && (
             <a href={info.social.instagram} target="_blank" rel="noopener noreferrer" className="text-xs tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors">
               Instagram
+            </a>
+          )}
+          {info.social.linkedin && (
+            <a href={info.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors">
+              LinkedIn
+            </a>
+          )}
+          {info.social.vimeo && (
+            <a href={info.social.vimeo} target="_blank" rel="noopener noreferrer" className="text-xs tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors">
+              Vimeo
+            </a>
+          )}
+          {info.social.tiktok && (
+            <a href={info.social.tiktok} target="_blank" rel="noopener noreferrer" className="text-xs tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors">
+              TikTok
             </a>
           )}
           {info.social.imdb && (

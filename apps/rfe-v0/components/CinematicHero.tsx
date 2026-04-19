@@ -9,13 +9,17 @@ const HERO_IMAGE_FALLBACK = '/assets/team/kara-and-elisabeth.jpg'
 
 type Props = {
   imageSrc?: string
+  headline?: string
+  subtitle?: string
+  label?: string
 }
 
-export function CinematicHero({ imageSrc }: Props) {
+export function CinematicHero({ imageSrc, headline, subtitle, label }: Props) {
   const HERO_IMAGE_SRC = imageSrc || HERO_IMAGE_FALLBACK
   const [phase, setPhase] = useState(0)
   const [imgError, setImgError] = useState(false)
-  const { lang } = useLanguage()
+  const { lang, content } = useLanguage()
+  const navItems = content.navItems
 
   const sectionRef = useRef<HTMLElement>(null)
   const imgRef = useRef<HTMLDivElement>(null)
@@ -157,48 +161,41 @@ export function CinematicHero({ imageSrc }: Props) {
                 transition: 'transform 1.5s var(--ease-emerge)',
               }}
             >
-              There&rsquo;s always more to the story.
+              {headline || 'There\u2019s always more to the story.'}
             </h1>
           </div>
 
-          <p
-            className="mt-8 text-sm uppercase font-light"
-            style={{
-              color: 'var(--rfe-gold)',
-              letterSpacing: phase >= 3 ? '0.28em' : '0.06em',
-              opacity: phase >= 3 ? 0.7 : 0,
-              transition: 'opacity 2s var(--ease-quiet), letter-spacing 3s var(--ease-quiet)',
-            }}
-          >
-            True Crime / Real Drama
-          </p>
+          {(subtitle || (!headline && !subtitle)) && (
+            <p
+              className="mt-8 text-sm uppercase font-light"
+              style={{
+                color: 'var(--rfe-gold)',
+                letterSpacing: phase >= 3 ? '0.28em' : '0.06em',
+                opacity: phase >= 3 ? 0.7 : 0,
+                transition: 'opacity 2s var(--ease-quiet), letter-spacing 3s var(--ease-quiet)',
+              }}
+            >
+              {subtitle || 'True Crime / Real Drama'}
+            </p>
+          )}
 
-          {/* Name credits — below subtitle */}
-          <div
-            className="mt-10 flex items-center justify-center gap-8 md:gap-16"
-            style={{
-              opacity: phase >= 3 ? 1 : 0,
-              transition: 'opacity 2s var(--ease-quiet) 0.4s',
-            }}
-          >
-            <span
-              className="text-[10px] uppercase tracking-[0.22em] font-light"
-              style={{ color: 'rgba(245, 240, 235, 0.35)' }}
+          {/* Credits — below subtitle */}
+          {label && (
+            <div
+              className="mt-10 flex items-center justify-center"
+              style={{
+                opacity: phase >= 3 ? 1 : 0,
+                transition: 'opacity 2s var(--ease-quiet) 0.4s',
+              }}
             >
-              Elisabeth Rohm
-            </span>
-            <span
-              className="w-px h-3"
-              style={{ background: 'rgba(181, 151, 90, 0.3)' }}
-              aria-hidden="true"
-            />
-            <span
-              className="text-[10px] uppercase tracking-[0.22em] font-light"
-              style={{ color: 'rgba(245, 240, 235, 0.35)' }}
-            >
-              Kara Feifer
-            </span>
-          </div>
+              <span
+                className="text-[10px] uppercase tracking-[0.22em] font-light"
+                style={{ color: 'rgba(245, 240, 235, 0.35)' }}
+              >
+                {label}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Left-side table of contents — desktop only */}
@@ -210,13 +207,21 @@ export function CinematicHero({ imageSrc }: Props) {
             transition: 'opacity 2.5s var(--ease-quiet) 1.2s',
           }}
         >
-          {[
-            { href: `/${lang}/about`, label: 'About Us' },
-            { href: `/${lang}/our-work`, label: 'Our Work' },
-            { href: `/${lang}/development`, label: 'Development' },
-            { href: `/${lang}/press`, label: 'Press' },
-            { href: `/${lang}/contact`, label: 'Contact' },
-          ].map((item, i) => (
+          {(navItems.length > 0
+            ? navItems.map((item) => ({
+                label: item.label,
+                href: item.isExternal || !item.href.startsWith('/')
+                  ? item.href
+                  : `/${lang}${item.href}`,
+              }))
+            : [
+                { href: `/${lang}/about`, label: 'About Us' },
+                { href: `/${lang}/our-work`, label: 'Our Work' },
+                { href: `/${lang}/development`, label: 'Development' },
+                { href: `/${lang}/press`, label: 'Press' },
+                { href: `/${lang}/contact`, label: 'Contact' },
+              ]
+          ).map((item, i) => (
             <Link
               key={item.href}
               href={item.href}

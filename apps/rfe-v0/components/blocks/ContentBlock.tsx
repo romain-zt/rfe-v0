@@ -40,7 +40,7 @@ type Props = {
   sectionTone?: string
 }
 
-function renderLexicalNode(node: any): React.ReactNode {
+export function renderLexicalNode(node: any): React.ReactNode {
   if (!node) return null
 
   if (node.type === 'text') {

@@ -132,6 +132,8 @@ export default async function RootLayout({
       },
     },
     ourWork: works,
+    navItems: navigation?.header?.items ?? [],
+    brandLogoUrl: (siteConfig?.brand?.logo as { url?: string } | undefined)?.url ?? '',
   }
 
   const navItems = navigation?.header?.items

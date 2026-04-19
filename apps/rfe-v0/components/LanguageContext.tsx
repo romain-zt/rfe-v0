@@ -16,6 +16,8 @@ export type SiteContentData = {
   awardsNews: AwardsNewsItem[]
   contactInfo: ContactInfo
   ourWork: WorkItem[]
+  navItems: { label: string; href: string; isExternal?: boolean }[]
+  brandLogoUrl: string
 }
 
 type LanguageContextType = {

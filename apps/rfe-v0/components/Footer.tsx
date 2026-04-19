@@ -6,13 +6,15 @@ import { useLanguage } from '@/components/LanguageContext'
 export function Footer() {
   const { lang, t, content } = useLanguage()
   const email = content.contactInfo.email
+  const logoUrl = content.brandLogoUrl || '/assets/logos/logo-rfe.png'
+  const copyright = t.footer.rights || `© ${new Date().getFullYear()} RFE`
 
   return (
     <footer className="relative px-6 py-24 lg:py-32 flex flex-col items-center justify-center text-center">
       {/* Logo — barely there */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/assets/logos/logo-rfe.png"
+        src={logoUrl}
         alt="RFE"
         className="h-6 w-auto object-contain mb-8"
         style={{ opacity: 0.12 }}
@@ -41,7 +43,7 @@ export function Footer() {
           {t.footer.legal}
         </Link>
         <p className="text-[9px] tracking-[0.15em]" style={{ color: 'rgba(245, 240, 235, 0.08)' }}>
-          © {new Date().getFullYear()} RFE
+          {copyright}
         </p>
       </div>
     </footer>

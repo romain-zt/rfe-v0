@@ -23,7 +23,12 @@ export function RenderHero({ hero }: { hero: HeroData }) {
     const mediaUrl = getMediaUrl(hero.media)
     return (
       <div id="hero" data-block-type="hero" data-hero-type="cinematic">
-        <CinematicHero imageSrc={mediaUrl || undefined} />
+        <CinematicHero
+          imageSrc={mediaUrl || undefined}
+          headline={hero.headline}
+          subtitle={hero.subtitle}
+          label={hero.label}
+        />
       </div>
     )
   }

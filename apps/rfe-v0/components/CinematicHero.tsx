@@ -5,9 +5,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from '@/components/LanguageContext'
 
-const HERO_IMAGE_SRC = '/assets/team/kara-and-elisabeth.jpg'
+const HERO_IMAGE_FALLBACK = '/assets/team/kara-and-elisabeth.jpg'
 
-export function CinematicHero() {
+type Props = {
+  imageSrc?: string
+}
+
+export function CinematicHero({ imageSrc }: Props) {
+  const HERO_IMAGE_SRC = imageSrc || HERO_IMAGE_FALLBACK
   const [phase, setPhase] = useState(0)
   const [imgError, setImgError] = useState(false)
   const { lang } = useLanguage()

@@ -20,9 +20,10 @@ export function RenderHero({ hero }: { hero: HeroData }) {
   if (!hero) return null
 
   if (hero.type === 'cinematic') {
+    const mediaUrl = getMediaUrl(hero.media)
     return (
       <div id="hero" data-block-type="hero" data-hero-type="cinematic">
-        <CinematicHero />
+        <CinematicHero imageSrc={mediaUrl || undefined} />
       </div>
     )
   }

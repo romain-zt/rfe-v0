@@ -7,6 +7,25 @@ type ProductionStage =
   | 'movies-development'
   | 'series-development'
 
+type CreditRole =
+  | 'director'
+  | 'writer'
+  | 'ep'
+  | 'producer'
+  | 'star'
+  | 'showrunner'
+  | 'co-producer'
+  | 'creator'
+  | 'other'
+
+type WorkSeedCredit = {
+  name: string
+  role: CreditRole
+  imdbUrl?: string
+  note?: string
+  isHeadline?: boolean
+}
+
 type WorkSeedItem = {
   id: number
   title: string
@@ -18,6 +37,7 @@ type WorkSeedItem = {
   category?: 'film' | 'series' | 'unscripted'
   subcategory?: string
   productionStage?: ProductionStage
+  credits?: WorkSeedCredit[]
 }
 
 function generateSlug(title: string): string {
@@ -30,9 +50,9 @@ function generateSlug(title: string): string {
 
 const WORKS_DATA: WorkSeedItem[] = [
   // === PRODUCED (Michael's "PROJECTS PRODUCED") ===
-  { id: 46, title: 'Husband Father Killer', year: 2024, src: '/assets/posters/HusbandFatherKiller.jpeg', tags: ['Thriller'], productionStage: 'produced', description: 'Based on the horrific true story of Alyssa Pladl, Elisabeth Rohm directed and executive produced the film alongside Kara Feifer. Debuted on Lifetime on October 19, 2024.' },
-  { id: 17, title: 'The Dating App Killer', year: 2026, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], productionStage: 'produced', description: 'Based on the true story of Monica White. Elisabeth Rohm directed and executive produced alongside Kara Feifer.' },
-  { id: 25, title: 'Wife Stalker', year: 2025, src: '/assets/works/wife-stalker.png', tags: ['Thriller'], productionStage: 'produced', description: "Based on Lynne and Valerie Constantine's psychological thriller. Elisabeth Rohm directed and executive produced alongside Kara Feifer." },
+  { id: 46, title: 'Husband Father Killer', year: 2024, src: '/assets/posters/HusbandFatherKiller.jpeg', tags: ['Thriller'], productionStage: 'produced', description: 'Based on the horrific true story of Alyssa Pladl. Debuted on Lifetime on October 19, 2024.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }] },
+  { id: 17, title: 'The Dating App Killer', year: 2026, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], productionStage: 'produced', description: 'Based on the true story of Monica White.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }] },
+  { id: 25, title: 'Wife Stalker', year: 2025, src: '/assets/works/wife-stalker.png', tags: ['Thriller'], productionStage: 'produced', description: "Based on Lynne and Valerie Constantine's psychological thriller.", credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }] },
   { id: 4, title: "Sister's Daughter", year: 2026, src: '/assets/works/sisters-daughter.png', tags: ['Drama'], productionStage: 'produced', description: 'Blood ties, buried secrets, and the weight of what was never said.' },
 
   // === IN PRODUCTION (Michael's "IN PRODUCTION") ===
@@ -41,14 +61,14 @@ const WORKS_DATA: WorkSeedItem[] = [
 
   // === PAID DEVELOPMENT (Michael's "PAID DEVELOPMENT") ===
   // NOTE: Blade, Sick Puppy, Bombsquad, The Chase, Nasty Business not seeded yet — see to-refine.md #5
-  { id: 23, title: 'Lie Detector', year: 2025, src: '/assets/works/lie-detector.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development', description: 'Mattel/Lie Detector with Ed Bernero, showrunner and creator of Criminal Minds. When the FBI unveils VERA, a cutting-edge lie detector considered to be infallible, Master Interrogator Kara Voss and her team are tasked with proving it.' },
-  { id: 47, title: 'The Highlife', year: 2026, src: '/assets/works/high-life.png', tags: ['Drama'], category: 'series', productionStage: 'paid-development', description: 'A series with TF1 Studios, featuring Anne Clements (Black Mafia Family) and Lauralee Bell (The Young and the Restless).' },
-  { id: 42, title: 'Dispatch', year: 2026, src: '/assets/posters/dispatch.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development', description: 'When a late-night call ends in a fiery truck crash, a small-town dispatcher teams up with local police to uncover a deadly cover-up. Co-production with TF1 America, with Jessica Borsiczky.' },
+  { id: 23, title: 'Lie Detector', year: 2025, src: '/assets/works/lie-detector.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development', description: 'When the FBI unveils VERA, a cutting-edge lie detector considered to be infallible, Master Interrogator Kara Voss and her team are tasked with proving it. A Mattel/Lie Detector project.', credits: [{ name: 'Ed Bernero', role: 'showrunner', note: 'creator of Criminal Minds', isHeadline: true }] },
+  { id: 47, title: 'The Highlife', year: 2026, src: '/assets/works/high-life.png', tags: ['Drama'], category: 'series', productionStage: 'paid-development', description: 'A series with TF1 Studios.', credits: [{ name: 'Anne Clements', role: 'producer', note: 'Black Mafia Family', isHeadline: true }, { name: 'Lauralee Bell', role: 'producer', note: 'The Young and the Restless' }] },
+  { id: 42, title: 'Dispatch', year: 2026, src: '/assets/posters/dispatch.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development', description: 'When a late-night call ends in a fiery truck crash, a small-town dispatcher teams up with local police to uncover a deadly cover-up. Co-production with TF1 America.', credits: [{ name: 'Jessica Borsiczky', role: 'producer', isHeadline: true }] },
 
   // === MOVIES & FEATURES — IN DEVELOPMENT (Michael's "MOVIES & FEATURES") ===
   // NOTE: 1% Better not seeded — see to-refine.md #5
-  { id: 32, title: 'Feather', year: 2026, src: '/assets/works/feather.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', description: "The never before told story of Farrah Fawcett's life and legacy. Written by Vernon Scott, co-produced by Latigo Films." },
-  { id: 1, title: 'Margret & Stevie', year: 2026, src: '/assets/works/margret-stevie.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', description: "Publishers are circling, eager to rewrite Curious George's co-creator Margret Rey's legacy — but as they close in, so do the memories of the war she survived decades earlier. Starring Shirley MacLaine, directed by Matthew Weiner." },
+  { id: 32, title: 'Feather', year: 2026, src: '/assets/works/feather.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', description: "The never before told story of Farrah Fawcett's life and legacy.", credits: [{ name: 'Vernon Scott', role: 'writer', isHeadline: true }, { name: 'Latigo Films', role: 'co-producer' }] },
+  { id: 1, title: 'Margret & Stevie', year: 2026, src: '/assets/works/margret-stevie.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', description: "Publishers are circling, eager to rewrite Curious George's co-creator Margret Rey's legacy — but as they close in, so do the memories of the war she survived decades earlier.", credits: [{ name: 'Matthew Weiner', role: 'director', isHeadline: true }, { name: 'Shirley MacLaine', role: 'star' }] },
   { id: 33, title: 'Murder-in-Law', year: 2026, src: '/assets/posters/murder-in-law.png', tags: ['True Crime'], category: 'film', subcategory: 'true-crime-movies', productionStage: 'movies-development', description: "Law & Crime: a wealthy Miami matriarch. A bitter custody war. A hitman's bullet. What began as the cold-blooded assassination of a Florida law professor spiraled into one of the most shocking family-driven murder plots in America." },
   { id: 9, title: 'Flower Girl', year: 2025, src: '/assets/works/flower-girl.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', description: 'With Lockwood Media. The story of Virginia Cherrill, the leading lady of "City Lights" — about the severe consequences she suffered for refusing Chaplin\'s advances.' },
   { id: 14, title: 'Trans Electric', year: 2026, src: '/assets/posters/TransElectric2.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', description: "From the depths of the '70s rock 'n' roll excesses, Cidny Bullen's compelling journey about finding your authentic voice." },
@@ -60,9 +80,9 @@ const WORKS_DATA: WorkSeedItem[] = [
 
   // === SERIES — IN DEVELOPMENT (Michael's "SERIES") ===
   // NOTE: Double Dealer not seeded — see to-refine.md #5
-  { id: 10, title: 'By Midnight', year: 2025, src: '/assets/works/by-midnight.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', description: 'After moving to an elite London school, a teenage girl uncovers a string of murders tied to a secret vampire society. With Kat Rose Martin attached as writer.' },
+  { id: 10, title: 'By Midnight', year: 2025, src: '/assets/works/by-midnight.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', description: 'After moving to an elite London school, a teenage girl uncovers a string of murders tied to a secret vampire society.', credits: [{ name: 'Kat Rose Martin', role: 'writer', isHeadline: true }] },
   { id: 35, title: 'Undefeated', year: 2026, src: '/assets/posters/Undefeated.jpg', tags: ['Drama'], category: 'series', productionStage: 'series-development', description: "Inside the Miami Dolphins' 1972 comeback from three straight championship losses to an undefeated season. Based on Mike Freeman's book." },
-  { id: 48, title: 'Icky', year: 2026, src: '/assets/works/icky.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', description: 'A series with Ken Girotti and Wendy Coulas.' },
+  { id: 48, title: 'Icky', year: 2026, src: '/assets/works/icky.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', description: 'A new dramatic series.', credits: [{ name: 'Ken Girotti', role: 'director', isHeadline: true }, { name: 'Wendy Coulas', role: 'producer' }] },
   { id: 8, title: 'Diamonds and Deadlines', year: 2026, src: '/assets/works/diamonds-and-deadlines.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', description: 'The true story of Miriam Leslie, who made her way to the top of the publishing world and left her multi-million-dollar estate to the suffragists.' },
   { id: 7, title: "Two's Company", year: 2025, src: '/assets/works/twos-company.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', description: 'From a shattered childhood to the heights of fame and reinvention, Suzanne Somers fights to own her voice and her legacy.' },
   { id: 16, title: 'Matador', year: 2025, src: '/assets/works/matador.png', tags: ['Drama'], productionStage: 'series-development', description: 'A streetwise Brooklyn kid flees to Mexico City and trains under a legendary matador to become the first American bullfighter.' },
@@ -81,9 +101,9 @@ const WORKS_DATA: WorkSeedItem[] = [
   { id: 27, title: 'Booth P.I.', year: 2025, src: '/assets/works/booth-pi.png', tags: ['Thriller'], description: 'A recovering Southern belle and struggling New York actress returns home to save her family plantation and accidentally becomes a small-town sleuth.' },
   { id: 29, title: 'Iron Man', year: 2025, src: '/assets/works/iron-man.png', tags: ['Drama'], description: 'The true story of the first ever Ironman champion with Down Syndrome and the father who would do anything to give his special-needs son a chance.' },
   { id: 28, title: 'Silent Echo', year: 2025, src: '/assets/works/silent-echo.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-feature', description: "A year after the death of her four-year-old son, Charlotte Fleming sees something that jolts her awake: Sebastion, alive and well in a stranger's social media post." },
-  { id: 34, title: "Girls Can't Play Pool", year: 2026, src: '/assets/posters/GirlsCantPlayPool.jpg', tags: ['Drama'], category: 'film', subcategory: 'dramas-feature', description: 'Heather is a gifted young pool hustler who lives on the edge of chaos. When two women decide to go on the road together, their lucrative partnership leads to a deep bond. Elisabeth Rohm to direct.' },
+  { id: 34, title: "Girls Can't Play Pool", year: 2026, src: '/assets/posters/GirlsCantPlayPool.jpg', tags: ['Drama'], category: 'film', subcategory: 'dramas-feature', description: 'Heather is a gifted young pool hustler who lives on the edge of chaos. When two women decide to go on the road together, their lucrative partnership leads to a deep bond.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }] },
   { id: 36, title: 'Korean Espionage', year: 2026, src: '/assets/posters/KoreanEspionage.png', tags: ['Thriller'], category: 'series', subcategory: 'true-crime-series', description: 'When Korean Air Flight 858 is exploded by a North Korean agent, a former US soldier learns about his Japanese wife\'s darkest secret: she mentored the attacker.' },
-  { id: 45, title: "Girls Can't Play Pool", year: 2026, src: '/assets/posters/GirlsCantPlayPool.jpg', tags: ['Drama'], category: 'series', subcategory: 'dramas-feature', description: 'Heather is a gifted young pool hustler who lives on the edge of chaos. When two women decide to go on the road together, their lucrative partnership leads to a deep bond. Elisabeth Rohm to direct.' },
+  { id: 45, title: "Girls Can't Play Pool", year: 2026, src: '/assets/posters/GirlsCantPlayPool.jpg', tags: ['Drama'], category: 'series', subcategory: 'dramas-feature', description: 'Heather is a gifted young pool hustler who lives on the edge of chaos. When two women decide to go on the road together, their lucrative partnership leads to a deep bond.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }] },
   { id: 37, title: 'Relentless', year: 2026, src: '/assets/posters/relentless.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-feature', description: '"Fatal Attraction" meets "Cape Fear." A sexy, propulsive thriller where one mistake in Mexico spirals out of control.' },
   { id: 38, title: 'Call Me Madam', year: 2026, src: '/assets/posters/CallMeMadam.png', tags: ['Drama'], category: 'series', subcategory: 'dramas-series', description: "In 1961 Hot Springs, Arkansas, a savvy madam attempts to pass her high-end brothel to her Black protégé, challenging the town's racial barriers and mob control." },
   { id: 39, title: 'Swap', year: 2026, src: '/assets/posters/swap.png', tags: ['Drama'], category: 'series', subcategory: 'dramas-series', description: 'A show about contemporary marriage — love, sex, commitment, and what happens when three couples who aren\'t quite friends get a little drunk and swap.' },
@@ -118,6 +138,7 @@ export async function seedWorks(payload: Payload, mediaMap: Map<string, number>)
       description: item.description || '',
       videoUrl: item.videoUrl || '',
       category: item.category || undefined,
+      credits: item.credits || undefined,
       productionStage: item.productionStage || undefined,
       subcategory: item.subcategory || '',
       sortOrder: i,

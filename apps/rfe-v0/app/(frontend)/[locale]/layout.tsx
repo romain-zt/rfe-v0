@@ -98,6 +98,7 @@ export default async function RootLayout({
     category: w.category,
     productionStage: w.productionStage,
     subcategory: w.subcategory,
+    credits: w.credits || [],
   }))
 
   const teamMembers = teamRes.docs.map((m) => ({

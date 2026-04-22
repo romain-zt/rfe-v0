@@ -101,6 +101,7 @@ export default async function WorkPage({ params }: Props) {
     category: cmsWork.category,
     productionStage: cmsWork.productionStage,
     subcategory: cmsWork.subcategory,
+    credits: cmsWork.credits || [],
   }
 
   const breadcrumbItems = [

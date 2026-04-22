@@ -27,6 +27,17 @@ export const PRODUCTION_STAGE_TAB_LABELS: Record<string, string> = {
   'series-development': 'Series',
 }
 
+export type WorkCreditRole = 'director' | 'writer' | 'ep' | 'producer' | 'star' | 'showrunner' | 'co-producer' | 'creator' | 'other'
+
+export type WorkCredit = {
+  id?: string
+  name: string
+  role: WorkCreditRole
+  imdbUrl?: string
+  note?: string
+  isHeadline?: boolean
+}
+
 export type WorkItem = {
   id: number
   slug?: string
@@ -39,6 +50,7 @@ export type WorkItem = {
   category?: WorkCategory
   subcategory?: string
   productionStage?: ProductionStage
+  credits?: WorkCredit[]
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: string[]

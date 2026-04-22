@@ -137,6 +137,47 @@ export default function WorkPageContent({ work }: WorkPageContentProps) {
             </p>
           )}
 
+          {work.credits && work.credits.length > 0 && (
+            <section
+              className="pt-8 sm:pt-12 border-t border-border/30"
+              aria-labelledby="credits-heading"
+            >
+              <h2 id="credits-heading" className="font-serif text-lg sm:text-xl font-light tracking-wide mb-4 sm:mb-6">
+                {t.credits?.sectionTitle ?? 'Credits'}
+              </h2>
+              <ul className="space-y-3">
+                {work.credits.map((credit, i) => {
+                  const roleLabel = t.credits?.roleLabel?.[credit.role] ?? ''
+                  const nameNode = credit.imdbUrl ? (
+                    <a
+                      href={credit.imdbUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-foreground transition-colors underline decoration-foreground/20 hover:decoration-foreground/60 underline-offset-4"
+                    >
+                      {credit.name}&nbsp;↗
+                    </a>
+                  ) : (
+                    <span>{credit.name}</span>
+                  )
+                  return (
+                    <li key={credit.id ?? i} className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                      {roleLabel && (
+                        <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] text-muted-foreground/50 sm:min-w-[140px]">
+                          {roleLabel}
+                        </span>
+                      )}
+                      <span className="text-foreground/90">
+                        {nameNode}
+                        {credit.note && <span className="text-muted-foreground/60"> — {credit.note}</span>}
+                      </span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
+
           <div
             className="pt-8 sm:pt-12 border-t border-border/30 space-y-6"
             style={{

@@ -44,7 +44,13 @@ Series pool: By Midnight, Undefeated, Icky, Diamonds and Deadlines, Two's Compan
 
 ---
 
-## 4. Michael — talent / credits as a structured field
+## 4. ✅ RESOLVED (22 Apr 2026) — Michael — talent / credits as a structured field
+
+**Status:** Shipped (pending visual validation). See `updated-to-validate.md` → "Structured `credits[]` on Works".
+
+Schema added: `{ name, role (select), imdbUrl?, note?, isHeadline }[]`. Card shows headline credit; detail page shows full role-grouped Credits section. Romain still needs to fill IMDB URLs via admin (validation enforces `https://www.imdb.com/` prefix).
+
+**Original ask (kept for reference):**
 
 Michael wants name credits **hyperlinked to IMDB** on:
 - Lie Detector → Ed Bernero (showrunner & creator of Criminal Minds)

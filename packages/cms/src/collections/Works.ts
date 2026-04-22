@@ -43,6 +43,58 @@ export const Works: CollectionConfig = {
     { name: 'description', type: 'textarea' },
     { name: 'videoUrl', type: 'text', admin: { description: 'YouTube or Vimeo embed URL' } },
     {
+      name: 'credits',
+      type: 'array',
+      admin: {
+        description:
+          'People and companies attached to this project. Headline credit appears on the work card. All credits appear on the detail page.',
+      },
+      fields: [
+        { name: 'name', type: 'text', required: true },
+        {
+          name: 'role',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Director', value: 'director' },
+            { label: 'Writer', value: 'writer' },
+            { label: 'Executive Producer', value: 'ep' },
+            { label: 'Producer', value: 'producer' },
+            { label: 'Star', value: 'star' },
+            { label: 'Showrunner', value: 'showrunner' },
+            { label: 'Co-Producer', value: 'co-producer' },
+            { label: 'Creator', value: 'creator' },
+            { label: 'Other', value: 'other' },
+          ],
+        },
+        {
+          name: 'imdbUrl',
+          type: 'text',
+          admin: { description: 'Optional. Must start with https://www.imdb.com/' },
+          validate: (val: unknown) => {
+            if (!val || typeof val !== 'string' || val.length === 0) return true
+            if (!val.startsWith('https://www.imdb.com/'))
+              return 'Must start with https://www.imdb.com/'
+            return true
+          },
+        },
+        {
+          name: 'note',
+          type: 'text',
+          admin: { description: 'Optional 1-line context (e.g. "creator of Criminal Minds")' },
+        },
+        {
+          name: 'isHeadline',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            description:
+              'Show this credit on the work card. If multiple are checked, the first wins.',
+          },
+        },
+      ],
+    },
+    {
       name: 'category',
       type: 'select',
       options: [

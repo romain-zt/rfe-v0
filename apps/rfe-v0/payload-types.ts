@@ -462,6 +462,28 @@ export interface Work {
    * YouTube or Vimeo embed URL
    */
   videoUrl?: string | null;
+  /**
+   * People and companies attached to this project. Headline credit appears on the work card. All credits appear on the detail page.
+   */
+  credits?:
+    | {
+        name: string;
+        role: 'director' | 'writer' | 'ep' | 'producer' | 'star' | 'showrunner' | 'co-producer' | 'creator' | 'other';
+        /**
+         * Optional. Must start with https://www.imdb.com/
+         */
+        imdbUrl?: string | null;
+        /**
+         * Optional 1-line context (e.g. "creator of Criminal Minds")
+         */
+        note?: string | null;
+        /**
+         * Show this credit on the work card. If multiple are checked, the first wins.
+         */
+        isHeadline?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   category?: ('film' | 'series' | 'unscripted') | null;
   /**
    * Where this project sits in the production pipeline. Used to group works on the website.
@@ -1393,6 +1415,16 @@ export interface WorksSelect<T extends boolean = true> {
   tags?: T;
   description?: T;
   videoUrl?: T;
+  credits?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        imdbUrl?: T;
+        note?: T;
+        isHeadline?: T;
+        id?: T;
+      };
   category?: T;
   productionStage?: T;
   subcategory?: T;

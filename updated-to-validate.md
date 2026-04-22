@@ -24,6 +24,46 @@ When rejected → delete it from here and (if still open) add the question to `t
 
 ## Pending validation
 
+### ⏳ Structured `credits[]` on Works — *resolves `to-refine.md #4`*
+
+**Date:** 22 Apr 2026
+**Source:** Romain's request — credits should not live in free-text description; need IMDB hyperlinks; show one discrete credit per card, full credit list on detail page.
+
+**What was applied:**
+
+- New `credits` array field on the `Works` collection: `{ name, role (select), imdbUrl?, note?, isHeadline }[]`. Roles: director, writer, ep, producer, star, showrunner, co-producer, creator, other.
+- DB migration `20260422_*_works_credits` (table + enum + FK + indexes).
+- Seed: credits added to 13 works (Husband Father Killer, Dating App Killer, Wife Stalker, Lie Detector, Highlife, Icky, Feather, Margret & Stevie, By Midnight, Dispatch, Girls Can't Play Pool ×2). Descriptions stripped of inlined credits to avoid double-display.
+- Card UI (`WorkGrid.tsx`): one uppercase headline credit line below tags, opens IMDB in `_blank` when URL present, ≥44px touch target. Hidden when no credits.
+- Detail UI (`WorkPageContent.tsx`): dedicated "Credits" section between description and contact CTA, role-grouped, IMDB links underlined, mobile-stacked / desktop-inline.
+- i18n: `t.credits.byRole` (card prefix) + `t.credits.roleLabel` (detail section) + `sectionTitle` in `build-ui-dictionary.ts`.
+
+**Files touched (11):** Works collection + migration + migrations index + seed-works + cms types + i18n types + layout mapper + i18n dictionary + WorkGrid + WorkPageContent + detail page.tsx (credits pass-through).
+
+**Branch:** *(uncommitted on `v2`)*
+
+**Verification checklist:**
+
+- [x] `pnpm --filter @rfe/v0 payload migrate` ran clean
+- [x] `pnpm --filter @rfe/v0 build` passes
+- [x] `pnpm seed` runs (idempotent)
+- [x] No new lint errors
+- [ ] `/en/our-work` cards show "DIRECTED BY ELISABETH ROHM" / "SHOWRUNNER ED BERNERO" / etc. on the right cards
+- [ ] Cards without credits show nothing extra (no empty space)
+- [ ] Click a credit pill on a card → does NOT navigate to the work detail (stopPropagation works); opens IMDB if `imdbUrl` set
+- [ ] `/en/our-work/lie-detector` detail page shows "Credits" section: `Showrunner — Ed Bernero — creator of Criminal Minds`
+- [ ] Mobile breakpoints OK at 320 / 375 / 768 (role label stacks above name on mobile, inline on sm+)
+- [ ] Lie Detector / Highlife / Icky / Feather / Margret & Stevie / By Midnight / Dispatch / HFK / DAK / Wife Stalker descriptions no longer mention the credited names
+- [ ] Admin: Works → any work → "Credits" array editor works; can add IMDB URLs via the admin UI (validation requires `https://www.imdb.com/...`)
+
+**Open caveats:**
+
+- **No IMDB URLs in seed** — Romain to fill them in via admin (validation enforces `https://www.imdb.com/` prefix).
+- **Icky description rewrite:** original was 100% credits; subagent set it to "A new dramatic series." — Romain may want stronger logline once available.
+- **Headline picking** — auto-defaults to first credit if none flagged. Worth scanning admin to confirm the right credit is the headline on each work.
+
+---
+
 ### ⏳ Works detail route restored — *fixes 404 on every `/our-work/[slug]` link*
 
 **Date:** 22 Apr 2026

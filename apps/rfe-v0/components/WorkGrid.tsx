@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from './LanguageContext'
-import type { WorkItem } from '@/lib/i18n/types'
+import type { WorkItem, WorkCredit } from '@/lib/i18n/types'
 import { PRODUCTION_STAGE_LABELS, PRODUCTION_STAGE_TAB_LABELS } from '@/lib/i18n/types'
 import type { ProductionStage } from '@/lib/i18n/types'
 import { useReveal, useStaggeredReveal } from '@/hooks/useReveal'
@@ -89,6 +89,11 @@ function VideoPreview({
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background/60 via-transparent to-background/30" />
     </div>
   )
+}
+
+function getHeadlineCredit(credits?: WorkCredit[]): WorkCredit | null {
+  if (!credits?.length) return null
+  return credits.find(c => c.isHeadline) ?? credits[0] ?? null
 }
 
 // Masonry size pattern — varies per position for editorial feel
@@ -179,6 +184,28 @@ function WorkCard({
           <span className="inline-block mt-4 text-[9px] tracking-[0.2em] uppercase text-foreground/30 group-hover:text-foreground/60 transition-colors duration-500">
             {t.work.view} ↗
           </span>
+          {(() => {
+            const headline = getHeadlineCredit(work.credits)
+            if (!headline) return null
+            const prefix = t.credits?.byRole?.[headline.role] ?? ''
+            const labelText = prefix ? `${prefix} ${headline.name}` : headline.name
+            if (headline.imdbUrl) {
+              return (
+                <span
+                  role="link"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.open(headline.imdbUrl!, '_blank', 'noopener,noreferrer') }}
+                  className="block mt-2 min-h-[44px] flex items-center text-[10px] sm:text-xs tracking-[0.15em] uppercase text-muted-foreground/60 hover:text-foreground transition-colors cursor-pointer line-clamp-1"
+                >
+                  {labelText}&nbsp;↗
+                </span>
+              )
+            }
+            return (
+              <span className="block mt-2 text-[10px] sm:text-xs tracking-[0.15em] uppercase text-muted-foreground/60 line-clamp-1">
+                {labelText}
+              </span>
+            )
+          })()}
         </Link>
       </article>
     )
@@ -277,6 +304,30 @@ function WorkCard({
               ))}
             </div>
           )}
+          {(() => {
+            const headline = getHeadlineCredit(work.credits)
+            if (!headline) return null
+            const prefix = t.credits?.byRole?.[headline.role] ?? ''
+            const labelText = prefix ? `${prefix} ${headline.name}` : headline.name
+            if (headline.imdbUrl) {
+              return (
+                <a
+                  href={headline.imdbUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center min-h-[44px] text-[10px] sm:text-xs tracking-[0.15em] uppercase text-muted-foreground/60 hover:text-foreground transition-colors line-clamp-1 pt-1"
+                >
+                  {labelText}&nbsp;↗
+                </a>
+              )
+            }
+            return (
+              <span className="inline-flex items-center text-[10px] sm:text-xs tracking-[0.15em] uppercase text-muted-foreground/60 line-clamp-1 pt-1">
+                {labelText}
+              </span>
+            )
+          })()}
         </div>
       </Link>
     </article>

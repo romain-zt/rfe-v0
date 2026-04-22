@@ -5,6 +5,17 @@ async function getPayloadClient() {
   return getPayload({ config })
 }
 
+export type WorkCreditRole = 'director' | 'writer' | 'ep' | 'producer' | 'star' | 'showrunner' | 'co-producer' | 'creator' | 'other'
+
+export type WorkCredit = {
+  id?: string
+  name: string
+  role: WorkCreditRole
+  imdbUrl?: string
+  note?: string
+  isHeadline?: boolean
+}
+
 export type Work = {
   id: number
   title: string
@@ -24,6 +35,7 @@ export type Work = {
   category?: 'film' | 'series' | 'unscripted'
   productionStage?: 'produced' | 'in-production' | 'paid-development' | 'movies-development' | 'series-development'
   subcategory?: string
+  credits?: WorkCredit[]
   sortOrder: number
   seo?: {
     title?: string

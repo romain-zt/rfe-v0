@@ -416,7 +416,7 @@ export async function seedPages(
     if (!mediaMap) return hero
 
     const candidates = [
-      '/assets/portfolio-medias/kara-and-elisabeth.webp',
+      '/assets/team/kara-and-elisabeth.webp',
       '/assets/team/liz-rohm-hero.png',
       '/assets/works/margret-stevie.png',
     ]

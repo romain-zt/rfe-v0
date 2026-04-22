@@ -37,7 +37,7 @@ const IMAGE_PATHS = [
   '/assets/works/feather.png',
   '/assets/works/high-life.png',
   '/assets/works/icky.png',
-  '/assets/team/kara-and-elisabeth.jpg',
+  '/assets/team/kara-and-elisabeth.webp',
   '/assets/works/the-dating-app-killer.jpg',
   '/assets/works/murder-your-darlings.jpg',
   '/assets/works/if-you-tell.png',

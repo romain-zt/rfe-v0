@@ -49,7 +49,7 @@ Per Lis: "it's nice to have both me and Kara on the front page". The cinematic h
 
 | Item | Location |
 |---|---|
-| Image file | `apps/rfe-v0/public/assets/team/kara-and-elisabeth.jpg` *(easily updatable — drop a new file at this path)* |
+| Image file | `apps/rfe-v0/public/assets/team/kara-and-elisabeth.webp` *(easily updatable — drop a new file at this path)* |
 | Hero component | `apps/rfe-v0/components/CinematicHero.tsx` (rewritten to render one full-bleed image; vignette / orb / parallax / TOC / scroll indicator preserved; faces credit "Elisabeth Rohm | Kara Feifer" preserved at the bottom) |
 | Seed | image path added to `IMAGE_PATHS` in `packages/cms/src/seed/seed-media.ts` so it uploads to S3 on next seed run |
 

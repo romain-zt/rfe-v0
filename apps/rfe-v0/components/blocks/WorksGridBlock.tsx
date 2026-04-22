@@ -62,11 +62,19 @@ export function WorksGridComponent(props: Props) {
     }
 
     if (props.showSubcategoryTabs) {
-      const devWorks = allWorks.filter(w => w.category)
+      const devStages = ['paid-development', 'movies-development', 'series-development']
+      const devWorks = allWorks.filter(w => devStages.includes(w.productionStage ?? ''))
       return props.limit ? devWorks.slice(0, props.limit) : devWorks
     }
 
-    const ourWorks = allWorks.filter(w => !w.category)
+    const stageOrder: Record<string, number> = { 'in-production': 0, 'produced': 1 }
+    const ourWorks = allWorks
+      .filter(w => w.productionStage === 'produced' || w.productionStage === 'in-production')
+      .sort((a, b) => {
+        const aO = stageOrder[a.productionStage ?? ''] ?? 2
+        const bO = stageOrder[b.productionStage ?? ''] ?? 2
+        return aO - bO
+      })
     return props.limit ? ourWorks.slice(0, props.limit) : ourWorks
   }, [allWorks, curatedIds, props.showSubcategoryTabs, props.category, props.limit])
 
@@ -86,7 +94,7 @@ export function WorksGridComponent(props: Props) {
           </h2>
         </div>
       )}
-      <WorkGrid works={works} />
+      <WorkGrid works={works} tabField={props.showSubcategoryTabs ? 'productionStage' : 'none'} />
     </section>
   )
 }

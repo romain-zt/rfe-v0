@@ -6,6 +6,27 @@ export type Language = 'en' | 'fr'
 
 export type WorkCategory = 'film' | 'series' | 'unscripted'
 
+export type ProductionStage =
+  | 'produced'
+  | 'in-production'
+  | 'paid-development'
+  | 'movies-development'
+  | 'series-development'
+
+export const PRODUCTION_STAGE_LABELS: Record<ProductionStage, string> = {
+  'produced': 'Produced',
+  'in-production': 'In Production',
+  'paid-development': 'Paid Development',
+  'movies-development': 'In Development — Movies',
+  'series-development': 'In Development — Series',
+}
+
+export const PRODUCTION_STAGE_TAB_LABELS: Record<string, string> = {
+  'paid-development': 'Paid Development',
+  'movies-development': 'Movies',
+  'series-development': 'Series',
+}
+
 export type WorkItem = {
   id: number
   slug?: string
@@ -17,6 +38,7 @@ export type WorkItem = {
   videoUrl?: string
   category?: WorkCategory
   subcategory?: string
+  productionStage?: ProductionStage
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: string[]

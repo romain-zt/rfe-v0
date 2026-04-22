@@ -96,6 +96,7 @@ export default async function RootLayout({
     description: w.description || '',
     videoUrl: w.videoUrl || '',
     category: w.category,
+    productionStage: w.productionStage,
     subcategory: w.subcategory,
   }))
 

@@ -5,11 +5,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from './LanguageContext'
 import type { WorkItem } from '@/lib/i18n/types'
+import { PRODUCTION_STAGE_LABELS, PRODUCTION_STAGE_TAB_LABELS } from '@/lib/i18n/types'
+import type { ProductionStage } from '@/lib/i18n/types'
 import { useReveal, useStaggeredReveal } from '@/hooks/useReveal'
 import { getWorkSlug } from '@/lib/works'
 
 export type WorkGridProps = {
   works: WorkItem[]
+  tabField?: 'productionStage' | 'none'
 }
 
 function extractYouTubeId(url: string): string | null {
@@ -96,7 +99,7 @@ function getMasonrySize(index: number): 'full' | 'large' | 'medium' | 'small' | 
     'medium', 'title-only', 'large', // row 3: one is just a title
     'small', 'large', 'medium',      // row 4: varied
   ] as const
-  return pattern[index % pattern.length]
+  return pattern[index % pattern.length]!
 }
 
 function WorkCard({
@@ -245,6 +248,12 @@ function WorkCard({
             }}
           />
 
+          {work.productionStage && (
+            <span className="absolute top-2 left-2 z-[4] px-2 py-0.5 text-[10px] sm:text-xs uppercase tracking-wider font-medium bg-black/60 text-white/90 rounded-full backdrop-blur-sm">
+              {t.productionStage?.[work.productionStage] || PRODUCTION_STAGE_LABELS[work.productionStage]}
+            </span>
+          )}
+
           {/* Hover overlay */}
           <div className={`absolute inset-0 z-[5] bg-background/75 flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'} pointer-events-none`}>
             <span className="text-[10px] tracking-[0.2em] uppercase text-foreground/80 border border-foreground/30 px-5 py-2.5">
@@ -274,10 +283,27 @@ function WorkCard({
   )
 }
 
-export function WorkGrid({ works }: WorkGridProps) {
+export function WorkGrid({ works, tabField }: WorkGridProps) {
   const { lang, t } = useLanguage()
 
   const { filterOptions, filterMode } = useMemo(() => {
+    if (tabField === 'none') {
+      return { filterOptions: [] as { key: string; label: string }[], filterMode: 'tags' as const }
+    }
+
+    if (tabField === 'productionStage') {
+      const stages = Array.from(new Set(
+        works.map(w => w.productionStage).filter(Boolean) as ProductionStage[],
+      ))
+      const tabOrder: ProductionStage[] = ['paid-development', 'movies-development', 'series-development']
+      const ordered = tabOrder.filter(s => stages.includes(s))
+      const opts = ordered.map(s => ({
+        key: s,
+        label: t.productionStage?.tabs?.[s] || PRODUCTION_STAGE_TAB_LABELS[s] || s,
+      }))
+      return { filterOptions: opts, filterMode: 'productionStage' as const }
+    }
+
     const categories = new Set(works.map(w => w.category).filter(Boolean))
     if (categories.size >= 2) {
       const categoryLabels: Record<string, string> = {
@@ -299,7 +325,7 @@ export function WorkGrid({ works }: WorkGridProps) {
     }
 
     return { filterOptions: [] as { key: string; label: string }[], filterMode: 'tags' as const }
-  }, [works, t])
+  }, [works, t, tabField])
 
   const showFilters = filterOptions.length >= 2
 
@@ -309,7 +335,7 @@ export function WorkGrid({ works }: WorkGridProps) {
 
   useEffect(() => {
     if (filterOptions.length > 0 && !filterOptions.some(o => o.key === filter)) {
-      setFilter(filterOptions[0].key)
+      setFilter(filterOptions[0]!.key)
     }
   }, [filterOptions, filter])
 
@@ -321,6 +347,10 @@ export function WorkGrid({ works }: WorkGridProps) {
 
   const filteredWorks = useMemo(() => {
     if (!showFilters || !filter) return works
+
+    if (filterMode === 'productionStage') {
+      return works.filter((work) => work.productionStage === filter)
+    }
 
     if (filterMode === 'category') {
       return works.filter((work) => work.category === filter)
@@ -394,7 +424,7 @@ export function WorkGrid({ works }: WorkGridProps) {
             <div key={work.id} className={spanClass}>
               <WorkCard
                 work={work}
-                delay={staggerDelays[index]}
+                delay={staggerDelays[index] ?? 0}
                 isPreviewActive={activePreviewId === work.id}
                 onPreviewActivate={() => handlePreviewActivate(work.id)}
                 onPreviewDeactivate={() => handlePreviewDeactivate(work.id)}

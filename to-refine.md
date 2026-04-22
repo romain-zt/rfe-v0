@@ -76,6 +76,8 @@ The following projects appear in Michael's list but he did **not** provide poste
 
 **Decision needed:** do you have proper poster files for these somewhere? Otherwise we'll seed them with a placeholder and you can upload via the admin panel.
 
+> **IA sub-question — RESOLVED (22 Apr 2026):** "Should paid development / movies & features / series be separate pages/menu items, or attributes on Works?" → **Attributes.** Implementation: `/our-work` shows produced + in-production with stage badges per card; `/development` shows 3 subcategory tabs (Paid Dev · Movies · Series). Nav stays at 5 items. See `updated-to-validate.md` → "Works productionStage surfaced on frontend". Still pending: the missing poster files above.
+
 ---
 
 ## 6. Michael — "Passing Falls" or "Passing Love"?
@@ -94,7 +96,37 @@ We applied Michael's drafted Kara bio anyway as an interim improvement over the 
 
 ---
 
-## 8. Lis — deck redesign
+## 8. Dead `showFilters` prop on `worksGrid` block — *surfaced 22 Apr 2026 during 404 fix*
+
+`packages/cms/src/seed/seed-pages.ts:228` sets `showFilters: true` on the `/our-work` `worksGrid` block, and the field is defined in `packages/cms/src/blocks/WorksGrid.ts:58–61`. **Neither `WorksGridBlock.tsx` nor `WorkGrid.tsx` reads it** — filter behavior is fully driven by `tabField`/`showSubcategoryTabs` since the `productionStage` refactor.
+
+**Decision needed:** remove the dead prop from the block schema + seed, OR wire it up to actually toggle a tag-based filter row on `/our-work`?
+
+**Recommendation:** remove it. Admins toggling a no-op switch is worse than no switch.
+
+---
+
+## 9. Dedicated pages per work group? — *surfaced 22 Apr 2026 during 404 fix*
+
+Open question: should each filtered work group (Produced, In Production, Paid Dev, Movies, Series) get its own URL?
+
+**Trade-offs:**
+- Pro dedicated pages: SEO (canonical URL + h1 + meta per stage), shareable links ("send investors the in-development series"), per-stage intro copy.
+- Pro current single-page: simpler IA, only 5–10 items per stage, keeps nav at 5 items, no URL sprawl.
+
+**Wrong primitive:** Next.js parallel routes (`@slot`) — those are for simultaneous panels, not filtered views.
+
+**Three viable options if we change anything:**
+
+1. **Query param** (`/our-work?stage=in-production`) — ~10 LOC, no route changes, shareable URLs. Best if the goal is just "send a filtered link".
+2. **Sub-pages via `works-groups`** (`/our-work/produced`, `/our-work/in-production`, etc.) — half-day work, reuses the existing 5 groups already in the collection. Best if the goal is SEO or per-stage intro copy.
+3. **Do nothing** — current single-page is correct for the content volume. Best if neither shareability nor SEO is a real need yet.
+
+**Decision needed:** what's the underlying goal — SEO juice per stage, shareable filtered links, or future expansion with stage-specific intros? The answer picks the option.
+
+---
+
+## 10. Lis — deck redesign
 
 **Quote (Lis):** *"I wouldn't put my photograph on all of the pages of the slides of the deck."*
 

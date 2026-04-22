@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo y | cross-env NODE_OPTIONS=--no-deprecation payload migrate && echo y | next build",
-    "dev": "echo y | next dev",
+    "build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && next build",
+    "dev": "next dev",
     "lint": "eslint .",
     "start": "next start",
     "typecheck": "tsc --noEmit",

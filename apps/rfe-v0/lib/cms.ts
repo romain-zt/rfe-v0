@@ -22,6 +22,7 @@ export type Work = {
   description: string
   videoUrl?: string
   category?: 'film' | 'series' | 'unscripted'
+  productionStage?: 'produced' | 'in-production' | 'paid-development' | 'movies-development' | 'series-development'
   subcategory?: string
   sortOrder: number
   seo?: {

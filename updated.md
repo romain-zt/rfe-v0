@@ -1,6 +1,9 @@
 # Feedback Update Log — 18 Apr 2026
 
-Tracks what was applied from the two emails received this week, and what we deliberately did **not** apply (those items live in `to-refine.md`).
+Tracks what was applied **and validated** from the two emails received this week.
+
+- Items still pending validation live in `updated-to-validate.md` (staging log)
+- Items still open / awaiting decisions live in `to-refine.md`
 
 ---
 

@@ -81,6 +81,10 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
         connectionString: normalizeDatabaseUrl(opts.databaseUrl),
       },
       migrationDir: path.join(opts.dirname, 'migrations'),
+      // Disable dev push mode: we maintain explicit migrations, so dev should
+      // behave like prod (migrations only). This avoids the "data loss will
+      // occur" prompt every time `pnpm dev` boots or HMR re-inits Payload.
+      push: false,
       ...(opts.prodMigrations ? { prodMigrations: opts.prodMigrations } : {}),
     }),
     editor: lexicalEditor(),

@@ -22,5 +22,17 @@ export function buildUiDictionary(
       series: siteConfig?.ui?.developmentSeries ?? 'Series',
       unscripted: siteConfig?.ui?.developmentUnscripted ?? 'Unscripted',
     },
+    productionStage: {
+      'produced': 'Produced',
+      'in-production': 'In Production',
+      'paid-development': 'Paid Development',
+      'movies-development': 'In Development — Movies',
+      'series-development': 'In Development — Series',
+      tabs: {
+        'paid-development': 'Paid Development',
+        'movies-development': 'Movies',
+        'series-development': 'Series',
+      },
+    },
   }
 }

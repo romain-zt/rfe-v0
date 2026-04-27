@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
   }
 
   if (body.global) {
-    revalidateTag(`cms:globals:${body.global}`)
+    revalidateTag(`cms:globals:${body.global}`, 'max')
   } else if (body.collection && body.slug) {
-    revalidateTag(`cms:${body.collection}:${body.slug}`)
+    revalidateTag(`cms:${body.collection}:${body.slug}`, 'max')
   } else if (body.collection) {
-    revalidateTag(`cms:${body.collection}`)
+    revalidateTag(`cms:${body.collection}`, 'max')
   } else {
-    revalidateTag('cms')
+    revalidateTag('cms', 'max')
   }
 
   return NextResponse.json({ revalidated: true, now: Date.now() })

@@ -5,7 +5,7 @@ import { FieldLabel, TextInput, useField } from '@payloadcms/ui'
 
 const VALID_HEX = /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
-export const ColorPickerField: React.FC<any> = () => {
+export const ColorPickerField: React.FC = () => {
   const {
     customComponents: { AfterInput, BeforeInput, Label } = {},
     errorMessage,
@@ -32,7 +32,7 @@ export const ColorPickerField: React.FC<any> = () => {
             onChange={setValue}
             path={path}
             showError={showError}
-            value={value}
+            value={hex}
             style={{ marginBottom: 0 }}
           />
         </div>

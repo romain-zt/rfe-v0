@@ -426,10 +426,6 @@ export interface WorksGridBlock {
    */
   worksGroup?: (number | null) | WorksGroup;
   /**
-   * Show category/tag filter tabs above the grid
-   */
-  showFilters?: boolean | null;
-  /**
    * Show subcategory tabs (for development page)
    */
   showSubcategoryTabs?: boolean | null;
@@ -1265,7 +1261,6 @@ export interface WorksGridBlockSelect<T extends boolean = true> {
   sourceType?: T;
   selectedWorks?: T;
   worksGroup?: T;
-  showFilters?: T;
   showSubcategoryTabs?: T;
   category?: T;
   limit?: T;

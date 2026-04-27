@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useLanguage } from './LanguageContext'
 import type { WorkItem, WorkCredit } from '@/lib/i18n/types'
 import { PRODUCTION_STAGE_LABELS, PRODUCTION_STAGE_TAB_LABELS } from '@/lib/i18n/types'
@@ -336,6 +337,9 @@ function WorkCard({
 
 export function WorkGrid({ works, tabField }: WorkGridProps) {
   const { lang, t } = useLanguage()
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   const { filterOptions, filterMode } = useMemo(() => {
     if (tabField === 'none') {
@@ -380,15 +384,42 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
 
   const showFilters = filterOptions.length >= 2
 
-  const [filter, setFilter] = useState(filterOptions[0]?.key ?? '')
   const [activePreviewId, setActivePreviewId] = useState<number | null>(null)
   const [hoveredId, setHoveredId] = useState<number | null>(null)
 
-  useEffect(() => {
-    if (filterOptions.length > 0 && !filterOptions.some(o => o.key === filter)) {
-      setFilter(filterOptions[0]!.key)
+  const currentFilter = useMemo(() => {
+    if (!showFilters) return ''
+    const filterFromUrl = searchParams.get('filter')
+    if (filterFromUrl && filterOptions.some((option) => option.key === filterFromUrl)) {
+      return filterFromUrl
     }
-  }, [filterOptions, filter])
+    return filterOptions[0]?.key ?? ''
+  }, [filterOptions, searchParams, showFilters])
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    const currentUrlFilter = params.get('filter')
+
+    if (!showFilters || !currentFilter) {
+      if (currentUrlFilter !== null) {
+        params.delete('filter')
+        const nextQuery = params.toString()
+        router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false })
+      }
+      return
+    }
+
+    if (currentUrlFilter === currentFilter) return
+    params.set('filter', currentFilter)
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+  }, [currentFilter, pathname, router, searchParams, showFilters])
+
+  const updateFilterInUrl = useCallback((nextFilter: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (params.get('filter') === nextFilter) return
+    params.set('filter', nextFilter)
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+  }, [pathname, router, searchParams])
 
   const reducedMotion = useReducedMotion()
   const saveData = useSaveData()
@@ -397,18 +428,18 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
   const cardRefsMap = useRef<Map<number, HTMLElement>>(new Map())
 
   const filteredWorks = useMemo(() => {
-    if (!showFilters || !filter) return works
+    if (!showFilters || !currentFilter) return works
 
     if (filterMode === 'productionStage') {
-      return works.filter((work) => work.productionStage === filter)
+      return works.filter((work) => work.productionStage === currentFilter)
     }
 
     if (filterMode === 'category') {
-      return works.filter((work) => work.category === filter)
+      return works.filter((work) => work.category === currentFilter)
     }
 
-    return works.filter((work) => work.tags.includes(filter))
-  }, [filter, works, filterMode, showFilters])
+    return works.filter((work) => work.tags.includes(currentFilter))
+  }, [currentFilter, works, filterMode, showFilters])
 
   const staggerDelays = useStaggeredReveal(filteredWorks.length, 0, 80)
 
@@ -441,11 +472,11 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
             {filterOptions.map((f) => (
               <button
                 key={f.key}
-                onClick={() => setFilter(f.key)}
+                onClick={() => updateFilterInUrl(f.key)}
                 className={`text-[11px] tracking-[0.15em] uppercase transition-all duration-500 pb-1 border-b ${
-                  filter === f.key
+                  currentFilter === f.key
                     ? 'text-foreground border-foreground/40'
-                    : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20'
+                    : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20 cursor-pointer'
                 }`}
               >
                 {f.label}

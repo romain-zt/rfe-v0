@@ -225,7 +225,6 @@ const PAGES: PageSeed[] = [
       contentBlock(
         [
           lexicalBlockNode('worksGrid', {
-            showFilters: true,
             showSubcategoryTabs: false,
             sectionTone: 'charcoal',
           }),
@@ -257,7 +256,6 @@ const PAGES: PageSeed[] = [
             'RFE has a growing slate of projects in active development across film, series, and unscripted content.',
           ),
           lexicalBlockNode('worksGrid', {
-            showFilters: false,
             showSubcategoryTabs: true,
             sectionTone: 'charcoal',
           }),
@@ -409,13 +407,44 @@ export async function seedPages(
 
   const mediaMap = opts?.mediaMap
 
+  const heroMediaByPageSlug: Record<string, string[]> = {
+    home: [
+      '/assets/team/kara-lis.jpg',
+      '/assets/team/kara-and-elisabeth.webp',
+      '/assets/team/kara-and-elisabeth.jpg',
+    ],
+    about: [
+      '/assets/team/liz-rohm-hero.png',
+      '/assets/team/elisabeth-rohm-3.jpg',
+      '/assets/team/kara-and-elisabeth.webp',
+    ],
+    'our-work': [
+      '/assets/portfolio-medias/tournage-1.jpg',
+      '/assets/portfolio-medias/tournage-2.jpg',
+      '/assets/works/margret-stevie.png',
+    ],
+    development: [
+      '/assets/portfolio-medias/tournage-3.jpg',
+      '/assets/portfolio-medias/tournage-4.jpg',
+      '/assets/works/lie-detector.png',
+    ],
+    press: [
+      '/assets/portfolio-medias/tournage-4.jpg',
+      '/assets/portfolio-medias/tournage-2.jpg',
+      '/assets/team/kara-and-elisabeth.webp',
+    ],
+  }
+
   async function resolveHeroMedia(
     hero: Record<string, unknown>,
+    pageSlug: string,
   ): Promise<Record<string, unknown>> {
     if (hero.type === 'minimal') return hero
     if (!mediaMap) return hero
 
     const candidates = [
+      ...(heroMediaByPageSlug[pageSlug] ?? []),
+      '/assets/team/kara-lis.jpg',
       '/assets/team/kara-and-elisabeth.webp',
       '/assets/team/liz-rohm-hero.png',
       '/assets/works/margret-stevie.png',
@@ -469,7 +498,7 @@ export async function seedPages(
       ]
     }
 
-    const heroWithMedia = await resolveHeroMedia(page.hero)
+    const heroWithMedia = await resolveHeroMedia(page.hero, page.slug)
 
     if (featuredWorkId) {
       layout = layout.map((block) => {

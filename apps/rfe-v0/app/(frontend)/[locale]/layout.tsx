@@ -33,11 +33,16 @@ const _fraunces = Fraunces({
 })
 
 type Props = {
-  params: Promise<{ locale: Language }>
+  params: Promise<{ locale: string }>
+}
+
+function normalizeLocale(locale: string): Language {
+  return locale === 'fr' ? 'fr' : 'en'
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { locale } = await params
+  const { locale: rawLocale } = await params
+  const locale = normalizeLocale(rawLocale)
   const siteConfig = await getSiteConfig().catch(() => null)
   const title = siteConfig?.seo?.defaultTitle || 'RFE — a cinematic female gaze studio'
   const description = siteConfig?.seo?.defaultDescription || 'stories that refuse to stay quiet.'
@@ -74,9 +79,10 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode
-  params: Promise<{ locale: Language }>
+  params: Promise<{ locale: string }>
 }>) {
-  const { locale } = await params
+  const { locale: rawLocale } = await params
+  const locale = normalizeLocale(rawLocale)
 
   const [siteConfig, navigation, worksRes, teamRes, pressRes] = await Promise.all([
     getSiteConfig().catch(() => null),

@@ -249,7 +249,7 @@ export const SiteConfig: GlobalConfig = {
                 {
                   name: 'heroParagraph',
                   type: 'textarea',
-                  defaultValue: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories.',
+                  defaultValue: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds. RFE is a production company dedicated to developing bold, elevated content with a focus on empowering voices and complex characters, especially those of women.',
                 },
                 {
                   name: 'paragraphs',

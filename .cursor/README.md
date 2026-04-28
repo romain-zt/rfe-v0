@@ -54,3 +54,19 @@ Turborepo, housing the Next.js + Payload CMS website and shared internal package
 | `55-clean-while-migrating` | Improve adjacent code safely |
 | `60-testing-verification` | Build/lint/type-check gates |
 | `70-definition-of-done` | What "done" means for a migration step |
+
+## Key commands
+
+| Command file | Purpose |
+|--------------|---------|
+| `plan` | Plan a migration step before implementation |
+| `implement` | Implement a scoped migration step |
+| `review` | Review migration changes against definition of done |
+| `prompt` | Generate a self-contained migration prompt |
+| `improve` | Clean up adjacent migration code safely |
+| `improve-config` | Improve `.cursor/` config from proven workflow gaps |
+| `create-command` | Create focused slash commands |
+| `create-skill` | Create reusable Agent Skills |
+| `create-subagent` | Create isolated specialist subagents |
+| `create-rule` | Create persistent Cursor rules |
+| `create-hook` | Create event-driven Cursor hooks |

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && next build",
+    "build": "next build",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start",

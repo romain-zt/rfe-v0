@@ -217,6 +217,7 @@ function WorkCard({
     : size === 'medium' ? '3/4'
     : '1/1'
 
+    
   return (
     <article
       ref={setRefs}
@@ -426,6 +427,8 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
   const previewsEnabled = !reducedMotion && !saveData
 
   const cardRefsMap = useRef<Map<number, HTMLElement>>(new Map())
+  const filterBarRef = useRef<HTMLDivElement | null>(null)
+  const filterAnchorRef = useRef<HTMLDivElement | null>(null)
 
   const filteredWorks = useMemo(() => {
     if (!showFilters || !currentFilter) return works
@@ -461,29 +464,50 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
     setActivePreviewId((prev) => prev === workId ? null : prev)
   }, [])
 
+  const handleFilterClick = useCallback((nextFilter: string) => {
+    updateFilterInUrl(nextFilter)
+
+    if (typeof window === 'undefined') return
+
+    // Tous écrans: remonte la vue jusqu'au bloc des filtres.
+    const filterAnchorElement = filterAnchorRef.current
+    if (!filterAnchorElement) return
+
+    window.requestAnimationFrame(() => {
+      filterAnchorElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    })
+  }, [updateFilterInUrl])
+
   return (
     <>
       {showFilters && (
-        <div
-          className="sticky top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-4 mb-14 sm:mb-16 border-b border-border/30"
-          style={{ backgroundColor: 'var(--tone-charcoal)' }}
-        >
-          <div className="flex justify-center gap-6 sm:gap-8">
-            {filterOptions.map((f) => (
-              <button
-                key={f.key}
-                onClick={() => updateFilterInUrl(f.key)}
-                className={`text-[11px] tracking-[0.15em] uppercase transition-all duration-500 pb-1 border-b ${
-                  currentFilter === f.key
-                    ? 'text-foreground border-foreground/40'
-                    : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20 cursor-pointer'
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
+        <>
+          <div ref={filterAnchorRef} className="h-0" aria-hidden="true" />
+          <div
+            ref={filterBarRef}
+            className="sticky top-0 z-50 -mx-6 px-6 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 py-4 mb-14 sm:mb-16 border-b border-border/30"
+            style={{ backgroundColor: 'var(--tone-charcoal)' }}
+          >
+            <div className="flex justify-center gap-6 sm:gap-8">
+              {filterOptions.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => handleFilterClick(f.key)}
+                  className={`text-[11px] tracking-[0.15em] uppercase transition-all duration-500 pb-1 border-b ${
+                    currentFilter === f.key
+                      ? 'text-foreground border-foreground/40'
+                      : 'text-muted-foreground/50 border-transparent hover:text-muted-foreground hover:border-foreground/20 cursor-pointer'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Staggered masonry grid — editorial magazine layout */}

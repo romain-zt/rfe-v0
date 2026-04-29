@@ -91,7 +91,7 @@ export function EmbeddedFormBlock({ title, subtitle, form }: Props) {
   }
 
   return (
-    <div data-ai-element="embedded-form" data-ai-form-id={formId}>
+    <div className='mx-8' data-ai-element="embedded-form" data-ai-form-id={formId}>
       {title && <h2 data-ai-field="embeddedForm.title" className="text-2xl lg:text-3xl font-light tracking-wide mb-2">{title}</h2>}
       {subtitle && <p data-ai-field="embeddedForm.subtitle" className="text-muted-foreground mb-8">{subtitle}</p>}
 

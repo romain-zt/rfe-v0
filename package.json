@@ -7,7 +7,8 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean && rm -rf node_modules",
-    "seed": "pnpm --filter @rfe/v0 seed"
+    "seed": "pnpm --filter @rfe/v0 seed",
+    "fresh": "pnpm --filter @rfe/v0 payload migrate:fresh"
   },
   "devDependencies": {
     "next": "catalog:",

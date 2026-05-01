@@ -1,6 +1,7 @@
 import { CinematicHero } from '@/components/CinematicHero'
 import { PageCinematicHero } from '@/components/PageCinematicHero'
 import type { ImageFit } from '@/components/ResponsiveHeroPicture'
+import { imagePositionToCss, type ImagePositionPreset } from '@rfe/cms/fields/imageDisplay'
 
 type MediaRef = { url?: string } | number | null
 
@@ -11,8 +12,8 @@ type HeroData = {
   label?: string
   media?: MediaRef
   mediaMobile?: MediaRef
-  imagePosition?: string
-  imagePositionMobile?: string
+  imagePosition?: ImagePositionPreset | string | null
+  imagePositionMobile?: ImagePositionPreset | string | null
   imageFit?: ImageFit | null
   imageFitMobile?: ImageFit | null
 }
@@ -33,13 +34,17 @@ export function RenderHero({ hero }: { hero: HeroData }) {
   if (hero.type === 'cinematic') {
     const mediaUrl = getMediaUrl(hero.media)
     const mediaMobileUrl = getMediaUrl(hero.mediaMobile)
+    const desktopPosition = imagePositionToCss(hero.imagePosition)
+    const mobilePosition = hero.imagePositionMobile
+      ? imagePositionToCss(hero.imagePositionMobile)
+      : undefined
     return (
       <div id="hero" data-block-type="hero" data-hero-type="cinematic">
         <CinematicHero
           imageSrc={mediaUrl || undefined}
           imageSrcMobile={mediaMobileUrl || undefined}
-          imagePosition={hero.imagePosition || 'center center'}
-          imagePositionMobile={hero.imagePositionMobile || undefined}
+          imagePosition={desktopPosition}
+          imagePositionMobile={mobilePosition}
           imageFit={normalizeFit(hero.imageFit)}
           imageFitMobile={normalizeFit(hero.imageFitMobile)}
           headline={hero.headline}
@@ -53,13 +58,17 @@ export function RenderHero({ hero }: { hero: HeroData }) {
   if (hero.type === 'page') {
     const mediaUrl = getMediaUrl(hero.media)
     const mediaMobileUrl = getMediaUrl(hero.mediaMobile)
+    const desktopPosition = imagePositionToCss(hero.imagePosition)
+    const mobilePosition = hero.imagePositionMobile
+      ? imagePositionToCss(hero.imagePositionMobile)
+      : undefined
     return (
       <div id="hero" data-block-type="hero" data-hero-type="page">
         <PageCinematicHero
           imageSrc={mediaUrl || '/assets/works/margret-stevie.png'}
           imageSrcMobile={mediaMobileUrl || undefined}
-          imagePosition={hero.imagePosition || 'center 30%'}
-          imagePositionMobile={hero.imagePositionMobile || undefined}
+          imagePosition={desktopPosition}
+          imagePositionMobile={mobilePosition}
           imageFit={normalizeFit(hero.imageFit)}
           imageFitMobile={normalizeFit(hero.imageFitMobile)}
           label={hero.label || ''}

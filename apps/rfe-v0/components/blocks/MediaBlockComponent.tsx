@@ -2,6 +2,7 @@
 
 import { ResponsiveHeroPicture, type ImageFit } from '@/components/ResponsiveHeroPicture'
 import { useReveal } from '@/hooks/useReveal'
+import { imagePositionToCss, type ImagePositionPreset } from '@rfe/cms/fields/imageDisplay'
 
 type MediaRef = { url?: string } | number | null | undefined
 
@@ -10,8 +11,8 @@ type Props = {
   mediaMobile?: MediaRef
   caption?: string
   size?: 'full' | 'contained'
-  imagePosition?: string
-  imagePositionMobile?: string
+  imagePosition?: ImagePositionPreset | string | null
+  imagePositionMobile?: ImagePositionPreset | string | null
   imageFit?: ImageFit | null
   imageFitMobile?: ImageFit | null
 }
@@ -30,7 +31,7 @@ export function MediaBlockComponent({
   mediaMobile,
   caption,
   size = 'full',
-  imagePosition = 'center center',
+  imagePosition,
   imagePositionMobile,
   imageFit,
   imageFitMobile,
@@ -43,7 +44,11 @@ export function MediaBlockComponent({
   const mobileUrl = getMediaUrl(mediaMobile)
   const hasMobileVariant = Boolean(mobileUrl)
   const mobileSrc = mobileUrl || desktopUrl
-  const mobilePosition = imagePositionMobile || imagePosition
+
+  const desktopPositionCss = imagePositionToCss(imagePosition)
+  const mobilePositionCss = imagePositionMobile
+    ? imagePositionToCss(imagePositionMobile)
+    : desktopPositionCss
 
   const containerClass = size === 'full' ? 'w-full' : 'max-w-4xl mx-auto px-6 lg:px-16'
 
@@ -62,8 +67,8 @@ export function MediaBlockComponent({
             desktopSrc={desktopUrl}
             mobileSrc={mobileSrc}
             hasMobileVariant={hasMobileVariant}
-            desktopPosition={imagePosition}
-            mobilePosition={mobilePosition}
+            desktopPosition={desktopPositionCss}
+            mobilePosition={mobilePositionCss}
             desktopFit={normalizeFit(imageFit) ?? 'cover'}
             mobileFit={normalizeFit(imageFitMobile)}
             alt=""

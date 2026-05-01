@@ -196,7 +196,7 @@ const PAGES: PageSeed[] = [
       subtitle:
         'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
       label: 'About Us',
-      imagePosition: 'center top',
+      imagePosition: 'top',
     },
     layout: [
       contentBlock(
@@ -234,7 +234,7 @@ const PAGES: PageSeed[] = [
       type: 'page',
       headline: 'Films that look with women, not at them.',
       label: 'Our Work',
-      imagePosition: 'center 20%',
+      imagePosition: 'top',
     },
     layout: [
       contentBlock(
@@ -262,7 +262,7 @@ const PAGES: PageSeed[] = [
       type: 'page',
       headline: "What we're building next.",
       label: 'Development',
-      imagePosition: 'center 30%',
+      imagePosition: 'top',
     },
     layout: [
       contentBlock(
@@ -304,7 +304,7 @@ const PAGES: PageSeed[] = [
       type: 'page',
       headline: 'The world is starting to listen.',
       label: 'Press',
-      imagePosition: 'center 20%',
+      imagePosition: 'top',
     },
     layout: [
       contentBlock(

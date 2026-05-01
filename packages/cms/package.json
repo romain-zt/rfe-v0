@@ -44,6 +44,10 @@
       "types": "./src/fields/client.ts",
       "default": "./src/fields/client.ts"
     },
+    "./fields/imageDisplay": {
+      "types": "./src/fields/imageDisplay.ts",
+      "default": "./src/fields/imageDisplay.ts"
+    },
     "./styles/admin.css": "./src/styles/admin.css"
   },
   "files": [

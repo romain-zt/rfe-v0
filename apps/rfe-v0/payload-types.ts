@@ -167,25 +167,29 @@ export interface Page {
      */
     media?: (number | null) | Media;
     /**
-     * CSS object-position for the desktop image (e.g. "center top", "50% 30%").
-     */
-    imagePosition?: string | null;
-    /**
-     * How the desktop image fits the viewport.
+     * How the image fits its container.
      */
     imageFit?: ('cover' | 'contain') | null;
     /**
-     * Optional portrait/mobile image (used at < 640px). Falls back to the desktop image if empty.
+     * Where to anchor the image when cropped.
+     */
+    imagePosition?:
+      | ('top-left' | 'top' | 'top-right' | 'left' | 'center' | 'right' | 'bottom-left' | 'bottom' | 'bottom-right')
+      | null;
+    /**
+     * Optional portrait image for < 640px. Inherits the desktop image if empty.
      */
     mediaMobile?: (number | null) | Media;
     /**
-     * Optional CSS object-position for mobile (e.g. "center top"). Falls back to the desktop value if empty.
-     */
-    imagePositionMobile?: string | null;
-    /**
-     * Optional override for mobile (< 640px). Leave empty to use the desktop value.
+     * Leave empty to inherit desktop.
      */
     imageFitMobile?: ('cover' | 'contain') | null;
+    /**
+     * Leave empty to inherit desktop.
+     */
+    imagePositionMobile?:
+      | ('top-left' | 'top' | 'top-right' | 'left' | 'center' | 'right' | 'bottom-left' | 'bottom' | 'bottom-right')
+      | null;
   };
   layout: (
     | ContentBlock
@@ -343,25 +347,29 @@ export interface MediaBlockType {
   caption?: string | null;
   size?: ('full' | 'contained') | null;
   /**
-   * CSS object-position for the desktop image (e.g. "center top", "50% 30%").
-   */
-  imagePosition?: string | null;
-  /**
-   * How the desktop image fits its container.
+   * How the image fits its container.
    */
   imageFit?: ('cover' | 'contain') | null;
   /**
-   * Optional portrait/mobile image (used at < 640px). Falls back to the desktop image if empty.
+   * Where to anchor the image when cropped.
+   */
+  imagePosition?:
+    | ('top-left' | 'top' | 'top-right' | 'left' | 'center' | 'right' | 'bottom-left' | 'bottom' | 'bottom-right')
+    | null;
+  /**
+   * Optional portrait image for < 640px. Inherits the desktop image if empty.
    */
   mediaMobile?: (number | null) | Media;
   /**
-   * Optional CSS object-position for mobile (e.g. "center top"). Falls back to the desktop value if empty.
-   */
-  imagePositionMobile?: string | null;
-  /**
-   * Optional override for mobile (< 640px). Leave empty to use the desktop value.
+   * Leave empty to inherit desktop.
    */
   imageFitMobile?: ('cover' | 'contain') | null;
+  /**
+   * Leave empty to inherit desktop.
+   */
+  imagePositionMobile?:
+    | ('top-left' | 'top' | 'top-right' | 'left' | 'center' | 'right' | 'bottom-left' | 'bottom' | 'bottom-right')
+    | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -1198,11 +1206,11 @@ export interface PagesSelect<T extends boolean = true> {
         subtitle?: T;
         label?: T;
         media?: T;
-        imagePosition?: T;
         imageFit?: T;
+        imagePosition?: T;
         mediaMobile?: T;
-        imagePositionMobile?: T;
         imageFitMobile?: T;
+        imagePositionMobile?: T;
       };
   layout?:
     | T
@@ -1262,11 +1270,11 @@ export interface MediaBlockTypeSelect<T extends boolean = true> {
   media?: T;
   caption?: T;
   size?: T;
-  imagePosition?: T;
   imageFit?: T;
+  imagePosition?: T;
   mediaMobile?: T;
-  imagePositionMobile?: T;
   imageFitMobile?: T;
+  imagePositionMobile?: T;
   id?: T;
   blockName?: T;
 }

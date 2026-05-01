@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { Suspense, useMemo } from 'react'
 import { WorkGrid } from '@/components/WorkGrid'
 import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
@@ -94,7 +94,9 @@ export function WorksGridComponent(props: Props) {
           </h2>
         </div>
       )}
-      <WorkGrid works={works} tabField={props.showSubcategoryTabs ? 'productionStage' : 'none'} />
+      <Suspense fallback={<div className="h-8" aria-hidden="true" />}>
+        <WorkGrid works={works} tabField={props.showSubcategoryTabs ? 'productionStage' : 'none'} />
+      </Suspense>
     </section>
   )
 }

@@ -22,9 +22,9 @@ function lexicalRoot(children: ReturnType<typeof lexicalParagraphNode>[]) {
     root: {
       children,
       direction: 'ltr' as const,
-      format: '',
+      format: '' as const,
       indent: 0,
-      type: 'root',
+      type: 'root' as const,
       version: 1,
     },
   }
@@ -58,21 +58,21 @@ export async function seedForms(payload: Payload): Promise<SeedFormsResult> {
         name: 'name',
         label: 'Name',
         required: true,
-        width: 100,
+        width: '100',
       },
       {
         blockType: 'email' as const,
         name: 'email',
         label: 'Email',
         required: true,
-        width: 100,
+        width: '100',
       },
       {
         blockType: 'textarea' as const,
         name: 'message',
         label: 'Message',
         required: true,
-        width: 100,
+        width: '100',
       },
     ],
   }
@@ -82,7 +82,7 @@ export async function seedForms(payload: Payload): Promise<SeedFormsResult> {
     await payload.update({
       collection: 'forms',
       id,
-      data,
+      data: data as never,
     })
     console.log(`[seed-forms] Updated form: ${CONTACT_FORM_TITLE} (id ${id})`)
     return { contactFormId: id }
@@ -90,7 +90,7 @@ export async function seedForms(payload: Payload): Promise<SeedFormsResult> {
 
   const doc = await payload.create({
     collection: 'forms',
-    data,
+    data: data as never,
   })
   const id = doc.id as number
   console.log(`[seed-forms] Created form: ${CONTACT_FORM_TITLE} (id ${id})`)

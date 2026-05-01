@@ -55,12 +55,6 @@ export const WorksGrid: Block = {
           label: 'Display',
           fields: [
             {
-              name: 'showFilters',
-              type: 'checkbox',
-              defaultValue: true,
-              admin: { description: 'Show category/tag filter tabs above the grid' },
-            },
-            {
               name: 'showSubcategoryTabs',
               type: 'checkbox',
               defaultValue: false,

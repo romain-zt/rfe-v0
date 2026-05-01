@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
 
 type ScrollItem = {
   work?: { title?: string; year?: number; poster?: { url?: string } | number; slug?: string } | number | null
@@ -13,7 +13,7 @@ type ScrollItem = {
   size?: 'large' | 'medium' | 'small'
 }
 
-type RelationRef = number | { id: number; [key: string]: unknown }
+type RelationRef = number | { id: number;[key: string]: unknown }
 
 type WorksGroupRef = {
   items?: RelationRef[]
@@ -63,16 +63,137 @@ function extractIds(refs: RelationRef[] | WorksGroupRef | null | undefined): num
 export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGroup, items, ctaLabel, ctaUrl, sectionTone }: Props) {
   const { ref: titleRef, isVisible: titleVisible } = useReveal<HTMLDivElement>({ threshold: 0.2 })
   const scrollRef = useRef<HTMLDivElement>(null)
+  const dragState = useRef<{
+    isDown: boolean
+    startX: number
+    startScrollLeft: number
+    pointerId: number | null
+  }>({
+    isDown: false,
+    startX: 0,
+    startScrollLeft: 0,
+    pointerId: null,
+  })
+  const autoScrollIntervalRef = useRef<number | null>(null)
+  const interactionDebounceTimeoutRef = useRef<number | null>(null)
+  const autoScrollEnabledRef = useRef(false)
+  const isAutoScrollingRef = useRef(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const { lang, content } = useLanguage()
   const toneClass = sectionTone && sectionTone !== 'default' ? `section-tone-${sectionTone}` : 'section-tone-warm'
 
+  const getSnapPositions = useCallback((): number[] => {
+    if (!scrollRef.current) return []
+
+    const el = scrollRef.current
+    const children = Array.from(el.querySelectorAll<HTMLElement>('[data-works-scroll-item="true"]'))
+    return children.map((child) => child.offsetLeft)
+  }, [])
+
+  const getNearestSnapIndex = useCallback((positions: number[], scrollLeft: number): number => {
+    if (positions.length === 0) return 0
+
+    let bestIndex = 0
+    const first = positions[0]
+    if (first === undefined) return 0
+    let bestDistance = Math.abs(first - scrollLeft)
+    for (let i = 1; i < positions.length; i += 1) {
+      const value = positions[i]
+      if (value === undefined) continue
+      const dist = Math.abs(value - scrollLeft)
+      if (dist < bestDistance) {
+        bestDistance = dist
+        bestIndex = i
+      }
+    }
+    return bestIndex
+  }, [])
+
+  const scrollToSnapIndex = useCallback((index: number, behavior: ScrollBehavior = 'smooth') => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const positions = getSnapPositions()
+    if (positions.length === 0) return
+
+    const len = positions.length
+    const safeIndex = ((index % len) + len) % len
+    el.scrollTo({ left: positions[safeIndex], behavior })
+  }, [getSnapPositions])
+
+  const scrollToRelative = useCallback((dir: 1 | -1) => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const maxScroll = el.scrollWidth - el.clientWidth
+    if (maxScroll <= 0) return
+
+    const positions = getSnapPositions()
+    if (positions.length === 0) return
+
+    const edgeTolerancePx = 4
+    const isAtStart = el.scrollLeft <= edgeTolerancePx
+    const isAtEnd = el.scrollLeft >= maxScroll - edgeTolerancePx
+
+    const wrapTargetIndex =
+      dir === 1 ? (isAtEnd ? 0 : null) : (isAtStart ? positions.length - 1 : null)
+
+    if (wrapTargetIndex !== null) {
+      scrollToSnapIndex(wrapTargetIndex, 'smooth')
+      return
+    }
+
+    const nearestIndex = getNearestSnapIndex(positions, el.scrollLeft)
+    scrollToSnapIndex(nearestIndex + dir, 'smooth')
+  }, [getNearestSnapIndex, getSnapPositions, scrollToSnapIndex])
+
+  const stopAutoScroll = useCallback(() => {
+    if (autoScrollIntervalRef.current !== null) {
+      window.clearInterval(autoScrollIntervalRef.current)
+      autoScrollIntervalRef.current = null
+    }
+  }, [])
+
+  const startAutoScroll = useCallback(() => {
+    if (!autoScrollEnabledRef.current) return
+    if (!scrollRef.current) return
+
+    stopAutoScroll()
+
+    autoScrollIntervalRef.current = window.setInterval(() => {
+      isAutoScrollingRef.current = true
+      scrollToRelative(1)
+      window.setTimeout(() => {
+        isAutoScrollingRef.current = false
+      }, 1200)
+    }, 5000)
+  }, [scrollToRelative, stopAutoScroll])
+
+  const markUserInteraction = useCallback(() => {
+    if (!autoScrollEnabledRef.current) return
+
+    // Stoppe tout de suite l'auto pour que le reset du timer soit immédiat.
+    stopAutoScroll()
+
+    if (interactionDebounceTimeoutRef.current !== null) {
+      window.clearTimeout(interactionDebounceTimeoutRef.current)
+    }
+
+    // Reset “après relâchement” pour éviter de repousser sans fin pendant un scroll continu.
+    interactionDebounceTimeoutRef.current = window.setTimeout(() => {
+      startAutoScroll()
+    }, 200)
+  }, [startAutoScroll, stopAutoScroll])
+
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return
+
     const el = scrollRef.current
     const maxScroll = el.scrollWidth - el.clientWidth
     if (maxScroll > 0) setScrollProgress(el.scrollLeft / maxScroll)
-  }, [])
+
+    if (!isAutoScrollingRef.current) markUserInteraction()
+  }, [markUserInteraction])
 
   useEffect(() => {
     const el = scrollRef.current
@@ -80,6 +201,71 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
     el.addEventListener('scroll', handleScroll, { passive: true })
     return () => el.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    autoScrollEnabledRef.current = mq.matches
+
+    if (mq.matches) startAutoScroll()
+
+    const onChange = () => {
+      autoScrollEnabledRef.current = mq.matches
+      if (mq.matches) startAutoScroll()
+      else stopAutoScroll()
+    }
+
+    mq.addEventListener('change', onChange)
+    return () => {
+      mq.removeEventListener('change', onChange)
+      stopAutoScroll()
+      if (interactionDebounceTimeoutRef.current !== null) {
+        window.clearTimeout(interactionDebounceTimeoutRef.current)
+        interactionDebounceTimeoutRef.current = null
+      }
+    }
+  }, [startAutoScroll, stopAutoScroll])
+
+  const onPointerDown = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    // Sur mobile/tactile, le scroll natif marche déjà.
+    if (e.pointerType !== 'mouse') return
+    if (!autoScrollEnabledRef.current) return
+    if (!scrollRef.current) return
+
+    isAutoScrollingRef.current = false
+
+    dragState.current.isDown = true
+    dragState.current.startX = e.clientX
+    dragState.current.startScrollLeft = scrollRef.current.scrollLeft
+    dragState.current.pointerId = e.pointerId
+
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {
+      // Certains environnements peuvent ne pas supporte setPointerCapture: on ignore.
+    }
+  }, [])
+
+  const endDrag = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    if (dragState.current.pointerId !== e.pointerId) return
+
+    dragState.current.isDown = false
+    dragState.current.pointerId = null
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    } catch {
+      // Ignore si la capture n'est pas active.
+    }
+  }, [])
+
+  const onPointerMove = useCallback((e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!dragState.current.isDown) return
+    if (dragState.current.pointerId !== e.pointerId) return
+    if (!scrollRef.current) return
+
+    const dx = e.clientX - dragState.current.startX
+    scrollRef.current.scrollLeft = dragState.current.startScrollLeft - dx
+  }, [])
 
   const allWorks = content?.ourWork || []
 
@@ -96,9 +282,9 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
 
     const sourceWorks = curatedIds
       ? (() => {
-          const worksById = new Map(allWorks.map((w) => [w.id, w]))
-          return curatedIds.map((id) => worksById.get(id)).filter(Boolean) as typeof allWorks
-        })()
+        const worksById = new Map(allWorks.map((w) => [w.id, w]))
+        return curatedIds.map((id) => worksById.get(id)).filter(Boolean) as typeof allWorks
+      })()
       : allWorks.filter(w => !w.category && w.src).slice(0, 10)
 
     return sourceWorks.map((w, i) => ({
@@ -110,60 +296,145 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
   if (displayItems.length === 0) return null
 
   return (
-    <section data-ai-element="works-scroll" className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.035) 0%, transparent 60%)' }} aria-hidden="true" />
+    <div>
+      <button
+        type="button"
+        aria-label="Faire défiler vers la gauche"
+        className="group flex pointer-events-auto items-center justify-center absolute left-3 sm:left-6 lg:left-16 top-0 bottom-0 z-20 w-14 transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--rfe-gold-dim) cursor-pointer"
+        onPointerDown={(e) => {
+          // Empêche le drag-to-scroll du conteneur de capter le clic sur certaines zones (haut/bas).
+          e.stopPropagation()
+        }}
+        onClick={() => {
+          scrollToRelative(-1)
+          markUserInteraction()
+        }}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute w-11 h-11 rounded-full border border-[rgba(245,240,235,0.22)] backdrop-blur-md bg-linear-to-b from-[rgba(7,7,8,0.55)] to-[rgba(7,7,8,0.10)] shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-colors group-hover:border-[rgba(245,240,235,0.5)]"
+          style={{ opacity: 0.75 }}
+        />
+        <span aria-hidden="true" className="relative z-10 text-[20px] leading-none" style={{ color: 'var(--rfe-gold-dim)' }}>
+          &lt;
+        </span>
+      </button>
+      <section data-ai-element="works-scroll" className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.035) 0%, transparent 60%)' }} aria-hidden="true" />
 
-      <div className="relative">
-        <div ref={titleRef} className="px-6 lg:px-16 mb-12 flex items-end justify-between">
-          <div style={{ opacity: titleVisible ? 1 : 0, transition: 'opacity 1.5s var(--ease-quiet)' }}>
-            <span data-ai-field="worksScroll.title" className="text-[9px] uppercase block mb-4 font-light" style={{ color: 'var(--rfe-gold-dim)', letterSpacing: titleVisible ? '0.42em' : '0.08em', transition: 'letter-spacing 2.2s var(--ease-quiet)' }}>
-              {title || 'Our Work'}
-            </span>
+        <div className="relative">
+          <div ref={titleRef} className="px-6 lg:px-16 mb-12 flex items-end justify-between">
+            <div style={{ opacity: titleVisible ? 1 : 0, transition: 'opacity 1.5s var(--ease-quiet)' }}>
+              <span data-ai-field="worksScroll.title" className="text-[9px] uppercase block mb-4 font-light" style={{ color: 'var(--rfe-gold-dim)', letterSpacing: titleVisible ? '0.42em' : '0.08em', transition: 'letter-spacing 2.2s var(--ease-quiet)' }}>
+                {title || 'Our Work'}
+              </span>
+            </div>
+            {ctaUrl && (
+              <Link href={`/${lang}${ctaUrl}`} className="text-[10px] tracking-[0.25em] uppercase pb-0.5 border-b transition-colors duration-500 hidden sm:inline-block" style={{ color: 'var(--rfe-gold-dim)', borderColor: 'rgba(181, 151, 90, 0.15)' }}>
+                {ctaLabel || 'see all'} ↗
+              </Link>
+            )}
           </div>
-          {ctaUrl && (
-            <Link href={`/${lang}${ctaUrl}`} className="text-[10px] tracking-[0.25em] uppercase pb-0.5 border-b transition-colors duration-500 hidden sm:inline-block" style={{ color: 'var(--rfe-gold-dim)', borderColor: 'rgba(181, 151, 90, 0.15)' }}>
-              {ctaLabel || 'see all'} ↗
-            </Link>
-          )}
-        </div>
 
-        <div ref={scrollRef} className="flex gap-4 md:gap-6 overflow-x-auto overflow-y-hidden px-6 lg:px-16 pb-4 snap-x snap-mandatory no-scrollbar">
-          {displayItems.map((item, i) => {
-            const imgUrl = getImageUrl(item)
-            const itemTitle = getTitle(item)
-            const year = getYear(item)
-            const size = item.size || 'large'
-            const width = size === 'large' ? 'clamp(260px, 32vw, 400px)' : size === 'medium' ? 'clamp(200px, 24vw, 310px)' : 'clamp(140px, 16vw, 200px)'
-            const aspect = size === 'large' ? '3/4' : size === 'medium' ? '2/3' : '1/1'
+          <div className="relative">
 
-            return (
-              <div key={i} className="relative flex-shrink-0 snap-start group" style={{ width, marginTop: i % 2 === 0 ? '0' : '2.5rem' }}>
-                <div className="relative overflow-hidden" style={{ aspectRatio: aspect }}>
-                  {imgUrl && (
-                    <Image src={imgUrl} alt={itemTitle} fill className="object-cover transition-all duration-[1.5s] group-hover:scale-[1.04]" sizes="(max-width: 768px) 60vw, 32vw" style={{ filter: 'grayscale(0.35) brightness(0.88)' }} />
-                  )}
-                  <div className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-40" style={{ background: 'linear-gradient(to top, rgba(7, 7, 8, 0.65) 0%, transparent 55%)' }} aria-hidden="true" />
-                  {item.label && (
-                    <span className="absolute top-3 left-3 text-[8px] uppercase tracking-[0.28em] font-light px-2 py-1" style={{ color: 'var(--rfe-gold-dim)', background: 'rgba(7, 7, 8, 0.55)', backdropFilter: 'blur(6px)' }}>
-                      {item.label}
-                    </span>
-                  )}
-                </div>
-                <div className="mt-3">
-                  <p className="font-serif text-[12px] md:text-sm font-light tracking-wide" style={{ color: 'rgba(245, 240, 235, 0.55)' }}>{itemTitle}</p>
-                  {year && <p className="text-[9px] tracking-[0.2em] mt-1" style={{ color: 'rgba(245, 240, 235, 0.2)' }}>{year}</p>}
-                </div>
-              </div>
-            )
-          })}
-        </div>
 
-        <div className="px-6 lg:px-16 mt-6 flex items-center gap-4">
-          <div className="h-px flex-1 max-w-xs" style={{ background: 'rgba(245, 240, 235, 0.06)' }}>
-            <div className="h-full transition-all duration-150" style={{ width: `${Math.max(20, scrollProgress * 100)}%`, background: 'var(--rfe-gold-dim)', opacity: 0.4 }} />
+            <div
+              ref={scrollRef}
+              className="flex gap-4 md:gap-6 overflow-x-auto overflow-y-hidden px-6 lg:px-16 pb-4 snap-x snap-mandatory no-scrollbar select-none"
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+            >
+              {displayItems.map((item, i) => {
+                const imgUrl = getImageUrl(item)
+                const itemTitle = getTitle(item)
+                const year = getYear(item)
+                const size = item.size || 'large'
+                const width = size === 'large' ? 'clamp(260px, 32vw, 400px)' : size === 'medium' ? 'clamp(200px, 24vw, 310px)' : 'clamp(140px, 16vw, 200px)'
+                const aspect = size === 'large' ? '3/4' : size === 'medium' ? '2/3' : '1/1'
+
+                return (
+                  <div
+                    key={i}
+                    data-works-scroll-item="true"
+                    className={`relative shrink-0 snap-start group ${i === 0 ? 'pl-8' : i === displayItems.length - 1 ? 'pr-2' : ''}`}
+                    style={{ width, marginTop: '2.5rem' }}
+                  >
+                    <div className="relative overflow-hidden" style={{ aspectRatio: aspect }}>
+                      {imgUrl && (
+                        <Image
+                          src={imgUrl}
+                          alt={itemTitle}
+                          fill
+                          className="object-cover transition-all duration-[1.5s] group-hover:scale-[1.04]"
+                          sizes="(max-width: 768px) 60vw, 32vw"
+                          style={{ filter: 'grayscale(0.35) brightness(0.88)' }}
+                        />
+                      )}
+                      <div
+                        className="absolute inset-0 transition-opacity duration-700 group-hover:opacity-40"
+                        style={{ background: 'linear-gradient(to top, rgba(7, 7, 8, 0.65) 0%, transparent 55%)' }}
+                        aria-hidden="true"
+                      />
+                      {item.label && (
+                        <span
+                          className="absolute top-3 left-3 text-[8px] uppercase tracking-[0.28em] font-light px-2 py-1"
+                          style={{
+                            color: 'var(--rfe-gold-dim)',
+                            background: 'rgba(7, 7, 8, 0.55)',
+                            backdropFilter: 'blur(6px)',
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-3">
+                      <p className="font-serif text-[12px] md:text-sm font-light tracking-wide" style={{ color: 'rgba(245, 240, 235, 0.55)' }}>
+                        {itemTitle}
+                      </p>
+                      {year && <p className="text-[9px] tracking-[0.2em] mt-1" style={{ color: 'rgba(245, 240, 235, 0.2)' }}>{year}</p>}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+
+          </div>
+
+          <div className="px-6 lg:px-16 mt-6 flex items-center gap-4">
+            <div className="h-px flex-1 max-w-full" style={{ background: 'rgba(245, 240, 235, 0.06)' }}>
+              <div className="h-full transition-all duration-150" style={{ width: `${Math.max(20, scrollProgress * 100)}%`, background: 'var(--rfe-gold-dim)', opacity: 0.4 }} />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <button
+        type="button"
+        aria-label="Faire défiler vers la droite"
+        className="group flex pointer-events-auto items-center justify-center absolute right-3 sm:right-6 lg:right-16 top-0 bottom-0 z-20 w-14 transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--rfe-gold-dim) cursor-pointer"
+        onPointerDown={(e) => {
+          // Empêche le drag-to-scroll du conteneur de capter le clic sur certaines zones (haut/bas).
+          e.stopPropagation()
+        }}
+        onClick={() => {
+          scrollToRelative(1)
+          markUserInteraction()
+        }}
+      >
+        <span
+          aria-hidden="true"
+          className="absolute w-11 h-11 rounded-full border border-[rgba(245,240,235,0.22)] backdrop-blur-md bg-linear-to-b from-[rgba(7,7,8,0.55)] to-[rgba(7,7,8,0.10)] shadow-[0_20px_40px_rgba(0,0,0,0.35)] transition-colors group-hover:border-[rgba(245,240,235,0.5)]"
+          style={{ opacity: 0.75 }}
+        />
+        <span aria-hidden="true" className="relative z-10 text-[20px] leading-none" style={{ color: 'var(--rfe-gold-dim)' }}>
+          &gt;
+        </span>
+      </button>
+    </div>
   )
 }
+

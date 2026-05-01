@@ -17,7 +17,7 @@ export function ContactInfoComponent({ title, showEmail = true, showPhone = true
   if (!info) return null
 
   return (
-    <div data-ai-element="contact-info" className="space-y-8">
+    <div data-ai-element="contact-info" className="space-y-8 my-8 mx-8">
       {title && (
         <h3 data-ai-field="contactInfo.title" className="text-sm tracking-wide uppercase mb-6" style={{ color: 'var(--rfe-gold)' }}>
           {title}
@@ -34,7 +34,7 @@ export function ContactInfoComponent({ title, showEmail = true, showPhone = true
       {showEmail && info.email && (
         <div>
           <h4 className="text-sm tracking-wide uppercase mb-3">Email</h4>
-          <a href={`mailto:${info.email}`} className="text-muted-foreground text-sm hover:text-foreground transition-colors">
+          <a href={`mailto:${info.email}`} className="text-muted-foreground text-sm hover:text-foreground transition-colors break-all">
             {info.email}
           </a>
         </div>

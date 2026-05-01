@@ -51,8 +51,6 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
       user: 'users',
       meta: {
         titleSuffix: '— RFE',
-        favicon: '/icon.svg',
-        ogImage: '/logo-rfe.svg',
       },
       importMap: { baseDir: opts.dirname },
       livePreview: {

@@ -66,12 +66,12 @@ export function renderLexicalNode(node: any): React.ReactNode {
 
   switch (node.type) {
     case 'paragraph':
-      return <p className="text-sm leading-[2.1] font-light mb-6" style={{ color: 'rgba(245, 240, 235, 0.55)', letterSpacing: '0.02em' }}>{children}</p>
+      return <p className="text-sm leading-[2.1] font-light mb-6 mx-8" style={{ color: 'rgba(245, 240, 235, 0.55)', letterSpacing: '0.02em' }}>{children}</p>
     case 'heading': {
       const tag = node.tag || 'h2'
-      if (tag === 'h1') return <h1 className="font-serif font-light text-balance mb-6" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', lineHeight: 1.2, color: 'var(--foreground)' }}>{children}</h1>
-      if (tag === 'h3') return <h3 className="font-serif font-light text-balance mb-4" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', lineHeight: 1.3, color: 'var(--foreground)' }}>{children}</h3>
-      return <h2 className="font-serif font-light text-balance mb-6" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', lineHeight: 1.25, color: 'var(--foreground)' }}>{children}</h2>
+      if (tag === 'h1') return <h1 className="font-serif font-light text-balance mb-6 mx-8" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', lineHeight: 1.2, color: 'var(--foreground)' }}>{children}</h1>
+      if (tag === 'h3') return <h3 className="font-serif font-light text-balance mb-4 mx-8" style={{ fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', lineHeight: 1.3, color: 'var(--foreground)' }}>{children}</h3>
+      return <h2 className="font-serif font-light text-balance mb-6 mx-8" style={{ fontSize: 'clamp(1.4rem, 3vw, 2.2rem)', lineHeight: 1.25, color: 'var(--foreground)' }}>{children}</h2>
     }
     case 'list':
       return node.listType === 'number'

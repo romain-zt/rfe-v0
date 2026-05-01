@@ -28,6 +28,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return
         if (entry.isIntersecting) {
           if (delay > 0) {
             setTimeout(() => setIsVisible(true), delay)

@@ -133,7 +133,7 @@ function csvToObjects(csv: string): Record<string, string>[] {
   const rows = parseCsv(csv)
   if (rows.length < 2) return []
   
-  const headers = rows[0].map(h => h.trim())
+  const headers = rows[0]?.map(h => h.trim()) ?? []
   return rows.slice(1).map(row => {
     const obj: Record<string, string> = {}
     headers.forEach((header, i) => {
@@ -154,18 +154,25 @@ function rowsToNestedDictionary(rows: Array<{ key: string; value: string }>): Di
     if (!key) continue
     
     const parts = key.split('.')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let current: any = result
+    let current: Record<string, unknown> = result as Record<string, unknown>
     
     for (let i = 0; i < parts.length - 1; i++) {
       const part = parts[i]
+      if (!part) continue
       if (!(part in current)) {
         current[part] = {}
       }
-      current = current[part]
+      const next = current[part]
+      if (typeof next === 'object' && next !== null) {
+        current = next as Record<string, unknown>
+      } else {
+        current[part] = {}
+        current = current[part] as Record<string, unknown>
+      }
     }
-    
-    current[parts[parts.length - 1]] = value
+    const lastPart = parts[parts.length - 1]
+    if (!lastPart) continue
+    current[lastPart] = value
   }
   
   return result

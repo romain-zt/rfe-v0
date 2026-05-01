@@ -1,42 +1,42 @@
-# Command: /improve-config
+---
+name: improve-config
+description: Improve .cursor configuration after a real workflow reveals missing guidance. Use for focused updates to rules, agents, commands, skills, hooks, or README inventory.
+argument-hint: [gap or lesson learned]
+---
 
-Improve the `.cursor/` configuration files based on lessons learned during migration.
+<objective>
+Improve `.cursor/` configuration based on a concrete lesson from the RFE migration.
 
-## When to use
+Keep the change small, practical, and grounded in repo-specific experience.
+</objective>
 
-- After completing a migration step and noticing missing guidance
-- When a rule is too strict or too loose
-- When a new pattern emerges that should be documented
-- When adding a new agent, command, or skill
+<context>
+Read `.cursor/README.md` and the specific existing file that may need changing.
 
-## Steps
+If creating or changing an artifact type, use the relevant project command:
+- `/create-rule` for persistent AI guidance
+- `/create-skill` for repeatable task workflows
+- `/create-subagent` for isolated specialist agents
+- `/create-command` for slash commands
+- `/create-hook` for event automation
+</context>
 
-1. **Identify the gap**
-   - What situation did you encounter that the current config doesn't cover?
-   - Which rule/agent/skill should be updated?
+<process>
+1. Identify the proven gap from `$ARGUMENTS` or ask one clarifying question.
+2. Choose the smallest correct artifact:
+   - Rule: persistent project guidance
+   - Skill: reusable workflow or domain instructions
+   - Subagent: isolated, specialized multi-step work
+   - Command: user-invoked single workflow
+   - Hook: automatic behavior around agent events
+3. Show the current text and proposed focused update when modifying an existing file.
+4. Apply only the relevant `.cursor/` edit.
+5. Update `.cursor/README.md` when adding, removing, or renaming files.
+</process>
 
-2. **Propose the change**
-   - Show the current text
-   - Show the proposed update
-   - Explain why
-
-3. **Apply the change**
-   - Edit the relevant `.cursor/` file
-   - Keep the change focused — don't rewrite the entire file
-
-4. **Update README.md if needed**
-   - If adding a new file, add it to the table in `.cursor/README.md`
-
-## What to improve
-
-- **Rules** — add missing constraints, clarify ambiguous guidance
-- **Agents** — add domain knowledge gained from migration experience
-- **Commands** — add new commands or refine existing steps
-- **Skills** — add new step-by-step guides for patterns that recur
-- **README** — keep the file inventory current
-
-## Rules
-- Keep files concise and practical
-- Don't add speculative guidance — only add what has proven useful
-- Reference specific repo files and paths (not generic advice)
-- Update the README table when adding/removing files
+<success_criteria>
+- The change is based on an actual workflow gap, not speculation.
+- The edited file stays concise and references concrete repo paths where useful.
+- README inventory is current when files are added, removed, or renamed.
+- Simple config edits stay in the main agent; use subagents only for broad exploration or isolated work.
+</success_criteria>

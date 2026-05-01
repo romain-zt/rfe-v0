@@ -52,13 +52,6 @@ export async function runSeed(
   logger.log('[seed] Starting full seed...')
 
   try {
-    const prodMigrations = (payload.db as Record<string, unknown>).prodMigrations as
-      | Parameters<typeof payload.db.migrate>[0]['migrations']
-      | undefined
-    if (prodMigrations?.length) {
-      logger.log('[seed] Running pending DB migrations...')
-      await payload.db.migrate({ migrations: prodMigrations })
-    }
     await seedAdmin(payload)
     const mediaMap = await seedMedia(payload)
     await seedWorks(payload, mediaMap)

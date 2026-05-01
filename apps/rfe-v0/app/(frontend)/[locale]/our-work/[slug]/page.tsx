@@ -32,7 +32,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tagLabel = getWorkTagLabel(cmsWork.tags ?? [])
   const baseTitle = (cmsWork.seo?.title ?? '').trim() || cmsWork.title
   const title = `${tagLabel} | ${baseTitle}`
-  const workForSeo = { title: cmsWork.title, year: cmsWork.year, tags: cmsWork.tags ?? [], description: cmsWork.description, src }
+  const workForSeo = {
+    id: cmsWork.id,
+    title: cmsWork.title,
+    year: cmsWork.year,
+    tags: cmsWork.tags ?? [],
+    description: cmsWork.description ?? '',
+    src,
+  }
   const description = (cmsWork.seo?.description ?? '').trim() || generateWorkSeoDescription(workForSeo, locale)
   const keywords = cmsWork.seo?.keywords
     ? cmsWork.seo.keywords.split(',').map((k) => k.trim())

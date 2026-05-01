@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useLanguage } from '@/components/LanguageContext'
 
-const HERO_IMAGE_FALLBACK = '/assets/team/kara-and-elisabeth.webp'
+const HERO_IMAGE_FALLBACK = '/assets/team/kara-lis.jpg'
 
 type Props = {
   imageSrc?: string

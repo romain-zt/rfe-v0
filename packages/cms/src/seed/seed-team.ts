@@ -28,27 +28,24 @@ export async function seedTeam(payload: Payload, mediaMap: Map<string, number>):
       limit: 1,
     })
 
-    const data: Record<string, unknown> = {
+    const data = {
       name: member.name,
       role: member.role,
       bio: member.bio,
       sortOrder: i,
-    }
-
-    if (photoId) {
-      data.photo = photoId
+      ...(photoId ? { photo: photoId } : {}),
     }
 
     if (existing.docs.length > 0) {
       await payload.update({
         collection: 'team-members',
         id: existing.docs[0]!.id,
-        data,
+        data: data as never,
       })
     } else {
       await payload.create({
         collection: 'team-members',
-        data,
+        data: data as never,
       })
     }
   }

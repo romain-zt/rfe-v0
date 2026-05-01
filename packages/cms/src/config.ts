@@ -67,7 +67,9 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
         },
         beforeLogin: ['@rfe/cms/components/BeforeLogin#BeforeLogin'],
         afterDashboard: ['@rfe/cms/components/ResetContentButton#ResetContentButton'],
-        providers: ['@rfe/cms/components/AIChat#AIChatProvider'],
+        providers: [
+          '@rfe/cms/components/AIChat#AIChatProvider',
+        ],
       },
     },
     endpoints: [seedResetEndpoint],

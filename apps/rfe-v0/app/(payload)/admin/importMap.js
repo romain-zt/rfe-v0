@@ -27,6 +27,7 @@ import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { CustomLivePreview as CustomLivePreview_0570d7a137ba4b854d50588a1e1ee968 } from '@rfe/cms/components/LivePreview'
 import { ColorPickerField as ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac } from '@rfe/cms/fields/client'
 import { SecretTextField as SecretTextField_aa22b64f10c5e420411c7f67ce2bd4ac } from '@rfe/cms/fields/client'
 import { Icon as Icon_30f9b97464cd6aed523463ee2909896b } from '@rfe/cms/components/Icon'
@@ -67,6 +68,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@rfe/cms/components/LivePreview#CustomLivePreview": CustomLivePreview_0570d7a137ba4b854d50588a1e1ee968,
   "@rfe/cms/fields/client#ColorPickerField": ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac,
   "@rfe/cms/fields/client#SecretTextField": SecretTextField_aa22b64f10c5e420411c7f67ce2bd4ac,
   "@rfe/cms/components/Icon#Icon": Icon_30f9b97464cd6aed523463ee2909896b,

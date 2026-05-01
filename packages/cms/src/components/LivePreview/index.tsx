@@ -26,7 +26,7 @@ const BreakpointBar: React.FC = () => {
 
   const allBreakpoints = [
     { label: 'Responsive', name: 'responsive' },
-    ...(breakpoints ?? []),
+    ...(breakpoints ?? []).filter((bp) => bp.name !== 'responsive'),
   ]
 
   return (
@@ -86,6 +86,22 @@ export const CustomLivePreview: React.FC = () => {
   const { mostRecentUpdate } = useDocumentEvents()
   const [formState] = useAllFormFields()
   const { id, collectionSlug, globalSlug } = useDocumentInfo()
+
+  // ─── Scroll to top when live preview opens ───────────────────────────────
+  useEffect(() => {
+    if (!isLivePreviewing) return
+    // Walk up the DOM from our panel to find the first scrollable ancestor
+    const findScrollable = (el: Element | null): Element | null => {
+      if (!el || el === document.documentElement) return document.documentElement
+      const { overflowY } = window.getComputedStyle(el)
+      if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) {
+        return el
+      }
+      return findScrollable(el.parentElement)
+    }
+    const container = findScrollable(panelRef.current?.parentElement ?? null)
+    container?.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [isLivePreviewing])
 
   // ─── postMessage bridge (mirrors LivePreviewWindow exactly) ───────────────
   useEffect(() => {

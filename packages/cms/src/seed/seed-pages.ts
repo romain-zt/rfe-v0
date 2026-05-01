@@ -102,6 +102,7 @@ const PAGES: PageSeed[] = [
       type: 'cinematic',
       headline: "There's always more to the story.",
       subtitle: 'True Crime / Real Drama',
+      imageFit: 'cover',
     },
     layout: [
       contentBlock(
@@ -196,6 +197,7 @@ const PAGES: PageSeed[] = [
       subtitle:
         'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
       label: 'About Us',
+      imageFit: 'cover',
       imagePosition: 'top',
     },
     layout: [
@@ -234,6 +236,7 @@ const PAGES: PageSeed[] = [
       type: 'page',
       headline: 'Films that look with women, not at them.',
       label: 'Our Work',
+      imageFit: 'cover',
       imagePosition: 'top',
     },
     layout: [
@@ -262,6 +265,7 @@ const PAGES: PageSeed[] = [
       type: 'page',
       headline: "What we're building next.",
       label: 'Development',
+      imageFit: 'cover',
       imagePosition: 'top',
     },
     layout: [
@@ -304,6 +308,7 @@ const PAGES: PageSeed[] = [
       type: 'page',
       headline: 'The world is starting to listen.',
       label: 'Press',
+      imageFit: 'cover',
       imagePosition: 'top',
     },
     layout: [
@@ -462,11 +467,20 @@ export async function seedPages(
   }
 
   /**
-   * Optional portrait variants for hero images (used at < 640px).
-   * Leave a slug out and the frontend gracefully falls back to the desktop image.
-   * Editors can upload mobile-specific variants via the admin once available.
+   * Portrait-format images for hero at < 640px (mobile).
+   * Falls back to the desktop image for any page not listed here.
+   * Only true portrait assets (taller than wide) should be added — landscape crops at
+   * an awkward ratio on portrait screens.
+   *
+   * Available portrait assets (confirmed dimensions):
+   *   /assets/team/kara.png          — 982×1274  (Kara headshot)
+   *   /assets/team/liz-rohm-hero.png — 1179×1383 (Elisabeth hero)
+   *   /assets/portfolio-medias/elisabeth-1.png — 1179×1471 (on-set)
    */
-  const heroMediaMobileByPageSlug: Record<string, string[]> = {}
+  const heroMediaMobileByPageSlug: Record<string, string[]> = {
+    home: ['/assets/team/kara.png', '/assets/team/liz-rohm-hero.png'],
+    about: ['/assets/team/liz-rohm-hero.png', '/assets/portfolio-medias/elisabeth-1.png'],
+  }
 
   async function resolveHeroMedia(
     hero: Record<string, unknown>,

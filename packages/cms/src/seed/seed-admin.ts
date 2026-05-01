@@ -1,8 +1,8 @@
 import type { Payload } from 'payload'
 
 export async function seedAdmin(payload: Payload): Promise<void> {
-  const email = process.env.PAYLOAD_ADMIN_EMAIL || 'admin@rfe.dev'
-  const password = process.env.PAYLOAD_ADMIN_PASSWORD || 'admin123'
+  const email = process.env.PAYLOAD_ADMIN_EMAIL || 'romain@zedtech.fr'
+  const password = process.env.PAYLOAD_ADMIN_PASSWORD || 'azer'
 
   const existing = await payload.find({
     collection: 'users',

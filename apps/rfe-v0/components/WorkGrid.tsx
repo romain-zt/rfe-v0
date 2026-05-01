@@ -117,6 +117,7 @@ function WorkCard({
   previewsEnabled,
   cardRef,
   size,
+  hideStageBadge,
 }: {
   work: WorkItem
   delay: number
@@ -126,6 +127,7 @@ function WorkCard({
   previewsEnabled: boolean
   cardRef: (el: HTMLElement | null) => void
   size: ReturnType<typeof getMasonrySize>
+  hideStageBadge?: boolean
 }) {
   const { t, lang } = useLanguage()
   const reveal = useReveal({ delay })
@@ -277,7 +279,7 @@ function WorkCard({
             }}
           />
 
-          {work.productionStage && (
+          {work.productionStage && !hideStageBadge && (
             <span className="absolute top-2 left-2 z-[4] px-2 py-0.5 text-[10px] sm:text-xs uppercase tracking-wider font-medium bg-black/60 text-white/90 rounded-full backdrop-blur-sm">
               {t.productionStage?.[work.productionStage] || PRODUCTION_STAGE_LABELS[work.productionStage]}
             </span>
@@ -537,6 +539,7 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
                 previewsEnabled={previewsEnabled}
                 cardRef={createCardRef(work.id)}
                 size={size}
+                hideStageBadge={showFilters}
               />
             </div>
           )

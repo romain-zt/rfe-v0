@@ -6,6 +6,8 @@ import * as migration_20260407_064546_add_missing_admin_columns from './20260407
 import * as migration_20260418_120000_works_production_stage from './20260418_120000_works_production_stage';
 import * as migration_20260422_140000_works_credits from './20260422_140000_works_credits';
 import * as migration_20260501_094424_media_block_image_position from './20260501_094424_media_block_image_position';
+import * as migration_20260501_100105_hero_and_media_block_responsive from './20260501_100105_hero_and_media_block_responsive';
+import * as migration_20260501_103854_hero_and_media_block_image_fit from './20260501_103854_hero_and_media_block_image_fit';
 
 export const migrations = [
   {
@@ -46,6 +48,16 @@ export const migrations = [
   {
     up: migration_20260501_094424_media_block_image_position.up,
     down: migration_20260501_094424_media_block_image_position.down,
-    name: '20260501_094424_media_block_image_position'
+    name: '20260501_094424_media_block_image_position',
+  },
+  {
+    up: migration_20260501_100105_hero_and_media_block_responsive.up,
+    down: migration_20260501_100105_hero_and_media_block_responsive.down,
+    name: '20260501_100105_hero_and_media_block_responsive',
+  },
+  {
+    up: migration_20260501_103854_hero_and_media_block_image_fit.up,
+    down: migration_20260501_103854_hero_and_media_block_image_fit.down,
+    name: '20260501_103854_hero_and_media_block_image_fit'
   },
 ];

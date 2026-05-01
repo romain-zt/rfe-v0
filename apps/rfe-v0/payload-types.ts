@@ -162,11 +162,30 @@ export interface Page {
      * Small uppercase label above the headline (e.g. "OUR WORK", "ABOUT US")
      */
     label?: string | null;
+    /**
+     * Desktop / tablet image (used at ≥ 640px).
+     */
     media?: (number | null) | Media;
     /**
-     * CSS object-position value (e.g. "center top", "50% 30%")
+     * CSS object-position for the desktop image (e.g. "center top", "50% 30%").
      */
     imagePosition?: string | null;
+    /**
+     * How the desktop image fits the viewport.
+     */
+    imageFit?: ('cover' | 'contain') | null;
+    /**
+     * Optional portrait/mobile image (used at < 640px). Falls back to the desktop image if empty.
+     */
+    mediaMobile?: (number | null) | Media;
+    /**
+     * Optional CSS object-position for mobile (e.g. "center top"). Falls back to the desktop value if empty.
+     */
+    imagePositionMobile?: string | null;
+    /**
+     * Optional override for mobile (< 640px). Leave empty to use the desktop value.
+     */
+    imageFitMobile?: ('cover' | 'contain') | null;
   };
   layout: (
     | ContentBlock
@@ -317,13 +336,32 @@ export interface ContentBlock {
  * via the `definition` "MediaBlockType".
  */
 export interface MediaBlockType {
+  /**
+   * Desktop / tablet image (used at ≥ 640px).
+   */
   media: number | Media;
   caption?: string | null;
   size?: ('full' | 'contained') | null;
   /**
-   * CSS object-position value (e.g. "center top", "50% 30%"). Applies at all breakpoints.
+   * CSS object-position for the desktop image (e.g. "center top", "50% 30%").
    */
   imagePosition?: string | null;
+  /**
+   * How the desktop image fits its container.
+   */
+  imageFit?: ('cover' | 'contain') | null;
+  /**
+   * Optional portrait/mobile image (used at < 640px). Falls back to the desktop image if empty.
+   */
+  mediaMobile?: (number | null) | Media;
+  /**
+   * Optional CSS object-position for mobile (e.g. "center top"). Falls back to the desktop value if empty.
+   */
+  imagePositionMobile?: string | null;
+  /**
+   * Optional override for mobile (< 640px). Leave empty to use the desktop value.
+   */
+  imageFitMobile?: ('cover' | 'contain') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -1161,6 +1199,10 @@ export interface PagesSelect<T extends boolean = true> {
         label?: T;
         media?: T;
         imagePosition?: T;
+        imageFit?: T;
+        mediaMobile?: T;
+        imagePositionMobile?: T;
+        imageFitMobile?: T;
       };
   layout?:
     | T
@@ -1221,6 +1263,10 @@ export interface MediaBlockTypeSelect<T extends boolean = true> {
   caption?: T;
   size?: T;
   imagePosition?: T;
+  imageFit?: T;
+  mediaMobile?: T;
+  imagePositionMobile?: T;
+  imageFitMobile?: T;
   id?: T;
   blockName?: T;
 }

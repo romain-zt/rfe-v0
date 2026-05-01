@@ -617,4 +617,22 @@
     from { letter-spacing: 0.05em; }
     to   { letter-spacing: 0.35em; }
   }
+
+  /* ============================================
+   * RESPONSIVE HERO PICTURE
+   * Switches object-fit + object-position per breakpoint via CSS variables
+   * set inline on the <img>. Mobile is the default; desktop overrides at >= 640px.
+   * ============================================ */
+
+  [data-rhp-img] {
+    object-fit: var(--rhp-mobile-fit, cover);
+    object-position: var(--rhp-mobile-pos, center center);
+  }
+
+  @media (min-width: 640px) {
+    [data-rhp-img] {
+      object-fit: var(--rhp-desktop-fit, cover);
+      object-position: var(--rhp-desktop-pos, center center);
+    }
+  }
 }

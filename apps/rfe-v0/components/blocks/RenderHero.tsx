@@ -1,19 +1,30 @@
 import { CinematicHero } from '@/components/CinematicHero'
 import { PageCinematicHero } from '@/components/PageCinematicHero'
+import type { ImageFit } from '@/components/ResponsiveHeroPicture'
+
+type MediaRef = { url?: string } | number | null
 
 type HeroData = {
   type: 'cinematic' | 'page' | 'minimal'
   headline?: string
   subtitle?: string
   label?: string
-  media?: { url?: string } | number | null
+  media?: MediaRef
+  mediaMobile?: MediaRef
   imagePosition?: string
+  imagePositionMobile?: string
+  imageFit?: ImageFit | null
+  imageFitMobile?: ImageFit | null
 }
 
-function getMediaUrl(media: HeroData['media']): string {
+function getMediaUrl(media: MediaRef | undefined): string {
   if (!media) return ''
   if (typeof media === 'number') return ''
   return media.url || ''
+}
+
+function normalizeFit(value: ImageFit | null | undefined): ImageFit | undefined {
+  return value === 'cover' || value === 'contain' ? value : undefined
 }
 
 export function RenderHero({ hero }: { hero: HeroData }) {
@@ -21,11 +32,16 @@ export function RenderHero({ hero }: { hero: HeroData }) {
 
   if (hero.type === 'cinematic') {
     const mediaUrl = getMediaUrl(hero.media)
+    const mediaMobileUrl = getMediaUrl(hero.mediaMobile)
     return (
       <div id="hero" data-block-type="hero" data-hero-type="cinematic">
         <CinematicHero
           imageSrc={mediaUrl || undefined}
+          imageSrcMobile={mediaMobileUrl || undefined}
           imagePosition={hero.imagePosition || 'center center'}
+          imagePositionMobile={hero.imagePositionMobile || undefined}
+          imageFit={normalizeFit(hero.imageFit)}
+          imageFitMobile={normalizeFit(hero.imageFitMobile)}
           headline={hero.headline}
           subtitle={hero.subtitle}
           label={hero.label}
@@ -36,11 +52,16 @@ export function RenderHero({ hero }: { hero: HeroData }) {
 
   if (hero.type === 'page') {
     const mediaUrl = getMediaUrl(hero.media)
+    const mediaMobileUrl = getMediaUrl(hero.mediaMobile)
     return (
       <div id="hero" data-block-type="hero" data-hero-type="page">
         <PageCinematicHero
           imageSrc={mediaUrl || '/assets/works/margret-stevie.png'}
+          imageSrcMobile={mediaMobileUrl || undefined}
           imagePosition={hero.imagePosition || 'center 30%'}
+          imagePositionMobile={hero.imagePositionMobile || undefined}
+          imageFit={normalizeFit(hero.imageFit)}
+          imageFitMobile={normalizeFit(hero.imageFitMobile)}
           label={hero.label || ''}
           subtitle={hero.subtitle}
         >

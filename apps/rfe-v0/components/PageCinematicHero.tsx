@@ -1,11 +1,15 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback, type ReactNode } from 'react'
-import Image from 'next/image'
+import { ResponsiveHeroPicture, type ImageFit } from '@/components/ResponsiveHeroPicture'
 
 type PageCinematicHeroProps = {
   imageSrc: string
+  imageSrcMobile?: string
   imagePosition?: string
+  imagePositionMobile?: string
+  imageFit?: ImageFit
+  imageFitMobile?: ImageFit
   label: string
   children: ReactNode
   subtitle?: string
@@ -13,11 +17,18 @@ type PageCinematicHeroProps = {
 
 export function PageCinematicHero({
   imageSrc,
+  imageSrcMobile,
   imagePosition = 'center 30%',
+  imagePositionMobile,
+  imageFit = 'cover',
+  imageFitMobile,
   label,
   children,
   subtitle,
 }: PageCinematicHeroProps) {
+  const PAGE_IMAGE_SRC_MOBILE = imageSrcMobile || imageSrc
+  const PAGE_POSITION_MOBILE = imagePositionMobile || imagePosition
+  const hasMobileVariant = Boolean(imageSrcMobile)
   const [phase, setPhase] = useState(0)
   const sectionRef = useRef<HTMLElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
@@ -83,16 +94,17 @@ export function PageCinematicHero({
       aria-label="Hero"
     >
       <div className="fixed inset-0 z-0" style={{ willChange: 'auto' }}>
-        <Image
+        <ResponsiveHeroPicture
           ref={imgRef}
-          src={imageSrc}
+          desktopSrc={imageSrc}
+          mobileSrc={PAGE_IMAGE_SRC_MOBILE}
+          hasMobileVariant={hasMobileVariant}
+          desktopPosition={imagePosition}
+          mobilePosition={PAGE_POSITION_MOBILE}
+          desktopFit={imageFit}
+          mobileFit={imageFitMobile}
           alt=""
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
           style={{
-            objectPosition: imagePosition,
             filter: 'grayscale(0.5) brightness(0.3) contrast(1.05)',
             opacity: phase >= 1 ? 1 : 0,
             transition: 'opacity 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)',

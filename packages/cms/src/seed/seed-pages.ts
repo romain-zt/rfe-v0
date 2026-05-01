@@ -461,6 +461,13 @@ export async function seedPages(
     ],
   }
 
+  /**
+   * Optional portrait variants for hero images (used at < 640px).
+   * Leave a slug out and the frontend gracefully falls back to the desktop image.
+   * Editors can upload mobile-specific variants via the admin once available.
+   */
+  const heroMediaMobileByPageSlug: Record<string, string[]> = {}
+
   async function resolveHeroMedia(
     hero: Record<string, unknown>,
     pageSlug: string,
@@ -468,18 +475,32 @@ export async function seedPages(
     if (hero.type === 'minimal') return hero
     if (!mediaMap) return hero
 
-    const candidates = [
+    const desktopCandidates = [
       ...(heroMediaByPageSlug[pageSlug] ?? []),
       '/assets/team/kara-lis.jpg',
       '/assets/team/kara-and-elisabeth.webp',
       '/assets/team/liz-rohm-hero.png',
       '/assets/works/margret-stevie.png',
     ]
-    for (const candidate of candidates) {
+    let next: Record<string, unknown> = hero
+    for (const candidate of desktopCandidates) {
       const id = mediaMap.get(candidate)
-      if (id) return { ...hero, media: id }
+      if (id) {
+        next = { ...next, media: id }
+        break
+      }
     }
-    return hero
+
+    const mobileCandidates = heroMediaMobileByPageSlug[pageSlug] ?? []
+    for (const candidate of mobileCandidates) {
+      const id = mediaMap.get(candidate)
+      if (id) {
+        next = { ...next, mediaMobile: id }
+        break
+      }
+    }
+
+    return next
   }
 
   async function resolveFeaturedWorkId(): Promise<number | null> {

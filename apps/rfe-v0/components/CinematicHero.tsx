@@ -1,15 +1,19 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
+import { ResponsiveHeroPicture, type ImageFit } from '@/components/ResponsiveHeroPicture'
 import { useLanguage } from '@/components/LanguageContext'
 
 const HERO_IMAGE_FALLBACK = '/assets/team/kara-lis.jpg'
 
 type Props = {
   imageSrc?: string
+  imageSrcMobile?: string
   imagePosition?: string
+  imagePositionMobile?: string
+  imageFit?: ImageFit
+  imageFitMobile?: ImageFit
   headline?: string
   subtitle?: string
   label?: string
@@ -17,12 +21,19 @@ type Props = {
 
 export function CinematicHero({
   imageSrc,
+  imageSrcMobile,
   imagePosition = 'center center',
+  imagePositionMobile,
+  imageFit = 'cover',
+  imageFitMobile,
   headline,
   subtitle,
   label,
 }: Props) {
   const HERO_IMAGE_SRC = imageSrc || HERO_IMAGE_FALLBACK
+  const HERO_IMAGE_SRC_MOBILE = imageSrcMobile || HERO_IMAGE_SRC
+  const HERO_POSITION_MOBILE = imagePositionMobile || imagePosition
+  const hasMobileVariant = Boolean(imageSrcMobile)
   const [phase, setPhase] = useState(0)
   const [imgError, setImgError] = useState(false)
   const { lang, content } = useLanguage()
@@ -102,14 +113,15 @@ export function CinematicHero({
           }}
         >
           {!imgError && (
-            <Image
-              src={HERO_IMAGE_SRC}
+            <ResponsiveHeroPicture
+              desktopSrc={HERO_IMAGE_SRC}
+              mobileSrc={HERO_IMAGE_SRC_MOBILE}
+              hasMobileVariant={hasMobileVariant}
+              desktopPosition={imagePosition}
+              mobilePosition={HERO_POSITION_MOBILE}
+              desktopFit={imageFit}
+              mobileFit={imageFitMobile}
               alt="Elisabeth Rohm and Kara Feifer"
-              fill
-              className="object-cover"
-              priority
-              sizes="100vw"
-              style={{ objectPosition: imagePosition }}
               onError={() => setImgError(true)}
             />
           )}

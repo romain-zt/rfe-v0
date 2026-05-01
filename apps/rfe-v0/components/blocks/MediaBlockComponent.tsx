@@ -1,26 +1,49 @@
 'use client'
 
-import Image from 'next/image'
+import { ResponsiveHeroPicture, type ImageFit } from '@/components/ResponsiveHeroPicture'
 import { useReveal } from '@/hooks/useReveal'
 
+type MediaRef = { url?: string } | number | null | undefined
+
 type Props = {
-  media?: { url?: string; alt?: string } | number
+  media?: MediaRef
+  mediaMobile?: MediaRef
   caption?: string
   size?: 'full' | 'contained'
   imagePosition?: string
+  imagePositionMobile?: string
+  imageFit?: ImageFit | null
+  imageFitMobile?: ImageFit | null
+}
+
+function getMediaUrl(media: MediaRef): string | null {
+  if (!media || typeof media === 'number') return null
+  return media.url || null
+}
+
+function normalizeFit(value: ImageFit | null | undefined): ImageFit | undefined {
+  return value === 'cover' || value === 'contain' ? value : undefined
 }
 
 export function MediaBlockComponent({
   media,
+  mediaMobile,
   caption,
   size = 'full',
   imagePosition = 'center center',
+  imagePositionMobile,
+  imageFit,
+  imageFitMobile,
 }: Props) {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 })
 
-  if (!media || typeof media === 'number') return null
-  const url = media.url
-  if (!url) return null
+  const desktopUrl = getMediaUrl(media)
+  if (!desktopUrl) return null
+
+  const mobileUrl = getMediaUrl(mediaMobile)
+  const hasMobileVariant = Boolean(mobileUrl)
+  const mobileSrc = mobileUrl || desktopUrl
+  const mobilePosition = imagePositionMobile || imagePosition
 
   const containerClass = size === 'full' ? 'w-full' : 'max-w-4xl mx-auto px-6 lg:px-16'
 
@@ -35,13 +58,16 @@ export function MediaBlockComponent({
         }}
       >
         <div className="relative aspect-video overflow-hidden">
-          <Image
-            src={url}
-            alt={media.alt || ''}
-            fill
-            className="object-cover"
-            sizes={size === 'full' ? '100vw' : '(max-width: 1024px) 100vw, 896px'}
-            style={{ objectPosition: imagePosition }}
+          <ResponsiveHeroPicture
+            desktopSrc={desktopUrl}
+            mobileSrc={mobileSrc}
+            hasMobileVariant={hasMobileVariant}
+            desktopPosition={imagePosition}
+            mobilePosition={mobilePosition}
+            desktopFit={normalizeFit(imageFit) ?? 'cover'}
+            mobileFit={normalizeFit(imageFitMobile)}
+            alt=""
+            priority={false}
           />
         </div>
         {caption && (

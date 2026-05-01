@@ -31,6 +31,15 @@ export const Pages: CollectionConfig = {
         return slug === 'home' ? `${base}/${locale}` : `${base}/${locale}/${slug}`
       },
     },
+    components: {
+      views: {
+        edit: {
+          livePreview: {
+            Component: '@rfe/cms/components/LivePreview#CustomLivePreview',
+          },
+        },
+      },
+    },
     preview: (data, { req }) =>
       generatePreviewPath({
         slug: typeof data?.slug === 'string' ? data.slug : '',

@@ -69,7 +69,6 @@ export function buildRfeConfig(opts: RfeConfigOptions) {
         afterDashboard: ['@rfe/cms/components/ResetContentButton#ResetContentButton'],
         providers: [
           '@rfe/cms/components/AIChat#AIChatProvider',
-          '@rfe/cms/components/LivePreviewScaler#LivePreviewScalerProvider',
         ],
       },
     },

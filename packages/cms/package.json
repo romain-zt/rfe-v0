@@ -40,9 +40,9 @@
       "types": "./src/components/AIChat/index.tsx",
       "default": "./src/components/AIChat/index.tsx"
     },
-    "./components/LivePreviewScaler": {
-      "types": "./src/components/LivePreviewScaler/index.tsx",
-      "default": "./src/components/LivePreviewScaler/index.tsx"
+    "./components/LivePreview": {
+      "types": "./src/components/LivePreview/index.tsx",
+      "default": "./src/components/LivePreview/index.tsx"
     },
     "./fields/client": {
       "types": "./src/fields/client.ts",

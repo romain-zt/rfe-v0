@@ -94,30 +94,35 @@ export function Header({ navItems: navItemsProp }: { navItems?: NavItem[] }) {
 
           {/* Hamburger — mobile only */}
           <button
-            className="relative lg:hidden w-8 h-8 flex flex-col items-center justify-center gap-1.5"
+            className="relative lg:hidden w-8 h-8 overflow-visible"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
             <span
-              className="block w-5 h-px bg-current transition-all duration-500"
+              className="absolute left-1/2 top-1/2 block w-5 h-px bg-current transition-all duration-500"
               style={{
                 color: 'var(--rfe-rose)',
-                transform: menuOpen ? 'rotate(45deg) translate(2px, 2px)' : 'none',
+                transform: menuOpen
+                  ? 'translate(-50%, -50%) rotate(45deg)'
+                  : 'translate(-50%, calc(-50% - 6px))',
               }}
             />
             <span
-              className="block w-5 h-px bg-current transition-all duration-500"
+              className="absolute left-1/2 top-1/2 block w-5 h-px bg-current transition-all duration-500"
               style={{
                 color: 'var(--rfe-rose)',
                 opacity: menuOpen ? 0 : 1,
+                transform: 'translate(-50%, -50%)',
               }}
             />
             <span
-              className="block w-5 h-px bg-current transition-all duration-500"
+              className="absolute left-1/2 top-1/2 block w-5 h-px bg-current transition-all duration-500"
               style={{
                 color: 'var(--rfe-rose)',
-                transform: menuOpen ? 'rotate(-45deg) translate(2px, -2px)' : 'none',
+                transform: menuOpen
+                  ? 'translate(-50%, -50%) rotate(-45deg)'
+                  : 'translate(-50%, calc(-50% + 6px))',
               }}
             />
           </button>

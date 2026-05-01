@@ -5,6 +5,8 @@ function nextBlockId() {
   return `seed-block-${++blockIdCounter}`
 }
 
+type WorkSelectionRef = number | string
+
 function lexicalText(text: string) {
   return { detail: 0, format: 0, mode: 'normal', style: '', text, type: 'text', version: 1 }
 }
@@ -109,7 +111,20 @@ const PAGES: PageSeed[] = [
             ctaLabel: 'see all',
             ctaUrl: '/our-work',
             sectionTone: 'warm',
-            items: [],
+            sourceType: 'pick',
+            // "top 5 Movies" + "top 5 Series" (voir Michael's pool)
+            selectedWorks: [
+              'feather', 
+              '1-better', 
+              'margret-and-stevie', 
+              'murder-in-law', 
+              'flower-girl', 
+              'by-midnight', 
+              'undefeated', 
+              'icky', 
+              'diamonds-and-deadlines', 
+              'twos-company',
+            ],
           }),
         ],
         'warm',
@@ -253,9 +268,20 @@ const PAGES: PageSeed[] = [
       contentBlock(
         [
           lexicalParagraphNode(
-            'RFE has a growing slate of projects in active development across film, series, and unscripted content.',
+            '',
           ),
           lexicalBlockNode('worksGrid', {
+            sourceType: 'pick',
+            // "top 5" deterministes (Movies + Series) pour l'ecran Development.
+            // Paid Development est conserve complet pour ne pas supprimer l'onglet associe.
+            selectedWorks: [
+              // Paid Development
+              'lie-detector', 'the-highlife', 'dispatch', 'blade', 'sick-puppy', 'bombsquad', 'the-chase-the-josephine-wentzel-story', 'nasty-business',
+              // Top Movies (Michael list)
+              'feather', '1-better', 'margret-and-stevie', 'murder-in-law', 'flower-girl',
+              // Top Series (Michael list)
+              'by-midnight', 'undefeated', 'icky', 'diamonds-and-deadlines', 'twos-company',
+            ],
             showSubcategoryTabs: true,
             sectionTone: 'charcoal',
           }),
@@ -466,6 +492,102 @@ export async function seedPages(
     return result.docs[0] ? (result.docs[0].id as number) : null
   }
 
+  async function resolveWorkSelections(layoutBlocks: Record<string, unknown>[]): Promise<Record<string, unknown>[]> {
+    const workIdBySlug = new Map<string, number>()
+
+    async function getWorkIdFromSlug(slug: string): Promise<number | null> {
+      const cached = workIdBySlug.get(slug)
+      if (cached != null) return cached
+
+      const result = await payload.find({
+        collection: 'works',
+        where: { slug: { equals: slug } },
+        limit: 1,
+        depth: 0,
+      })
+      const resolvedId = result.docs[0] ? (result.docs[0].id as number) : null
+      if (resolvedId != null) workIdBySlug.set(slug, resolvedId)
+      return resolvedId
+    }
+
+    async function resolveRefs(refs: WorkSelectionRef[]): Promise<number[]> {
+      const resolved: number[] = []
+      for (const ref of refs) {
+        if (typeof ref === 'number') {
+          resolved.push(ref)
+          continue
+        }
+        const id = await getWorkIdFromSlug(ref)
+        if (id != null) resolved.push(id)
+      }
+      return resolved
+    }
+
+    const nextLayout: Record<string, unknown>[] = []
+    for (const block of layoutBlocks) {
+      if (block.blockType !== 'content') {
+        nextLayout.push(block)
+        continue
+      }
+
+      const columns = (block as { columns?: Array<Record<string, unknown>> }).columns
+      if (!columns) {
+        nextLayout.push(block)
+        continue
+      }
+
+      const nextColumns: Array<Record<string, unknown>> = []
+      for (const col of columns) {
+        const rt = col.richText as { root?: { children?: Array<Record<string, unknown>> } } | undefined
+        if (!rt?.root?.children) {
+          nextColumns.push(col)
+          continue
+        }
+
+        const nextChildren: Array<Record<string, unknown>> = []
+        for (const child of rt.root.children) {
+          if (child.type !== 'block') {
+            nextChildren.push(child)
+            continue
+          }
+
+          const fields = child.fields as { selectedWorks?: WorkSelectionRef[]; sourceType?: string } | undefined
+          if (!fields?.selectedWorks || fields.sourceType !== 'pick') {
+            nextChildren.push(child)
+            continue
+          }
+
+          const resolvedWorks = await resolveRefs(fields.selectedWorks)
+          nextChildren.push({
+            ...child,
+            fields: {
+              ...fields,
+              selectedWorks: resolvedWorks,
+            },
+          })
+        }
+
+        nextColumns.push({
+          ...col,
+          richText: {
+            ...rt,
+            root: {
+              ...rt.root,
+              children: nextChildren,
+            },
+          },
+        })
+      }
+
+      nextLayout.push({
+        ...block,
+        columns: nextColumns,
+      })
+    }
+
+    return nextLayout
+  }
+
   const featuredWorkId = await resolveFeaturedWorkId()
 
   for (const page of PAGES) {
@@ -497,6 +619,8 @@ export async function seedPages(
         ),
       ]
     }
+
+    layout = await resolveWorkSelections(layout)
 
     const heroWithMedia = await resolveHeroMedia(page.hero, page.slug)
 

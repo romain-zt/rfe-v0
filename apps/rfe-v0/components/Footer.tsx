@@ -23,7 +23,7 @@ export function Footer() {
       {email ? (
         <a
           href={`mailto:${email}`}
-          className="text-xs tracking-[0.1em] transition-colors duration-700"
+          className="text-xs tracking-[0.1em] transition-colors duration-700 break-all"
           style={{ color: 'rgba(245, 240, 235, 0.3)' }}
           onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--rfe-rose)')}
           onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(245, 240, 235, 0.3)')}

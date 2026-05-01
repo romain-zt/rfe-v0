@@ -9,12 +9,19 @@ const HERO_IMAGE_FALLBACK = '/assets/team/kara-lis.jpg'
 
 type Props = {
   imageSrc?: string
+  imagePosition?: string
   headline?: string
   subtitle?: string
   label?: string
 }
 
-export function CinematicHero({ imageSrc, headline, subtitle, label }: Props) {
+export function CinematicHero({
+  imageSrc,
+  imagePosition = 'center center',
+  headline,
+  subtitle,
+  label,
+}: Props) {
   const HERO_IMAGE_SRC = imageSrc || HERO_IMAGE_FALLBACK
   const [phase, setPhase] = useState(0)
   const [imgError, setImgError] = useState(false)
@@ -99,9 +106,10 @@ export function CinematicHero({ imageSrc, headline, subtitle, label }: Props) {
               src={HERO_IMAGE_SRC}
               alt="Elisabeth Rohm and Kara Feifer"
               fill
-              className="object-cover object-center"
+              className="object-cover"
               priority
               sizes="100vw"
+              style={{ objectPosition: imagePosition }}
               onError={() => setImgError(true)}
             />
           )}

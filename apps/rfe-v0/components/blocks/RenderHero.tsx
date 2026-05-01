@@ -25,6 +25,7 @@ export function RenderHero({ hero }: { hero: HeroData }) {
       <div id="hero" data-block-type="hero" data-hero-type="cinematic">
         <CinematicHero
           imageSrc={mediaUrl || undefined}
+          imagePosition={hero.imagePosition || 'center center'}
           headline={hero.headline}
           subtitle={hero.subtitle}
           label={hero.label}

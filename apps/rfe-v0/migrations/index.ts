@@ -5,6 +5,7 @@ import * as migration_20260405_144134_add_ai_conversations from './20260405_1441
 import * as migration_20260407_064546_add_missing_admin_columns from './20260407_064546_add_missing_admin_columns';
 import * as migration_20260418_120000_works_production_stage from './20260418_120000_works_production_stage';
 import * as migration_20260422_140000_works_credits from './20260422_140000_works_credits';
+import * as migration_20260501_094424_media_block_image_position from './20260501_094424_media_block_image_position';
 
 export const migrations = [
   {
@@ -41,5 +42,10 @@ export const migrations = [
     up: migration_20260422_140000_works_credits.up,
     down: migration_20260422_140000_works_credits.down,
     name: '20260422_140000_works_credits',
+  },
+  {
+    up: migration_20260501_094424_media_block_image_position.up,
+    down: migration_20260501_094424_media_block_image_position.down,
+    name: '20260501_094424_media_block_image_position'
   },
 ];

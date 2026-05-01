@@ -7,9 +7,15 @@ type Props = {
   media?: { url?: string; alt?: string } | number
   caption?: string
   size?: 'full' | 'contained'
+  imagePosition?: string
 }
 
-export function MediaBlockComponent({ media, caption, size = 'full' }: Props) {
+export function MediaBlockComponent({
+  media,
+  caption,
+  size = 'full',
+  imagePosition = 'center center',
+}: Props) {
   const { ref, isVisible } = useReveal<HTMLDivElement>({ threshold: 0.1 })
 
   if (!media || typeof media === 'number') return null
@@ -35,6 +41,7 @@ export function MediaBlockComponent({ media, caption, size = 'full' }: Props) {
             fill
             className="object-cover"
             sizes={size === 'full' ? '100vw' : '(max-width: 1024px) 100vw, 896px'}
+            style={{ objectPosition: imagePosition }}
           />
         </div>
         {caption && (

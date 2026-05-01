@@ -24,5 +24,14 @@ export const MediaBlock: Block = {
         { label: 'Contained', value: 'contained' },
       ],
     },
+    {
+      name: 'imagePosition',
+      type: 'text',
+      defaultValue: 'center center',
+      admin: {
+        description:
+          'CSS object-position value (e.g. "center top", "50% 30%"). Applies at all breakpoints.',
+      },
+    },
   ],
 }

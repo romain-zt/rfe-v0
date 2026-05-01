@@ -320,6 +320,10 @@ export interface MediaBlockType {
   media: number | Media;
   caption?: string | null;
   size?: ('full' | 'contained') | null;
+  /**
+   * CSS object-position value (e.g. "center top", "50% 30%"). Applies at all breakpoints.
+   */
+  imagePosition?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
@@ -1216,6 +1220,7 @@ export interface MediaBlockTypeSelect<T extends boolean = true> {
   media?: T;
   caption?: T;
   size?: T;
+  imagePosition?: T;
   id?: T;
   blockName?: T;
 }

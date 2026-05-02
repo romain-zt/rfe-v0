@@ -74,7 +74,6 @@ export interface Config {
     'press-items': PressItem;
     users: User;
     media: Media;
-    'ai-conversations': AiConversation;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-kv': PayloadKv;
@@ -92,7 +91,6 @@ export interface Config {
     'press-items': PressItemsSelect<false> | PressItemsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    'ai-conversations': AiConversationsSelect<false> | AiConversationsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -959,26 +957,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ai-conversations".
- */
-export interface AiConversation {
-  id: number;
-  title: string;
-  messages:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  user: number | User;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1137,10 +1115,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'ai-conversations';
-        value: number | AiConversation;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1607,17 +1581,6 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ai-conversations_select".
- */
-export interface AiConversationsSelect<T extends boolean = true> {
-  title?: T;
-  messages?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -1936,17 +1899,6 @@ export interface SiteConfig {
     vimeo?: string | null;
     tiktok?: string | null;
   };
-  admin?: {
-    /**
-     * Show the AI chat widget in the admin panel.
-     */
-    aiAssistantEnabled?: boolean | null;
-    /**
-     * Paste your OpenAI API key here. Leave empty to use the key from environment variables (OPENAI_API_KEY).
-     */
-    openaiApiKey?: string | null;
-    aiModel?: ('gpt-4o' | 'gpt-4o-mini' | 'gpt-4.1' | 'gpt-4.1-mini' | 'gpt-4.1-nano') | null;
-  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2085,13 +2037,6 @@ export interface SiteConfigSelect<T extends boolean = true> {
         linkedin?: T;
         vimeo?: T;
         tiktok?: T;
-      };
-  admin?:
-    | T
-    | {
-        aiAssistantEnabled?: T;
-        openaiApiKey?: T;
-        aiModel?: T;
       };
   updatedAt?: T;
   createdAt?: T;

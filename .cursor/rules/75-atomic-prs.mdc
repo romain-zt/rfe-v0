@@ -1,0 +1,47 @@
+---
+description: Rules for splitting features into small, reviewable, and mergeable PRs.
+globs:
+alwaysApply: true
+---
+
+# Atomic PRs & Iterative Delivery
+
+## Principle
+
+Avoid large, monolithic changes. A "Feature Branch" should be a parent branch, but implementation should happen via small, atomic "Step PRs" that are merged into the feature branch.
+
+## Split Strategy
+
+Break a Spec (from `specs/`) into these atomic PRs:
+
+1. **PR-1: Schema & Types** (`payload-architect`)
+   - Goal: Define the data structure.
+   - Outcome: Schema file + generated types.
+2. **PR-2: Seed Logic** (`seed-engineer`)
+   - Goal: Populate dummy/hardcoded data.
+   - Outcome: Working seed command, verified in Admin.
+3. **PR-3: Infrastructure/Design Tokens** (`design-system-modeler`)
+   - Goal: Setup CSS vars and generic primitives.
+   - Outcome: Updates to `@rfe/design-tokens` or primitives in `@rfe/ui`.
+4. **PR-4: Frontend Implementation** (`frontend-guardian`)
+   - Goal: The actual UI.
+   - Outcome: Next.js page fetching from Payload.
+5. **PR-5: Cleanup & Polish**
+   - Goal: Delete old data/files.
+   - Outcome: Cleaned-up workspace.
+
+## Git Workflow for Sub-agents
+
+- **Branching:** If working on `feat/works-migration`, create `feat/works-migration-step-1-schema`.
+- **Merging:** Sub-agents should use `gh pr create` with the base branch set to the feature branch (not `main`).
+- **Iteration:** After a PR is "submitted" (simulated in agent world by finishing the task), the `verifier` agent must check it before the next task begins.
+
+## Parallel Rules
+
+- You can run `PR-1`, `PR-2` and `PR-3` in parallel if dependencies (types) are managed.
+- `PR-4` MUST wait for `PR-1` and `PR-2` (needs data + schema).
+
+## Rules
+- DO NOT create a PR with more than 15 files changed.
+- ALWAYS use the `gh` CLI to create PRs if the `full_network` permission is granted.
+- ALWAYS reference the Spec number and the specific Acceptance Criterion in the PR body.

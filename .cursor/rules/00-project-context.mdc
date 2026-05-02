@@ -84,3 +84,5 @@ The current branding lives in CSS variables in `app/[locale]/globals.css`:
 - Internal packages use `workspace:*` protocol
 - Shared dependency versions managed via pnpm catalog
 - Every non-trivial change starts with a spec in `specs/`
+- **Step PRs & Iteration:** Split work into atomic, reviewable PRs targeting the feature branch. Multiple agents (schema, seed, design) should run in parallel when they don't block each other.
+- **Atomic PRs:** Use `75-atomic-prs.mdc` to guide the split and iteration loops.

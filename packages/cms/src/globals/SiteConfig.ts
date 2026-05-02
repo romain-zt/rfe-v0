@@ -370,60 +370,6 @@ export const SiteConfig: GlobalConfig = {
           ],
         },
 
-        // ---------------------------------------------------------------
-        // TAB: Admin Panel
-        // ---------------------------------------------------------------
-        {
-          label: 'Admin',
-          description: 'Admin panel settings and AI assistant configuration.',
-          fields: [
-            {
-              name: 'admin',
-              type: 'group',
-              label: 'Admin Panel',
-              fields: [
-                {
-                  name: 'aiAssistantEnabled',
-                  type: 'checkbox',
-                  defaultValue: false,
-                  label: 'Enable AI Assistant',
-                  admin: {
-                    description: 'Show the AI chat widget in the admin panel.',
-                  },
-                },
-                {
-                  name: 'openaiApiKey',
-                  type: 'text',
-                  label: 'OpenAI API Key',
-                  admin: {
-                    condition: (_data, siblingData) => siblingData?.aiAssistantEnabled === true,
-                    description: 'Paste your OpenAI API key here. Leave empty to use the key from environment variables (OPENAI_API_KEY).',
-                    components: {
-                      Field: SECRET_FIELD_COMPONENT,
-                    },
-                  },
-                },
-                {
-                  name: 'aiModel',
-                  type: 'select',
-                  label: 'AI Model',
-                  defaultValue: 'gpt-4o',
-                  options: [
-                    { label: 'GPT-4o (recommended)', value: 'gpt-4o' },
-                    { label: 'GPT-4o Mini (faster, cheaper)', value: 'gpt-4o-mini' },
-                    { label: 'GPT-4.1', value: 'gpt-4.1' },
-                    { label: 'GPT-4.1 Mini', value: 'gpt-4.1-mini' },
-                    { label: 'GPT-4.1 Nano (fastest)', value: 'gpt-4.1-nano' },
-                  ],
-                  admin: {
-                    condition: (_data, siblingData) => siblingData?.aiAssistantEnabled === true,
-                    width: '50%',
-                  },
-                },
-              ],
-            },
-          ],
-        },
       ],
     },
   ],

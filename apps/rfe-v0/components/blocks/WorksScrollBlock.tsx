@@ -365,7 +365,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                           alt={itemTitle}
                           fill
                           className="object-cover transition-all duration-[1.5s] group-hover:scale-[1.04]"
-                          sizes="(max-width: 768px) 60vw, 32vw"
+                          sizes="(max-width: 768px) 70vw, 360px"
                           style={{ filter: 'grayscale(0.35) brightness(0.88)' }}
                         />
                       )}

@@ -24,4 +24,7 @@
 
   /* Base radius */
   --radius: 0.25rem;
+
+  /* Uniform poster previews — ISO A4 portrait */
+  --poster-preview-aspect: 210 / 297;
 }

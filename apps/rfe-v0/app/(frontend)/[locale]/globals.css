@@ -520,6 +520,12 @@
     overflow: hidden;
   }
 
+  .poster-preview-frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--poster-preview-aspect);
+  }
+
   .exhibition-frame::before {
     content: '';
     position: absolute;

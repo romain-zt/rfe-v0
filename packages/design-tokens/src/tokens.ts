@@ -28,8 +28,11 @@ export const radius = {
   base: '0.25rem',
 } as const
 
-/** Theatrical one-sheet ratio for work list / scroll preview frames */
-export const posterPreviewAspect = '2/3' as const
+/** ISO A4 portrait (210×297 mm) for uniform poster preview frames */
+export const posterPreviewAspect = '210/297' as const
+
+/** Default width for horizontal poster carousels (height follows aspect ratio) */
+export const posterPreviewWidth = 'clamp(168px, 18vw, 252px)' as const
 
 export type Colors = typeof colors
 export type Tones = typeof tones

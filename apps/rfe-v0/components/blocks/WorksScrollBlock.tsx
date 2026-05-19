@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
 import { useRef, useEffect, useState, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
-import { posterPreviewAspect } from '@rfe/design-tokens'
+import { posterPreviewWidth } from '@rfe/design-tokens'
 
 type ScrollItem = {
   work?: { title?: string; year?: number; poster?: { url?: string } | number; slug?: string } | number | null
@@ -288,9 +288,8 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
       })()
       : allWorks.filter(w => !w.category && w.src).slice(0, 10)
 
-    return sourceWorks.map((w, i) => ({
+    return sourceWorks.map((w) => ({
       work: { title: w.title, year: w.year, poster: { url: w.src }, slug: w.slug },
-      size: (i % 3 === 0 ? 'large' : i % 3 === 1 ? 'medium' : 'small') as ScrollItem['size'],
     }))
   })()
 
@@ -352,16 +351,14 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                 const imgUrl = getImageUrl(item)
                 const itemTitle = getTitle(item)
                 const year = getYear(item)
-                const size = item.size || 'large'
-                const width = size === 'large' ? 'clamp(260px, 32vw, 400px)' : size === 'medium' ? 'clamp(200px, 24vw, 310px)' : 'clamp(140px, 16vw, 200px)'
                 return (
                   <div
                     key={i}
                     data-works-scroll-item="true"
                     className={`relative shrink-0 snap-start group ${i === 0 ? 'pl-8' : i === displayItems.length - 1 ? 'pr-2' : ''}`}
-                    style={{ width, marginTop: '2.5rem' }}
+                    style={{ width: posterPreviewWidth }}
                   >
-                    <div className="relative overflow-hidden" style={{ aspectRatio: posterPreviewAspect }}>
+                    <div className="relative overflow-hidden poster-preview-frame exhibition-frame">
                       {imgUrl && (
                         <Image
                           src={imgUrl}

@@ -6,7 +6,7 @@ Work list previews use mixed aspect ratios (16/9, 2/3, 3/4, 1/1) in `WorkGrid` a
 
 ## Acceptance Criteria
 
-- [ ] All list/grid preview image frames use a single portrait ratio (`2/3`)
+- [ ] All list/grid preview image frames use a single portrait ratio (ISO A4: `210/297`)
 - [ ] No `productionStage` overlay badges on `WorkGrid` cards
 - [ ] `WorksScrollBlock` scroll items use the same ratio (PR-2)
 - [ ] Filter tabs and genre tags under titles remain unchanged
@@ -16,7 +16,8 @@ Work list previews use mixed aspect ratios (16/9, 2/3, 3/4, 1/1) in `WorkGrid` a
 
 ```ts
 // @rfe/design-tokens
-export const posterPreviewAspect = '2/3' as const
+export const posterPreviewAspect = '210/297' as const
+export const posterPreviewWidth = 'clamp(168px, 18vw, 252px)' as const
 ```
 
 ## File Structure

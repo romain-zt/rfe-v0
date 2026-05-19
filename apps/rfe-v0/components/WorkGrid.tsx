@@ -6,10 +6,11 @@ import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useLanguage } from './LanguageContext'
 import type { WorkItem, WorkCredit } from '@/lib/i18n/types'
-import { PRODUCTION_STAGE_LABELS, PRODUCTION_STAGE_TAB_LABELS } from '@/lib/i18n/types'
+import { PRODUCTION_STAGE_TAB_LABELS } from '@/lib/i18n/types'
 import type { ProductionStage } from '@/lib/i18n/types'
 import { useReveal, useStaggeredReveal } from '@/hooks/useReveal'
 import { getWorkSlug } from '@/lib/works'
+import { posterPreviewAspect } from '@rfe/design-tokens'
 
 export type WorkGridProps = {
   works: WorkItem[]
@@ -117,7 +118,6 @@ function WorkCard({
   previewsEnabled,
   cardRef,
   size,
-  hideStageBadge,
 }: {
   work: WorkItem
   delay: number
@@ -127,7 +127,6 @@ function WorkCard({
   previewsEnabled: boolean
   cardRef: (el: HTMLElement | null) => void
   size: ReturnType<typeof getMasonrySize>
-  hideStageBadge?: boolean
 }) {
   const { t, lang } = useLanguage()
   const reveal = useReveal({ delay })
@@ -214,12 +213,6 @@ function WorkCard({
     )
   }
 
-  const aspectRatio = size === 'full' ? '16/9'
-    : size === 'large' ? '2/3'
-    : size === 'medium' ? '3/4'
-    : '1/1'
-
-    
   return (
     <article
       ref={setRefs}
@@ -234,7 +227,7 @@ function WorkCard({
       >
         <div
           className="relative overflow-hidden mb-4 exhibition-frame cursor-pointer"
-          style={{ aspectRatio }}
+          style={{ aspectRatio: posterPreviewAspect }}
         >
           <div
             className={`absolute inset-0 transition-all duration-[1.2s] ${reveal.isVisible && !isHovered && !showPreview ? 'bw-media-scroll in-view' : isHovered || showPreview ? '' : 'bw-media'}`}
@@ -278,12 +271,6 @@ function WorkCard({
               mixBlendMode: 'overlay',
             }}
           />
-
-          {work.productionStage && !hideStageBadge && (
-            <span className="absolute top-2 left-2 z-[4] px-2 py-0.5 text-[10px] sm:text-xs uppercase tracking-wider font-medium bg-black/60 text-white/90 rounded-full backdrop-blur-sm">
-              {t.productionStage?.[work.productionStage] || PRODUCTION_STAGE_LABELS[work.productionStage]}
-            </span>
-          )}
 
           {/* Hover overlay */}
           <div className={`absolute inset-0 z-[5] bg-background/75 flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'} pointer-events-none`}>
@@ -539,7 +526,6 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
                 previewsEnabled={previewsEnabled}
                 cardRef={createCardRef(work.id)}
                 size={size}
-                hideStageBadge={showFilters}
               />
             </div>
           )

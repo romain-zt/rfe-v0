@@ -28,6 +28,9 @@ export const radius = {
   base: '0.25rem',
 } as const
 
+/** Theatrical one-sheet ratio for work list / scroll preview frames */
+export const posterPreviewAspect = '2/3' as const
+
 export type Colors = typeof colors
 export type Tones = typeof tones
 export type Easings = typeof easings

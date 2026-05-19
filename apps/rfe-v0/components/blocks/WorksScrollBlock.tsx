@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
 import { useRef, useEffect, useState, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
+import { posterPreviewAspect } from '@rfe/design-tokens'
 
 type ScrollItem = {
   work?: { title?: string; year?: number; poster?: { url?: string } | number; slug?: string } | number | null
@@ -353,8 +354,6 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                 const year = getYear(item)
                 const size = item.size || 'large'
                 const width = size === 'large' ? 'clamp(260px, 32vw, 400px)' : size === 'medium' ? 'clamp(200px, 24vw, 310px)' : 'clamp(140px, 16vw, 200px)'
-                const aspect = size === 'large' ? '3/4' : size === 'medium' ? '2/3' : '1/1'
-
                 return (
                   <div
                     key={i}
@@ -362,7 +361,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                     className={`relative shrink-0 snap-start group ${i === 0 ? 'pl-8' : i === displayItems.length - 1 ? 'pr-2' : ''}`}
                     style={{ width, marginTop: '2.5rem' }}
                   >
-                    <div className="relative overflow-hidden" style={{ aspectRatio: aspect }}>
+                    <div className="relative overflow-hidden" style={{ aspectRatio: posterPreviewAspect }}>
                       {imgUrl && (
                         <Image
                           src={imgUrl}

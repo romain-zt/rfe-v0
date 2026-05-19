@@ -17,7 +17,7 @@ Work list previews use mixed aspect ratios (16/9, 2/3, 3/4, 1/1) in `WorkGrid` a
 ```ts
 // @rfe/design-tokens
 export const posterPreviewAspect = '210/297' as const
-export const posterPreviewWidth = 'clamp(200px, 28vw, 360px)' as const
+export const posterPreviewWidth = 'clamp(240px, 78vw, 360px)' as const
 ```
 
 ## File Structure

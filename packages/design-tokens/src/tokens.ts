@@ -32,7 +32,7 @@ export const radius = {
 export const posterPreviewAspect = '210/297' as const
 
 /** Default width for horizontal poster carousels (height follows aspect ratio) */
-export const posterPreviewWidth = 'clamp(200px, 28vw, 360px)' as const
+export const posterPreviewWidth = 'clamp(240px, 78vw, 360px)' as const
 
 export type Colors = typeof colors
 export type Tones = typeof tones

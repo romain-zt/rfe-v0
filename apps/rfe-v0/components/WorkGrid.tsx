@@ -184,7 +184,7 @@ function WorkCard({
                 alt={work.title}
                 fill
                 className="object-cover transition-transform duration-[1.2s] group-hover:scale-[1.03]"
-                sizes="(max-width: 640px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                sizes="(max-width: 639px) 85vw, (max-width: 1280px) 50vw, 25vw"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'var(--tone-charcoal)' }}>
@@ -439,7 +439,7 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
       )}
 
       {/* Uniform A4 portrait poster grid */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-10">
         {filteredWorks.map((work, index) => (
           <WorkCard
             key={work.id}

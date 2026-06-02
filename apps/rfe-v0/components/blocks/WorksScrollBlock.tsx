@@ -297,7 +297,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
 
   return (
     <div>
-      <button
+      {/* <button
         type="button"
         aria-label="Faire défiler vers la gauche"
         className="group flex pointer-events-auto items-center justify-center absolute left-3 sm:left-6 lg:left-16 top-0 bottom-0 z-20 w-14 transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--rfe-gold-dim) cursor-pointer"
@@ -318,7 +318,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
         <span aria-hidden="true" className="relative z-10 text-[20px] leading-none" style={{ color: 'var(--rfe-gold-dim)' }}>
           &lt;
         </span>
-      </button>
+      </button> */}
       <section data-ai-element="works-scroll" className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.035) 0%, transparent 60%)' }} aria-hidden="true" />
 
@@ -408,7 +408,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
           </div>
         </div>
       </section>
-      <button
+      {/* <button
         type="button"
         aria-label="Faire défiler vers la droite"
         className="group flex pointer-events-auto items-center justify-center absolute right-3 sm:right-6 lg:right-16 top-0 bottom-0 z-20 w-14 transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--rfe-gold-dim) cursor-pointer"
@@ -429,7 +429,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
         <span aria-hidden="true" className="relative z-10 text-[20px] leading-none" style={{ color: 'var(--rfe-gold-dim)' }}>
           &gt;
         </span>
-      </button>
+      </button> */}
     </div>
   )
 }

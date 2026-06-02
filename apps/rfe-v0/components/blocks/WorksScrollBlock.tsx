@@ -355,7 +355,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                   <div
                     key={i}
                     data-works-scroll-item="true"
-                    className={`relative shrink-0 snap-start group ${i === 0 ? 'pl-8' : i === displayItems.length - 1 ? 'pr-2' : ''}`}
+                    className={`relative shrink-0 snap-start group ${i === displayItems.length - 1 ? 'pr-2' : ''}`}
                     style={{ width: posterPreviewWidth }}
                   >
                     <div className="relative overflow-hidden poster-preview-frame exhibition-frame">

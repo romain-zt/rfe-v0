@@ -53,7 +53,7 @@ export function TeamShowcaseComponent({ title, introText, showBios = true, showP
                     {member.role}
                   </p>
                   {showBios && member.bio && (
-                    <p className="text-sm leading-[2] font-light" style={{ color: 'rgba(245, 240, 235, 0.45)', maxWidth: '60ch' }}>
+                    <p data-ai-field="teamMember.bio" className="text-sm leading-[2] font-light whitespace-pre-line" style={{ color: 'rgba(245, 240, 235, 0.45)', maxWidth: '60ch' }}>
                       {member.bio}
                     </p>
                   )}

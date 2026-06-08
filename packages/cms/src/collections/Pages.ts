@@ -10,6 +10,7 @@ import { hero } from '../fields/hero.ts'
 import { blocks } from '../blocks/index.ts'
 import { generatePreviewPath } from '../utilities/generatePreviewPath.ts'
 import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import { sanitizePageLayout } from '../utilities/sanitizePageLayout.ts'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -191,10 +192,15 @@ export const Pages: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [
-      ({ data, operation }) => {
+      async ({ data, operation, req }) => {
+        if (data?.layout) {
+          data.layout = await sanitizePageLayout(data.layout, req.payload)
+        }
+
         if (operation === 'create' && data && !data.publishedAt) {
           data.publishedAt = new Date().toISOString()
         }
+
         return data
       },
     ],

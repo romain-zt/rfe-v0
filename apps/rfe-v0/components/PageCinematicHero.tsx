@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback, type ReactNode } from 'react'
 import { ResponsiveHeroPicture, type ImageFit } from '@/components/ResponsiveHeroPicture'
 
 type PageCinematicHeroProps = {
-  imageSrc: string
+  imageSrc?: string
   imageSrcMobile?: string
   imagePosition?: string
   imagePositionMobile?: string
@@ -26,6 +26,7 @@ export function PageCinematicHero({
   children,
   subtitle,
 }: PageCinematicHeroProps) {
+  const hasImage = Boolean(imageSrc)
   const PAGE_IMAGE_SRC_MOBILE = imageSrcMobile || imageSrc
   const PAGE_POSITION_MOBILE = imagePositionMobile || imagePosition
   const hasMobileVariant = Boolean(imageSrcMobile)
@@ -56,7 +57,7 @@ export function PageCinematicHero({
     const scrolled = -rect.top
     const progress = Math.max(0, Math.min(1, scrolled / (sectionH * 0.6)))
 
-    if (imgRef.current) {
+    if (hasImage && imgRef.current) {
       const brightness = 0.3 + progress * 0.25
       const grayscale = 0.5 - progress * 0.35
       const contrast = 1.05 - progress * 0.03
@@ -76,7 +77,7 @@ export function PageCinematicHero({
       contentRef.current.style.transform = `translateY(${scrolled * 0.2}px)`
       contentRef.current.style.opacity = `${fadeOut}`
     }
-  }, [])
+  }, [hasImage])
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -94,22 +95,34 @@ export function PageCinematicHero({
       aria-label="Hero"
     >
       <div className="fixed inset-0 z-0" style={{ willChange: 'auto' }}>
-        <ResponsiveHeroPicture
-          ref={imgRef}
-          desktopSrc={imageSrc}
-          mobileSrc={PAGE_IMAGE_SRC_MOBILE}
-          hasMobileVariant={hasMobileVariant}
-          desktopPosition={imagePosition}
-          mobilePosition={PAGE_POSITION_MOBILE}
-          desktopFit={imageFit}
-          mobileFit={imageFitMobile}
-          alt=""
-          style={{
-            filter: 'grayscale(0.5) brightness(0.3) contrast(1.05)',
-            opacity: phase >= 1 ? 1 : 0,
-            transition: 'opacity 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)',
-          }}
-        />
+        {hasImage ? (
+          <ResponsiveHeroPicture
+            ref={imgRef}
+            desktopSrc={imageSrc!}
+            mobileSrc={PAGE_IMAGE_SRC_MOBILE!}
+            hasMobileVariant={hasMobileVariant}
+            desktopPosition={imagePosition}
+            mobilePosition={PAGE_POSITION_MOBILE}
+            desktopFit={imageFit}
+            mobileFit={imageFitMobile}
+            alt=""
+            style={{
+              filter: 'grayscale(0.5) brightness(0.3) contrast(1.05)',
+              opacity: phase >= 1 ? 1 : 0,
+              transition: 'opacity 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)',
+            }}
+          />
+        ) : (
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'var(--background)',
+              opacity: phase >= 1 ? 1 : 0,
+              transition: 'opacity 2.5s cubic-bezier(0.25, 0.1, 0.25, 1)',
+            }}
+            aria-hidden="true"
+          />
+        )}
 
         <div
           ref={vignetteRef}

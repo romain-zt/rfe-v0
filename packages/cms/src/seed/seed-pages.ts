@@ -444,26 +444,7 @@ export async function seedPages(
       '/assets/team/kara-and-elisabeth.webp',
       '/assets/team/kara-and-elisabeth.jpg',
     ],
-    about: [
-      '/assets/team/liz-rohm-hero.png',
-      '/assets/team/elisabeth-rohm-3.jpg',
-      '/assets/team/kara-and-elisabeth.webp',
-    ],
-    'our-work': [
-      '/assets/portfolio-medias/tournage-1.jpg',
-      '/assets/portfolio-medias/tournage-2.jpg',
-      '/assets/works/margret-stevie.png',
-    ],
-    development: [
-      '/assets/portfolio-medias/tournage-3.jpg',
-      '/assets/portfolio-medias/tournage-4.jpg',
-      '/assets/works/lie-detector.png',
-    ],
-    press: [
-      '/assets/portfolio-medias/tournage-4.jpg',
-      '/assets/portfolio-medias/tournage-2.jpg',
-      '/assets/team/kara-and-elisabeth.webp',
-    ],
+    // about, our-work, development, press — text-only heroes (no background image)
   }
 
   /**
@@ -479,7 +460,6 @@ export async function seedPages(
    */
   const heroMediaMobileByPageSlug: Record<string, string[]> = {
     home: ['/assets/team/kara.png', '/assets/team/liz-rohm-hero.png'],
-    about: ['/assets/team/liz-rohm-hero.png', '/assets/portfolio-medias/elisabeth-1.png'],
   }
 
   async function resolveHeroMedia(
@@ -489,13 +469,9 @@ export async function seedPages(
     if (hero.type === 'minimal') return hero
     if (!mediaMap) return hero
 
-    const desktopCandidates = [
-      ...(heroMediaByPageSlug[pageSlug] ?? []),
-      '/assets/team/kara-lis.jpg',
-      '/assets/team/kara-and-elisabeth.webp',
-      '/assets/team/liz-rohm-hero.png',
-      '/assets/works/margret-stevie.png',
-    ]
+    const desktopCandidates = heroMediaByPageSlug[pageSlug] ?? []
+    if (desktopCandidates.length === 0) return hero
+
     let next: Record<string, unknown> = hero
     for (const candidate of desktopCandidates) {
       const id = mediaMap.get(candidate)

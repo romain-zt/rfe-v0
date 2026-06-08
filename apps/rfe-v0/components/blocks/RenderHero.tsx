@@ -65,7 +65,7 @@ export function RenderHero({ hero }: { hero: HeroData }) {
     return (
       <div id="hero" data-block-type="hero" data-hero-type="page">
         <PageCinematicHero
-          imageSrc={mediaUrl || '/assets/works/margret-stevie.png'}
+          imageSrc={mediaUrl || undefined}
           imageSrcMobile={mediaMobileUrl || undefined}
           imagePosition={desktopPosition}
           imagePositionMobile={mobilePosition}

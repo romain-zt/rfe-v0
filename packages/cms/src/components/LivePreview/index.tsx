@@ -90,7 +90,7 @@ export const CustomLivePreview: React.FC = () => {
  
   // ─── postMessage bridge (mirrors LivePreviewWindow exactly) ───────────────
   useEffect(() => {
-    if (!isLivePreviewing || !appIsReady || !formState) return
+    if (!isLivePreviewing || !appIsReady || !formState || !url) return
 
     const values = reduceFieldsToValues(formState, true)
     if (!values.id) values.id = id
@@ -128,7 +128,7 @@ export const CustomLivePreview: React.FC = () => {
 
   // SSR refresh event
   useEffect(() => {
-    if (!isLivePreviewing || !appIsReady) return
+    if (!isLivePreviewing || !appIsReady || !url) return
     const message = { type: 'payload-document-event' }
     if (previewWindowType === 'popup' && popupRef?.current) {
       popupRef.current.postMessage(message, url)

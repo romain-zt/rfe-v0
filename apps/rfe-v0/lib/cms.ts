@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 
@@ -140,19 +141,19 @@ export type WorksGroupData = {
   items: Work[]
 }
 
-export async function getWorks(query?: { category?: string }) {
+async function fetchWorks(category?: string) {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'works',
     limit: 100,
     sort: 'sortOrder',
     depth: 1,
-    ...(query?.category ? { where: { category: { equals: query.category } } } : {}),
+    ...(category ? { where: { category: { equals: category } } } : {}),
   })
   return result as unknown as { docs: Work[]; totalDocs: number }
 }
 
-export async function getWorkBySlug(slug: string) {
+async function fetchWorkBySlug(slug: string) {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'works',
@@ -163,19 +164,7 @@ export async function getWorkBySlug(slug: string) {
   return (result.docs[0] as unknown as Work) ?? null
 }
 
-export async function getWorksByCategory(category: string) {
-  const payload = await getPayloadClient()
-  const result = await payload.find({
-    collection: 'works',
-    where: { category: { equals: category } },
-    limit: 100,
-    sort: 'sortOrder',
-    depth: 1,
-  })
-  return result as unknown as { docs: Work[]; totalDocs: number }
-}
-
-export async function getTeamMembers() {
+async function fetchTeamMembers() {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'team-members',
@@ -185,7 +174,7 @@ export async function getTeamMembers() {
   return result as unknown as { docs: TeamMember[]; totalDocs: number }
 }
 
-export async function getPressItems() {
+async function fetchPressItems() {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'press-items',
@@ -195,17 +184,17 @@ export async function getPressItems() {
   return result as unknown as { docs: PressItem[]; totalDocs: number }
 }
 
-export async function getSiteConfig() {
+async function fetchSiteConfig() {
   const payload = await getPayloadClient()
   return payload.findGlobal({ slug: 'site-config' }) as unknown as SiteConfig
 }
 
-export async function getNavigation() {
+async function fetchNavigation() {
   const payload = await getPayloadClient()
   return payload.findGlobal({ slug: 'navigation' }) as unknown as NavigationData
 }
 
-export async function getPageBySlug(slug: string, draft = false) {
+async function fetchPageBySlug(slug: string, draft = false) {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'pages',
@@ -217,7 +206,7 @@ export async function getPageBySlug(slug: string, draft = false) {
   return (result.docs[0] as unknown as PageData) ?? null
 }
 
-export async function getAllPages() {
+async function fetchAllPages() {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'pages',
@@ -227,7 +216,7 @@ export async function getAllPages() {
   return result as unknown as { docs: PageData[]; totalDocs: number }
 }
 
-export async function getWorksGroup(slug: string) {
+async function fetchWorksGroup(slug: string) {
   const payload = await getPayloadClient()
   const result = await payload.find({
     collection: 'works-groups',
@@ -236,4 +225,76 @@ export async function getWorksGroup(slug: string) {
     depth: 2,
   })
   return (result.docs[0] as unknown as WorksGroupData) ?? null
+}
+
+const cacheOpts = { revalidate: false as const }
+
+export async function getWorks(query?: { category?: string }) {
+  const category = query?.category ?? 'all'
+  return unstable_cache(fetchWorks, ['cms-works', category], {
+    tags: ['cms', 'cms:works'],
+    ...cacheOpts,
+  })(category === 'all' ? undefined : category)
+}
+
+export async function getWorkBySlug(slug: string) {
+  return unstable_cache(fetchWorkBySlug, ['cms-work', slug], {
+    tags: ['cms', 'cms:works', `cms:works:${slug}`],
+    ...cacheOpts,
+  })(slug)
+}
+
+export async function getWorksByCategory(category: string) {
+  return getWorks({ category })
+}
+
+export async function getTeamMembers() {
+  return unstable_cache(fetchTeamMembers, ['cms-team-members'], {
+    tags: ['cms', 'cms:team-members'],
+    ...cacheOpts,
+  })()
+}
+
+export async function getPressItems() {
+  return unstable_cache(fetchPressItems, ['cms-press-items'], {
+    tags: ['cms', 'cms:press-items'],
+    ...cacheOpts,
+  })()
+}
+
+export async function getSiteConfig() {
+  return unstable_cache(fetchSiteConfig, ['cms-site-config'], {
+    tags: ['cms', 'cms:globals', 'cms:globals:site-config'],
+    ...cacheOpts,
+  })()
+}
+
+export async function getNavigation() {
+  return unstable_cache(fetchNavigation, ['cms-navigation'], {
+    tags: ['cms', 'cms:globals', 'cms:globals:navigation'],
+    ...cacheOpts,
+  })()
+}
+
+export async function getPageBySlug(slug: string, draft = false) {
+  if (draft) return fetchPageBySlug(slug, true)
+
+  return unstable_cache(fetchPageBySlug, ['cms-page', slug], {
+    tags: ['cms', 'cms:pages', `cms:pages:${slug}`],
+    ...cacheOpts,
+  })(slug, false)
+}
+
+export async function getAllPages() {
+  return unstable_cache(fetchAllPages, ['cms-all-pages'], {
+    tags: ['cms', 'cms:pages'],
+    ...cacheOpts,
+  })()
+}
+
+export async function getWorksGroup(slug: string) {
+  return unstable_cache(fetchWorksGroup, ['cms-works-group', slug], {
+    tags: ['cms', 'cms:works-groups', `cms:works-groups:${slug}`],
+    ...cacheOpts,
+  })(slug)
 }

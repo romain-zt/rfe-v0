@@ -1,7 +1,11 @@
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { NextResponse, type NextRequest } from 'next/server'
-
-const LOCALES = ['en']
+import {
+  revalidateCmsDataTags,
+  revalidatePageData,
+  revalidateSitePaths,
+  revalidateWorkData,
+} from '@/lib/revalidate-paths'
 
 export async function POST(request: NextRequest) {
   const secret = request.headers.get('x-revalidate-secret')
@@ -9,32 +13,35 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid secret' }, { status: 403 })
   }
 
-  let body: { collection?: string; slug?: string; global?: string } = {}
+  let body: {
+    collection?: string
+    slug?: string
+    global?: string
+    scope?: 'site'
+  } = {}
+
   try {
     body = await request.json()
   } catch {
-    // no body — revalidate everything
+    // no body — full site revalidation
   }
 
-  if (body.global) {
-    revalidateTag(`cms:globals:${body.global}`)
-    // Globals can affect any page — revalidate the whole layout
-    revalidatePath('/', 'layout')
+  if (body.scope === 'site' || (!body.collection && !body.global)) {
+    await revalidateSitePaths()
+  } else if (body.global) {
+    revalidateTag(`cms:globals:${body.global}`, { expire: 0 })
+    await revalidateSitePaths()
   } else if (body.collection === 'pages' && body.slug) {
-    revalidateTag(`cms:pages:${body.slug}`)
-    for (const locale of LOCALES) {
-      const path = body.slug === 'home' ? `/${locale}` : `/${locale}/${body.slug}`
-      revalidatePath(path)
-    }
-  } else if (body.collection && body.slug) {
-    revalidateTag(`cms:${body.collection}:${body.slug}`)
-    revalidatePath('/', 'layout')
+    revalidateCmsDataTags()
+    revalidatePageData(body.slug)
+  } else if (body.collection === 'works' && body.slug) {
+    revalidateCmsDataTags()
+    revalidateWorkData(body.slug)
+    await revalidateSitePaths()
   } else if (body.collection) {
-    revalidateTag(`cms:${body.collection}`)
-    revalidatePath('/', 'layout')
+    await revalidateSitePaths()
   } else {
-    revalidateTag('cms')
-    revalidatePath('/', 'layout')
+    await revalidateSitePaths()
   }
 
   return NextResponse.json({ revalidated: true, now: Date.now() })

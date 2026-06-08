@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 
 export const TeamMembers: CollectionConfig = {
   slug: 'team-members',
@@ -6,6 +7,10 @@ export const TeamMembers: CollectionConfig = {
     read: () => true,
   },
   admin: { useAsTitle: 'name', group: 'Content' },
+  hooks: {
+    afterChange: [() => { void revalidateFrontend({ collection: 'team-members' }) }],
+    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
+  },
   fields: [
     { name: 'name', type: 'text', required: true },
     { name: 'role', type: 'text', required: true },

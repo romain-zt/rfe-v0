@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 
 export const PressItems: CollectionConfig = {
   slug: 'press-items',
@@ -6,6 +7,10 @@ export const PressItems: CollectionConfig = {
     read: () => true,
   },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'source', 'date'], group: 'Content' },
+  hooks: {
+    afterChange: [() => { void revalidateFrontend({ collection: 'press-items' }) }],
+    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
+  },
   fields: [
     { name: 'title', type: 'text', required: true },
     { name: 'source', type: 'text', required: true },

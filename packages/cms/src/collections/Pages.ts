@@ -216,5 +216,6 @@ export const Pages: CollectionConfig = {
         }
       },
     ],
+    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
   },
 }

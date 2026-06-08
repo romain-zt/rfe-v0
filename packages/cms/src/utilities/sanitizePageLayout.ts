@@ -36,7 +36,6 @@ async function getExistingIds(
     depth: 0,
     limit: ids.length,
     pagination: false,
-    select: { id: true },
   })
 
   return new Set(result.docs.map((doc) => doc.id as number))

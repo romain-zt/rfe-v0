@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -7,6 +8,10 @@ export const Media: CollectionConfig = {
   },
   admin: {
     group: 'Admin',
+  },
+  hooks: {
+    afterChange: [() => { void revalidateFrontend({ collection: 'media' }) }],
+    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
   },
   upload: {
     imageSizes: [

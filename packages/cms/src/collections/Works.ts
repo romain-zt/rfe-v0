@@ -13,11 +13,14 @@ export const Works: CollectionConfig = {
   },
   hooks: {
     afterChange: [
-      () => {
-        revalidateFrontend({ collection: 'works' })
-        revalidateFrontend({ collection: 'pages' })
+      ({ doc, previousDoc }) => {
+        void revalidateFrontend({ collection: 'works', slug: doc.slug as string })
+        if (previousDoc?.slug && previousDoc.slug !== doc.slug) {
+          void revalidateFrontend({ collection: 'works', slug: previousDoc.slug as string })
+        }
       },
     ],
+    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
   },
   fields: [
     { name: 'title', type: 'text', required: true },

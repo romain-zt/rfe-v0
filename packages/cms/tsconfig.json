@@ -1,0 +1,8 @@
+{
+  "extends": "@rfe/tsconfig/react-library.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "@rfe/tsconfig/react-library.json",
+  "compilerOptions": {
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**"],
+      "env": [
+        "DATABASE_URL",
+        "PAYLOAD_SECRET",
+        "S3_ENDPOINT",
+        "S3_BUCKET",
+        "S3_ACCESS_KEY",
+        "S3_SECRET_KEY",
+        "S3_REGION",
+        "CMS_API_URL",
+        "NEXT_PUBLIC_CMS_URL",
+        "NEXT_PUBLIC_SITE_URL",
+        "PREVIEW_SECRET",
+        "REVALIDATION_SECRET",
+        "PAYLOAD_ADMIN_EMAIL",
+        "PAYLOAD_ADMIN_PASSWORD",
+        "POSTGRES_USER",
+        "DATABASE_URL_UNPOOLED",
+        "NEON_PROJECT_ID",
+        "POSTGRES_URL_NON_POOLING",
+        "PGPASSWORD",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_DATABASE",
+        "POSTGRES_HOST",
+        "POSTGRES_URL"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

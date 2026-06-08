@@ -327,7 +327,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
             <div style={{ opacity: titleVisible ? 1 : 0, transition: 'opacity 1.5s var(--ease-quiet)' }}>
               <span
                 data-ai-field="worksScroll.title"
-                className="text-xs lg:text-sm uppercase block mb-4 font-light"
+                className="text-base lg:text-lg uppercase block mb-4 font-light"
                 style={{
                   color: 'var(--rfe-gold-dim)',
                   letterSpacing: titleVisible ? '0.38em' : '0.08em',
@@ -396,7 +396,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                       )}
                     </div>
                     <div className="mt-3">
-                      <p className="font-serif text-sm md:text-base font-light tracking-wide" style={{ color: 'rgba(245, 240, 235, 0.38)' }}>
+                      <p className="font-serif text-base md:text-lg font-light tracking-wide" style={{ color: 'rgba(245, 240, 235, 0.38)' }}>
                         {itemTitle}
                       </p>
                       {year && <p className="text-[10px] tracking-[0.2em] mt-1" style={{ color: 'rgba(245, 240, 235, 0.22)' }}>{year}</p>}

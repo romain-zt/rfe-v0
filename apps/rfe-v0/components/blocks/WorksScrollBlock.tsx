@@ -325,7 +325,15 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
         <div className="relative">
           <div ref={titleRef} className="px-6 lg:px-16 mb-12 flex items-end justify-between">
             <div style={{ opacity: titleVisible ? 1 : 0, transition: 'opacity 1.5s var(--ease-quiet)' }}>
-              <span data-ai-field="worksScroll.title" className="text-[9px] uppercase block mb-4 font-light" style={{ letterSpacing: titleVisible ? '0.42em' : '0.08em', transition: 'letter-spacing 2.2s var(--ease-quiet)' }}>
+              <span
+                data-ai-field="worksScroll.title"
+                className="text-xs lg:text-sm uppercase block mb-4 font-light"
+                style={{
+                  color: 'var(--rfe-gold-dim)',
+                  letterSpacing: titleVisible ? '0.38em' : '0.08em',
+                  transition: 'letter-spacing 2.2s var(--ease-quiet)',
+                }}
+              >
                 {title || 'Our Work'}
               </span>
             </div>
@@ -388,10 +396,10 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                       )}
                     </div>
                     <div className="mt-3">
-                      <p className="font-serif text-[12px] md:text-sm font-light tracking-wide" style={{ color: 'rgba(245, 240, 235, 0.55)' }}>
+                      <p className="font-serif text-sm md:text-base font-light tracking-wide" style={{ color: 'rgba(245, 240, 235, 0.38)' }}>
                         {itemTitle}
                       </p>
-                      {year && <p className="text-[9px] tracking-[0.2em] mt-1" style={{ color: 'rgba(245, 240, 235, 0.2)' }}>{year}</p>}
+                      {year && <p className="text-[10px] tracking-[0.2em] mt-1" style={{ color: 'rgba(245, 240, 235, 0.22)' }}>{year}</p>}
                     </div>
                   </div>
                 )

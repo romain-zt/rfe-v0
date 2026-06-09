@@ -6,6 +6,8 @@ import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
 import { useRef, useEffect, useState, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
 import { posterPreviewWidth } from '@rfe/design-tokens'
+import { getWorkSlug } from '@/lib/works'
+import type { WorkItem } from '@/lib/i18n/types'
 
 type ScrollItem = {
   work?: { title?: string; year?: number; poster?: { url?: string } | number; slug?: string } | number | null
@@ -47,6 +49,22 @@ function getYear(item: ScrollItem): string {
   return ''
 }
 
+function getItemSlug(item: ScrollItem, allWorks: WorkItem[]): string | null {
+  if (!item.work || typeof item.work !== 'object') return null
+
+  const explicitSlug = (item.work.slug || '').trim()
+  if (explicitSlug) return explicitSlug
+
+  const workTitle = item.work.title
+  if (workTitle) {
+    const match = allWorks.find((w) => w.title === workTitle)
+    if (match) return getWorkSlug(match)
+    return getWorkSlug({ title: workTitle, slug: '' })
+  }
+
+  return null
+}
+
 function extractIds(refs: RelationRef[] | WorksGroupRef | null | undefined): number[] | null {
   if (!refs) return null
   if (typeof refs === 'number') return null
@@ -69,18 +87,20 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
     startX: number
     startScrollLeft: number
     pointerId: number | null
+    hasDragged: boolean
   }>({
     isDown: false,
     startX: 0,
     startScrollLeft: 0,
     pointerId: null,
+    hasDragged: false,
   })
   const autoScrollIntervalRef = useRef<number | null>(null)
   const interactionDebounceTimeoutRef = useRef<number | null>(null)
   const autoScrollEnabledRef = useRef(false)
   const isAutoScrollingRef = useRef(false)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const { lang, content } = useLanguage()
+  const { lang, content, t } = useLanguage()
   const toneClass = sectionTone && sectionTone !== 'default' ? `section-tone-${sectionTone}` : 'section-tone-warm'
 
   const getSnapPositions = useCallback((): number[] => {
@@ -238,6 +258,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
     dragState.current.startX = e.clientX
     dragState.current.startScrollLeft = scrollRef.current.scrollLeft
     dragState.current.pointerId = e.pointerId
+    dragState.current.hasDragged = false
 
     try {
       e.currentTarget.setPointerCapture(e.pointerId)
@@ -265,6 +286,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
     if (!scrollRef.current) return
 
     const dx = e.clientX - dragState.current.startX
+    if (Math.abs(dx) > 5) dragState.current.hasDragged = true
     scrollRef.current.scrollLeft = dragState.current.startScrollLeft - dx
   }, [])
 
@@ -359,14 +381,12 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                 const imgUrl = getImageUrl(item)
                 const itemTitle = getTitle(item)
                 const year = getYear(item)
-                return (
-                  <div
-                    key={i}
-                    data-works-scroll-item="true"
-                    className={`relative shrink-0 snap-start group ${i === displayItems.length - 1 ? 'pr-2' : ''}`}
-                    style={{ width: posterPreviewWidth }}
-                  >
-                    <div className="relative overflow-hidden poster-preview-frame exhibition-frame">
+                const slug = getItemSlug(item, allWorks)
+                const href = slug ? `/${lang}/our-work/${slug}` : null
+
+                const cardContent = (
+                  <>
+                    <div className="relative overflow-hidden poster-preview-frame exhibition-frame cursor-pointer">
                       {imgUrl && (
                         <Image
                           src={imgUrl}
@@ -382,6 +402,13 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                         style={{ background: 'linear-gradient(to top, rgba(7, 7, 8, 0.65) 0%, transparent 55%)' }}
                         aria-hidden="true"
                       />
+                      {href && (
+                        <div className="absolute inset-0 z-[5] bg-background/75 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                          <span className="text-[10px] tracking-[0.2em] uppercase text-foreground/80 border border-foreground/30 px-5 py-2.5">
+                            {t.work.view}
+                          </span>
+                        </div>
+                      )}
                       {item.label && (
                         <span
                           className="absolute top-3 left-3 text-[8px] uppercase tracking-[0.28em] font-light px-2 py-1"
@@ -396,11 +423,35 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                       )}
                     </div>
                     <div className="mt-3">
-                      <p className="font-serif text-base md:text-lg font-light tracking-wide" style={{ color: 'rgba(245, 240, 235, 0.38)' }}>
+                      <p className="font-serif text-base md:text-lg font-light tracking-wide transition-colors duration-500 group-hover:text-[rgba(245,240,235,0.65)]" style={{ color: 'rgba(245, 240, 235, 0.38)' }}>
                         {itemTitle}
                       </p>
                       {year && <p className="text-[10px] tracking-[0.2em] mt-1" style={{ color: 'rgba(245, 240, 235, 0.22)' }}>{year}</p>}
                     </div>
+                  </>
+                )
+
+                return (
+                  <div
+                    key={i}
+                    data-works-scroll-item="true"
+                    className={`relative shrink-0 snap-start group ${i === displayItems.length - 1 ? 'pr-2' : ''}`}
+                    style={{ width: posterPreviewWidth }}
+                  >
+                    {href ? (
+                      <Link
+                        href={href}
+                        className="block outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        aria-label={`${itemTitle} - ${t.work.view}`}
+                        onClick={(e) => {
+                          if (dragState.current.hasDragged) e.preventDefault()
+                        }}
+                      >
+                        {cardContent}
+                      </Link>
+                    ) : (
+                      cardContent
+                    )}
                   </div>
                 )
               })}

@@ -24,7 +24,18 @@ export const Works: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true },
-    { name: 'slug', type: 'text', required: true, unique: true, admin: { position: 'sidebar' } },
+    {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '@rfe/cms/components/SlugField#SlugField',
+        },
+      },
+    },
     { name: 'year', type: 'number', required: true, admin: { position: 'sidebar' } },
     {
       name: 'poster',
@@ -130,6 +141,28 @@ export const Works: CollectionConfig = {
         { name: 'title', type: 'text' },
         { name: 'description', type: 'textarea' },
         { name: 'keywords', type: 'text' },
+      ],
+    },
+    {
+      name: 'seenOn',
+      type: 'array',
+      admin: {
+        description: 'Broadcast / streaming partners — logo displayed on the poster card.',
+      },
+      fields: [
+        {
+          name: 'logo',
+          type: 'upload',
+          relationTo: 'media',
+          required: false,
+          admin: { description: 'Channel / platform logo (transparent PNG preferred)' },
+        },
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          admin: { description: 'Short display name — e.g. TF1, CNews, Netflix' },
+        },
       ],
     },
     {

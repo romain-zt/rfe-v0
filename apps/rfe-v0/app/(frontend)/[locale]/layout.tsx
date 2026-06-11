@@ -105,6 +105,10 @@ export default async function RootLayout({
     productionStage: w.productionStage,
     subcategory: w.subcategory,
     credits: w.credits || [],
+    seenOn: (w.seenOn || []).map((s) => ({
+      logoUrl: s.logo && typeof s.logo === 'object' ? s.logo.url : undefined,
+      name: s.name,
+    })),
   }))
 
   const teamMembers = teamRes.docs.map((m) => ({

@@ -133,6 +133,28 @@ export const Works: CollectionConfig = {
       ],
     },
     {
+      name: 'seenOn',
+      type: 'array',
+      admin: {
+        description: 'Broadcast / streaming partners — logo displayed on the poster card.',
+      },
+      fields: [
+        {
+          name: 'logo',
+          type: 'upload',
+          relationTo: 'media',
+          required: false,
+          admin: { description: 'Channel / platform logo (transparent PNG preferred)' },
+        },
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          admin: { description: 'Short display name — e.g. TF1, CNews, Netflix' },
+        },
+      ],
+    },
+    {
       name: 'sortOrder',
       type: 'number',
       admin: { position: 'sidebar', description: 'Lower = first' },

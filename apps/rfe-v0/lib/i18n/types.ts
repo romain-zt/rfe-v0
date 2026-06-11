@@ -51,6 +51,7 @@ export type WorkItem = {
   subcategory?: string
   productionStage?: ProductionStage
   credits?: WorkCredit[]
+  seenOn?: { logoUrl?: string; name: string }[]
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: string[]

@@ -37,6 +37,10 @@ export type Work = {
   productionStage?: 'produced' | 'in-production' | 'paid-development' | 'movies-development' | 'series-development'
   subcategory?: string
   credits?: WorkCredit[]
+  seenOn?: {
+    logo?: { url: string; sizes?: { thumbnail?: { url: string } } } | number | null
+    name: string
+  }[]
   sortOrder: number
   seo?: {
     title?: string

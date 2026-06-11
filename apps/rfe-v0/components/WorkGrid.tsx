@@ -211,6 +211,40 @@ function WorkCard({
             }}
           />
 
+          {/* Seen on */}
+          {work.seenOn && work.seenOn.length > 0 && (
+            <div className="absolute bottom-2.5 right-2.5 z-[4] flex items-center gap-1.5 pointer-events-none">
+              {work.seenOn.slice(0, 3).map((channel, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-center"
+                  style={{
+                    background: 'rgba(7, 7, 8, 0.55)',
+                    backdropFilter: 'blur(6px)',
+                    borderRadius: '2px',
+                    padding: channel.logoUrl ? '3px 5px' : '3px 6px',
+                  }}
+                  title={channel.name}
+                >
+                  {channel.logoUrl ? (
+                    <Image
+                      src={channel.logoUrl}
+                      alt={channel.name}
+                      width={36}
+                      height={18}
+                      className="object-contain max-h-[18px] w-auto opacity-80"
+                      style={{ filter: 'brightness(0) invert(1)' }}
+                    />
+                  ) : (
+                    <span className="text-[8px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.7)' }}>
+                      {channel.name}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Hover overlay */}
           <div className={`absolute inset-0 z-[5] bg-background/75 flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'} pointer-events-none`}>
             <span className="text-[10px] tracking-[0.2em] uppercase text-foreground/80 border border-foreground/30 px-5 py-2.5">

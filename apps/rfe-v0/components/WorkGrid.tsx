@@ -213,7 +213,7 @@ function WorkCard({
 
           {/* Seen on */}
           {work.seenOn && work.seenOn.length > 0 && (
-            <div className="absolute bottom-2.5 right-2.5 z-[4] flex items-center gap-1.5 pointer-events-none">
+            <div className="bg-[rgba(255,255,255,0.8)] backdrop-blur-sm absolute bottom-2.5 right-2.5 z-[4] flex items-center gap-1.5 pointer-events-none">
               {work.seenOn.slice(0, 3).map((channel, i) => (
                 <div
                   key={i}
@@ -233,10 +233,10 @@ function WorkCard({
                       alt={channel.name}
                       width={48}
                       height={48}
-                      className="object-contain max-h-[48px] w-auto"
+                      className="object-contain max-h-[64px] w-auto"
                     />
                   ) : (
-                    <span className="text-[8px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.7)' }}>
+                    <span className="text-[12px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.7)' }}>
                       {channel.name}
                     </span>
                   )}

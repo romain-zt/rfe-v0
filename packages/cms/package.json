@@ -44,6 +44,10 @@
       "types": "./src/components/LivePreview/index.tsx",
       "default": "./src/components/LivePreview/index.tsx"
     },
+    "./components/SlugField": {
+      "types": "./src/components/SlugField/index.tsx",
+      "default": "./src/components/SlugField/index.tsx"
+    },
     "./fields/client": {
       "types": "./src/fields/client.ts",
       "default": "./src/fields/client.ts"

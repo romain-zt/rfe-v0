@@ -24,7 +24,18 @@ export const Works: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true },
-    { name: 'slug', type: 'text', required: true, unique: true, admin: { position: 'sidebar' } },
+    {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '@rfe/cms/components/SlugField#SlugField',
+        },
+      },
+    },
     { name: 'year', type: 'number', required: true, admin: { position: 'sidebar' } },
     {
       name: 'poster',

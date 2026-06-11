@@ -3,7 +3,7 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
     ALTER TABLE "site_config"
-      ADD COLUMN "contact_secondary_email" varchar DEFAULT 'kara@rohmfeiferentertainment.com';
+      ADD COLUMN IF NOT EXISTS "contact_secondary_email" varchar DEFAULT 'kara@rohmfeiferentertainment.com';
   `)
 }
 

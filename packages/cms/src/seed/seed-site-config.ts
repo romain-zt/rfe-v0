@@ -46,6 +46,7 @@ export async function seedSiteConfig(payload: Payload): Promise<void> {
       },
       contact: {
         email: 'elisabeth@rohmfeiferentertainment.com',
+        secondaryEmail: 'kara@rohmfeiferentertainment.com',
         phone: '',
         address: 'Los Angeles, California',
       },

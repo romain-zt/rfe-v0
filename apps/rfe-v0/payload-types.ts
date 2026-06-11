@@ -542,6 +542,22 @@ export interface Work {
     keywords?: string | null;
   };
   /**
+   * Broadcast / streaming partners — logo displayed on the poster card.
+   */
+  seenOn?:
+    | {
+        /**
+         * Channel / platform logo (transparent PNG preferred)
+         */
+        logo?: (number | null) | Media;
+        /**
+         * Short display name — e.g. TF1, CNews, Netflix
+         */
+        name: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Lower = first
    */
   sortOrder?: number | null;
@@ -1463,6 +1479,13 @@ export interface WorksSelect<T extends boolean = true> {
         description?: T;
         keywords?: T;
       };
+  seenOn?:
+    | T
+    | {
+        logo?: T;
+        name?: T;
+        id?: T;
+      };
   sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1889,6 +1912,7 @@ export interface SiteConfig {
   };
   contact?: {
     email?: string | null;
+    secondaryEmail?: string | null;
     phone?: string | null;
     address?: string | null;
   };
@@ -2026,6 +2050,7 @@ export interface SiteConfigSelect<T extends boolean = true> {
     | T
     | {
         email?: T;
+        secondaryEmail?: T;
         phone?: T;
         address?: T;
       };

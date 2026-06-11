@@ -31,12 +31,20 @@ export function ContactInfoComponent({ title, showEmail = true, showPhone = true
         </div>
       )}
 
-      {showEmail && info.email && (
+      {showEmail && (info.email || info.secondaryEmail) && (
         <div>
           <h4 className="text-sm tracking-wide uppercase mb-3">Email</h4>
-          <a href={`mailto:${info.email}`} className="text-muted-foreground text-sm hover:text-foreground transition-colors break-all">
-            {info.email}
-          </a>
+          <div className="space-y-2">
+            {[info.email, info.secondaryEmail].filter(Boolean).map((address) => (
+              <a
+                key={address}
+                href={`mailto:${address}`}
+                className="block text-muted-foreground text-sm hover:text-foreground transition-colors break-all"
+              >
+                {address}
+              </a>
+            ))}
+          </div>
         </div>
       )}
 

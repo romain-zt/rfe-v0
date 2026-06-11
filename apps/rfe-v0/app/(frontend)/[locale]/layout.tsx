@@ -133,6 +133,7 @@ export default async function RootLayout({
     })),
     contactInfo: {
       email: siteConfig?.contact?.email ?? '',
+      secondaryEmail: siteConfig?.contact?.secondaryEmail ?? '',
       phone: siteConfig?.contact?.phone ?? '',
       address: siteConfig?.contact?.address ?? '',
       social: {

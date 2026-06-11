@@ -75,6 +75,7 @@ export type AwardsNewsItem = {
 
 export type ContactInfo = {
   email: string
+  secondaryEmail?: string
   phone: string
   address: string
   social: {

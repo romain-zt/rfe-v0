@@ -339,6 +339,12 @@ export const SiteConfig: GlobalConfig = {
                   type: 'row',
                   fields: [
                     { name: 'email', type: 'email', defaultValue: 'elisabeth@rohmfeiferentertainment.com', admin: { width: '50%' } },
+                    { name: 'secondaryEmail', type: 'email', defaultValue: 'kara@rohmfeiferentertainment.com', admin: { width: '50%' } },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
                     { name: 'phone', type: 'text', admin: { width: '50%' } },
                   ],
                 },

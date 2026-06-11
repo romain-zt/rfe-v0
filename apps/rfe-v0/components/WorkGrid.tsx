@@ -222,7 +222,7 @@ function WorkCard({
                     background: 'rgba(7, 7, 8, 0.55)',
                     backdropFilter: 'blur(6px)',
                     borderRadius: '2px',
-                    padding: channel.logoUrl ? '3px 5px' : '3px 6px',
+                    padding: channel.logoUrl ? '4px 6px' : '3px 6px',
                   }}
                   title={channel.name}
                 >
@@ -231,10 +231,9 @@ function WorkCard({
                     <img
                       src={channel.logoUrl}
                       alt={channel.name}
-                      width={36}
-                      height={18}
-                      className="object-contain max-h-[18px] w-auto opacity-80"
-                      style={{ filter: 'brightness(0) invert(1)' }}
+                      width={48}
+                      height={48}
+                      className="object-contain max-h-[48px] w-auto"
                     />
                   ) : (
                     <span className="text-[8px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.7)' }}>

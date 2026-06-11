@@ -1,4 +1,13 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+function getSiteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+  return 'http://localhost:3000'
+}
+
 const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET || ''
 
 export type RevalidatePayload = {
@@ -11,7 +20,8 @@ export type RevalidatePayload = {
 
 export async function revalidateFrontend(body: RevalidatePayload = { scope: 'site' }) {
   try {
-    const res = await fetch(`${SITE_URL}/next/revalidate`, {
+    const siteUrl = getSiteUrl()
+    const res = await fetch(`${siteUrl}/next/revalidate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,16 +30,14 @@ export async function revalidateFrontend(body: RevalidatePayload = { scope: 'sit
       body: JSON.stringify(body),
     })
 
-    if (!res.ok && process.env.NODE_ENV !== 'production') {
-      console.warn(
+    if (!res.ok) {
+      console.error(
         `[revalidateFrontend] ${res.status} ${res.statusText} for`,
         body,
-        '— check NEXT_PUBLIC_SITE_URL and REVALIDATION_SECRET',
+        `— check NEXT_PUBLIC_SITE_URL (${siteUrl}) and REVALIDATION_SECRET`,
       )
     }
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn('[revalidateFrontend] request failed:', error)
-    }
+    console.error('[revalidateFrontend] request failed:', error)
   }
 }

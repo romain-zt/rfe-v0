@@ -227,7 +227,8 @@ function WorkCard({
                   title={channel.name}
                 >
                   {channel.logoUrl ? (
-                    <Image
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
                       src={channel.logoUrl}
                       alt={channel.name}
                       width={36}

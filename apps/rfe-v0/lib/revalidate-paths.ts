@@ -10,6 +10,7 @@ const REVALIDATE_NOW = { expire: 0 } as const
 /** Invalidate all CMS data cache tags. */
 export function revalidateCmsDataTags() {
   revalidateTag('cms', REVALIDATE_NOW)
+  revalidateTag('cms:works', REVALIDATE_NOW)
 }
 
 export function revalidatePageData(slug: string) {
@@ -22,9 +23,11 @@ export function revalidatePageData(slug: string) {
 }
 
 export function revalidateWorkData(slug: string) {
+  revalidateTag('cms:works', REVALIDATE_NOW)
   revalidateTag(`cms:works:${slug}`, REVALIDATE_NOW)
   for (const locale of LOCALES) {
     revalidatePath(`/${locale}/our-work/${slug}`, 'page')
+    revalidatePath(`/${locale}/development`, 'page')
   }
 }
 

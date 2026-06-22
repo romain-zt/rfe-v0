@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import { toSlug } from '../utilities/toSlug.ts'
 
 export const Works: CollectionConfig = {
   slug: 'works',
@@ -34,6 +35,19 @@ export const Works: CollectionConfig = {
         components: {
           Field: '@rfe/cms/components/SlugField#SlugField',
         },
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, data }) => {
+            if (typeof value === 'string' && value.trim().length > 0) {
+              return toSlug(value)
+            }
+            if (typeof data?.title === 'string' && data.title.trim().length > 0) {
+              return toSlug(data.title)
+            }
+            return value
+          },
+        ],
       },
     },
     { name: 'year', type: 'number', required: true, admin: { position: 'sidebar' } },

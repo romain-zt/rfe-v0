@@ -2,14 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { FieldLabel, TextInput, useField, useFormFields, useDocumentInfo } from '@payloadcms/ui'
-
-function toSlug(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/['']/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
+import { toSlug } from '../../utilities/toSlug.ts'
 
 export const SlugField: React.FC = () => {
   const { id } = useDocumentInfo()
@@ -29,18 +22,18 @@ export const SlugField: React.FC = () => {
     return typeof f?.value === 'string' ? f.value : ''
   })
 
-  const [isLocked, setIsLocked] = useState(!isNew)
+  const [autoGenerate, setAutoGenerate] = useState(isNew)
 
   useEffect(() => {
-    if (!isLocked && title) {
+    if (autoGenerate && title) {
       setValue(toSlug(title))
     }
-  }, [title, isLocked, setValue])
+  }, [title, autoGenerate, setValue])
 
-  const handleToggleLock = useCallback(() => {
-    setIsLocked((prev) => {
+  const handleToggleAutoGenerate = useCallback(() => {
+    setAutoGenerate((prev) => {
       const next = !prev
-      if (!next && title) {
+      if (next && title) {
         setValue(toSlug(title))
       }
       return next
@@ -58,9 +51,9 @@ export const SlugField: React.FC = () => {
             AfterInput={AfterInput}
             BeforeInput={BeforeInput}
             Error={errorMessage}
-            onChange={isLocked ? setValue : undefined}
+            onChange={setValue}
             path={path}
-            readOnly={!isLocked}
+            readOnly={autoGenerate}
             showError={showError}
             value={typeof value === 'string' ? value : ''}
             style={{ marginBottom: 0 }}
@@ -68,8 +61,8 @@ export const SlugField: React.FC = () => {
         </div>
         <button
           type="button"
-          onClick={handleToggleLock}
-          title={isLocked ? 'Auto-generate from title' : 'Edit manually'}
+          onClick={handleToggleAutoGenerate}
+          title={autoGenerate ? 'Edit slug manually' : 'Auto-generate from title'}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -79,19 +72,19 @@ export const SlugField: React.FC = () => {
             padding: 0,
             border: '1px solid var(--theme-elevation-150)',
             borderRadius: 'var(--style-radius-s, 4px)',
-            background: isLocked ? 'transparent' : 'var(--theme-elevation-100)',
+            background: autoGenerate ? 'var(--theme-elevation-100)' : 'transparent',
             cursor: 'pointer',
             flexShrink: 0,
             color: 'var(--theme-text)',
             fontSize: 16,
           }}
         >
-          {isLocked ? '✎' : '⟳'}
+          {autoGenerate ? '⟳' : '✎'}
         </button>
       </div>
-      {!isLocked && (
+      {autoGenerate && (
         <p style={{ marginTop: 4, fontSize: 11, color: 'var(--theme-elevation-500)' }}>
-          Auto-generating from title — click ⟳ to edit manually
+          Auto-generating from title — click ✎ to edit manually
         </p>
       )}
     </div>

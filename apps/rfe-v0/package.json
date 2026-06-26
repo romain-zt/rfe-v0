@@ -15,7 +15,9 @@
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
     "seed": "tsx scripts/seed/index.ts",
-    "update:works:20260626": "tsx scripts/seed/update-works-michael-20260626.ts"
+    "update:works:20260626": "tsx scripts/seed/update-works-michael-20260626.ts",
+    "canva:login": "tsx scripts/canva/export-deck-pages.ts --login --headed",
+    "canva:export": "tsx scripts/canva/export-deck-pages.ts --headed"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.50",
@@ -97,6 +99,7 @@
     "postcss": "catalog:",
     "sass": "^1.99.0",
     "tailwindcss": "catalog:",
+    "playwright": "^1.52.0",
     "tsx": "^4.20.3",
     "tw-animate-css": "1.3.3",
     "typescript": "catalog:"

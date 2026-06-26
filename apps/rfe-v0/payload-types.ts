@@ -72,6 +72,7 @@ export interface Config {
     works: Work;
     'team-members': TeamMember;
     'press-items': PressItem;
+    platforms: Platform;
     users: User;
     media: Media;
     forms: Form;
@@ -89,6 +90,7 @@ export interface Config {
     works: WorksSelect<false> | WorksSelect<true>;
     'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
     'press-items': PressItemsSelect<false> | PressItemsSelect<true>;
+    platforms: PlatformsSelect<false> | PlatformsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -501,7 +503,24 @@ export interface Work {
   year: number;
   poster?: (number | null) | Media;
   tags?: ('Drama' | 'Thriller' | 'True Crime' | 'Unscripted')[] | null;
-  description?: string | null;
+  /**
+   * Supports bold, italic, links, and multiple paragraphs.
+   */
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   /**
    * YouTube or Vimeo embed URL
    */
@@ -542,25 +561,32 @@ export interface Work {
     keywords?: string | null;
   };
   /**
-   * Broadcast / streaming partners — logo displayed on the poster card.
+   * Broadcast / streaming partners shown below the poster card.
    */
-  seenOn?:
-    | {
-        /**
-         * Channel / platform logo (transparent PNG preferred)
-         */
-        logo?: (number | null) | Media;
-        /**
-         * Short display name — e.g. TF1, CNews, Netflix
-         */
-        name: string;
-        id?: string | null;
-      }[]
-    | null;
+  seenOn?: (number | Platform)[] | null;
   /**
    * Lower = first
    */
   sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Broadcast and streaming platforms. Reusable across works.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "platforms".
+ */
+export interface Platform {
+  id: number;
+  /**
+   * Short display name — e.g. Lifetime, TF1, Netflix
+   */
+  name: string;
+  /**
+   * Channel / platform logo (transparent PNG preferred)
+   */
+  logo?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -1125,6 +1151,10 @@ export interface PayloadLockedDocument {
         value: number | PressItem;
       } | null)
     | ({
+        relationTo: 'platforms';
+        value: number | Platform;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null)
@@ -1479,13 +1509,7 @@ export interface WorksSelect<T extends boolean = true> {
         description?: T;
         keywords?: T;
       };
-  seenOn?:
-    | T
-    | {
-        logo?: T;
-        name?: T;
-        id?: T;
-      };
+  seenOn?: T;
   sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1514,6 +1538,16 @@ export interface PressItemsSelect<T extends boolean = true> {
   url?: T;
   description?: T;
   sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "platforms_select".
+ */
+export interface PlatformsSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }

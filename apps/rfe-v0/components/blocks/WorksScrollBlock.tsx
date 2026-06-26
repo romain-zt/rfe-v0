@@ -10,7 +10,7 @@ import { getWorkSlug } from '@/lib/works'
 import type { WorkItem } from '@/lib/i18n/types'
 
 type ScrollItem = {
-  work?: { title?: string; year?: number; poster?: { url?: string } | number; slug?: string } | number | null
+  work?: { title?: string; year?: number; poster?: { url?: string } | number; slug?: string; seenOn?: { name: string; logoUrl?: string }[] } | number | null
   media?: { url?: string; alt?: string } | number | null
   label?: string
   size?: 'large' | 'medium' | 'small'
@@ -47,6 +47,11 @@ function getTitle(item: ScrollItem): string {
 function getYear(item: ScrollItem): string {
   if (item.work && typeof item.work === 'object') return String(item.work.year || '')
   return ''
+}
+
+function getSeenOn(item: ScrollItem): { name: string; logoUrl?: string }[] {
+  if (item.work && typeof item.work === 'object' && item.work.seenOn) return item.work.seenOn
+  return []
 }
 
 function getItemSlug(item: ScrollItem, allWorks: WorkItem[]): string | null {
@@ -311,7 +316,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
       : allWorks.filter(w => !w.category && w.src).slice(0, 10)
 
     return sourceWorks.map((w) => ({
-      work: { title: w.title, year: w.year, poster: { url: w.src }, slug: w.slug },
+      work: { title: w.title, year: w.year, poster: { url: w.src }, slug: w.slug, seenOn: w.seenOn },
     }))
   })()
 
@@ -381,6 +386,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                 const imgUrl = getImageUrl(item)
                 const itemTitle = getTitle(item)
                 const year = getYear(item)
+                const seenOn = getSeenOn(item)
                 const slug = getItemSlug(item, allWorks)
                 const href = slug ? `/${lang}/our-work/${slug}` : null
 
@@ -422,6 +428,34 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                         </span>
                       )}
                     </div>
+                    {seenOn.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-2 pb-1">
+                        {seenOn.map((platform, pi) => (
+                          <div
+                            key={pi}
+                            className="flex items-center justify-center px-2 py-1"
+                            style={{
+                              background: 'var(--tone-charcoal)',
+                              border: '1px solid rgba(245,240,235,0.08)',
+                            }}
+                            title={platform.name}
+                          >
+                            {platform.logoUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={platform.logoUrl}
+                                alt={platform.name}
+                                className="object-contain h-4 w-auto max-w-[56px]"
+                              />
+                            ) : (
+                              <span className="text-[9px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.6)' }}>
+                                {platform.name}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <div className="mt-3">
                       <p className="font-serif text-base md:text-lg font-light tracking-wide transition-colors duration-500 group-hover:text-[rgba(245,240,235,0.65)]" style={{ color: 'rgba(245, 240, 235, 0.38)' }}>
                         {itemTitle}

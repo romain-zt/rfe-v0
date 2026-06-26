@@ -2,7 +2,27 @@
 
 > Your guide to updating everything on [rohmfeiferentertainment.net](https://www.rohmfeiferentertainment.net/)
 >
+> **Online version:** [rohmfeiferentertainment.net/docs/backoffice](https://www.rohmfeiferentertainment.net/docs/backoffice/) · **PDF:** [backoffice-guide.pdf](https://www.rohmfeiferentertainment.net/docs/backoffice/backoffice-guide.pdf)
+>
 > If something breaks or looks weird, don't panic — you can always undo your changes (see [How to undo a mistake](#how-to-undo-a-mistake)).
+
+---
+
+<details>
+<summary><strong>For developers — publish / update this guide</strong></summary>
+
+Source files live in `docs/backoffice/`. To publish to the live site:
+
+```bash
+pnpm docs:backoffice        # copy to public/docs/backoffice/
+pnpm docs:backoffice:pdf    # copy + generate PDF
+```
+
+After deploy, Lis and Kara can open:
+- https://www.rohmfeiferentertainment.net/docs/backoffice/
+- https://www.rohmfeiferentertainment.net/docs/backoffice/backoffice-guide.pdf
+
+</details>
 
 ---
 

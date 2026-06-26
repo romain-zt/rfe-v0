@@ -62,6 +62,7 @@ const GROUPS: GroupDef[] = [
     name: 'Produced (Home page selection)',
     slug: 'home-produced',
     slugs: [
+      'marrying-a-murderer',
       'sick-puppy', 'the-chase-the-josephine-wentzel-story',
       'a-dentist-to-die-for', 'husband-father-killer', 'wife-stalker',
       'the-dating-app-killer', 'dont-trust-the-girls-upstairs', 'our-daughter-has-disappeared',
@@ -79,7 +80,7 @@ const GROUPS: GroupDef[] = [
     name: 'Films (Home Page selection)',
     slug: 'home-films',
     slugs: [
-      'marrying-a-murderer', 'margret-stevie', 'feather', '1-better',
+      'margret-stevie', 'feather', '1-better',
       'rescue-of-jerusalem', 'if-you-tell', 'passing-love', 'horseplay',
     ],
   },

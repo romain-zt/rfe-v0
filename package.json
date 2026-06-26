@@ -8,7 +8,9 @@
     "typecheck": "turbo run typecheck",
     "clean": "turbo run clean && rm -rf node_modules",
     "seed": "pnpm --filter @rfe/v0 seed",
-    "fresh": "pnpm --filter @rfe/v0 payload migrate:fresh"
+    "fresh": "pnpm --filter @rfe/v0 payload migrate:fresh",
+    "docs:backoffice": "pnpm --filter @rfe/v0 docs:backoffice",
+    "docs:backoffice:pdf": "pnpm --filter @rfe/v0 docs:backoffice:pdf"
   },
   "devDependencies": {
     "next": "catalog:",

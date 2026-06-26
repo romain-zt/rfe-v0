@@ -17,7 +17,9 @@
     "seed": "tsx scripts/seed/index.ts",
     "update:works:20260626": "tsx scripts/seed/update-works-michael-20260626.ts",
     "canva:login": "tsx scripts/canva/export-deck-pages.ts --login --headed",
-    "canva:export": "tsx scripts/canva/export-deck-pages.ts --headed"
+    "canva:export": "tsx scripts/canva/export-deck-pages.ts --headed",
+    "docs:backoffice": "tsx scripts/docs/sync-backoffice-docs.ts",
+    "docs:backoffice:pdf": "tsx scripts/docs/sync-backoffice-docs.ts --pdf"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.50",

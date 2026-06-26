@@ -188,7 +188,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   // IN PRODUCTION
   // ═══════════════════════════════════════════════════════════════════════════
   {
-    title: 'A Dentist to Die For', slug: 'a-dentist-to-die-for', year: 2026,
+    title: 'A Doctor to Die For', slug: 'a-dentist-to-die-for', year: 2026,
     src: '/assets/posters/a-dentist-to-die-for.png', tags: ['True Crime'], category: 'film', productionStage: 'in-production',
     seenOnNames: ['A&E Global Media'],
     description: [

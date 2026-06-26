@@ -1,5 +1,8 @@
 import type { CollectionConfig } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from '../utilities/cmsRevalidationHooks.ts'
 import { toSlug } from '../utilities/toSlug.ts'
 
 export const Works: CollectionConfig = {
@@ -13,15 +16,8 @@ export const Works: CollectionConfig = {
     group: 'Content',
   },
   hooks: {
-    afterChange: [
-      ({ doc, previousDoc }) => {
-        void revalidateFrontend({ collection: 'works', slug: doc.slug as string })
-        if (previousDoc?.slug && previousDoc.slug !== doc.slug) {
-          void revalidateFrontend({ collection: 'works', slug: previousDoc.slug as string })
-        }
-      },
-    ],
-    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   fields: [
     { name: 'title', type: 'text', required: true },

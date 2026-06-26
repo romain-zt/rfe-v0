@@ -20,7 +20,7 @@ export type WorkCredit = {
 export type Platform = {
   id: number
   name: string
-  logo?: { url: string; sizes?: { thumbnail?: { url: string } } } | number | null
+  logo?: { url: string; updatedAt?: string; sizes?: { thumbnail?: { url: string } } } | number | null
   updatedAt: string
   createdAt: string
 }
@@ -32,6 +32,7 @@ export type Work = {
   year: number
   poster?: {
     url: string
+    updatedAt?: string
     sizes?: {
       thumbnail?: { url: string }
       poster?: { url: string }
@@ -156,7 +157,7 @@ async function fetchWorks(category?: string) {
     collection: 'works',
     limit: 100,
     sort: 'sortOrder',
-    depth: 1,
+    depth: 2,
     ...(category ? { where: { category: { equals: category } } } : {}),
   })
   return result as unknown as { docs: Work[]; totalDocs: number }
@@ -168,7 +169,7 @@ async function fetchWorkBySlug(slug: string) {
     collection: 'works',
     where: { slug: { equals: slug } },
     limit: 1,
-    depth: 1,
+    depth: 2,
   })
   return (result.docs[0] as unknown as Work) ?? null
 }
@@ -238,15 +239,21 @@ async function fetchWorksGroup(slug: string) {
 
 const cacheOpts = { revalidate: false as const }
 
+/** Skip unstable_cache in dev — it persists across refreshes and blocks CMS edits from showing. */
+const useCmsCache = process.env.NODE_ENV === 'production'
+
 export async function getWorks(query?: { category?: string }) {
   const category = query?.category ?? 'all'
+  const args = category === 'all' ? undefined : category
+  if (!useCmsCache) return fetchWorks(args)
   return unstable_cache(fetchWorks, ['cms-works', category], {
     tags: ['cms', 'cms:works'],
     ...cacheOpts,
-  })(category === 'all' ? undefined : category)
+  })(args)
 }
 
 export async function getWorkBySlug(slug: string) {
+  if (!useCmsCache) return fetchWorkBySlug(slug)
   return unstable_cache(fetchWorkBySlug, ['cms-work', slug], {
     tags: ['cms', 'cms:works', `cms:works:${slug}`],
     ...cacheOpts,
@@ -258,6 +265,7 @@ export async function getWorksByCategory(category: string) {
 }
 
 export async function getTeamMembers() {
+  if (!useCmsCache) return fetchTeamMembers()
   return unstable_cache(fetchTeamMembers, ['cms-team-members'], {
     tags: ['cms', 'cms:team-members'],
     ...cacheOpts,
@@ -265,6 +273,7 @@ export async function getTeamMembers() {
 }
 
 export async function getPressItems() {
+  if (!useCmsCache) return fetchPressItems()
   return unstable_cache(fetchPressItems, ['cms-press-items'], {
     tags: ['cms', 'cms:press-items'],
     ...cacheOpts,
@@ -272,6 +281,7 @@ export async function getPressItems() {
 }
 
 export async function getSiteConfig() {
+  if (!useCmsCache) return fetchSiteConfig()
   return unstable_cache(fetchSiteConfig, ['cms-site-config'], {
     tags: ['cms', 'cms:globals', 'cms:globals:site-config'],
     ...cacheOpts,
@@ -279,6 +289,7 @@ export async function getSiteConfig() {
 }
 
 export async function getNavigation() {
+  if (!useCmsCache) return fetchNavigation()
   return unstable_cache(fetchNavigation, ['cms-navigation'], {
     tags: ['cms', 'cms:globals', 'cms:globals:navigation'],
     ...cacheOpts,
@@ -287,6 +298,7 @@ export async function getNavigation() {
 
 export async function getPageBySlug(slug: string, draft = false) {
   if (draft) return fetchPageBySlug(slug, true)
+  if (!useCmsCache) return fetchPageBySlug(slug, false)
 
   return unstable_cache(fetchPageBySlug, ['cms-page', slug], {
     tags: ['cms', 'cms:pages', `cms:pages:${slug}`],
@@ -295,6 +307,7 @@ export async function getPageBySlug(slug: string, draft = false) {
 }
 
 export async function getAllPages() {
+  if (!useCmsCache) return fetchAllPages()
   return unstable_cache(fetchAllPages, ['cms-all-pages'], {
     tags: ['cms', 'cms:pages'],
     ...cacheOpts,
@@ -302,6 +315,7 @@ export async function getAllPages() {
 }
 
 export async function getWorksGroup(slug: string) {
+  if (!useCmsCache) return fetchWorksGroup(slug)
   return unstable_cache(fetchWorksGroup, ['cms-works-group', slug], {
     tags: ['cms', 'cms:works-groups', `cms:works-groups:${slug}`],
     ...cacheOpts,

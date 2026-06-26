@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from '../utilities/cmsRevalidationHooks.ts'
 
 export const Platforms: CollectionConfig = {
   slug: 'platforms',
@@ -10,6 +14,10 @@ export const Platforms: CollectionConfig = {
     defaultColumns: ['name', 'updatedAt'],
     group: 'Content',
     description: 'Broadcast and streaming platforms. Reusable across works.',
+  },
+  hooks: {
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   fields: [
     {

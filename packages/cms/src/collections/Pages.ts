@@ -9,7 +9,10 @@ import {
 import { hero } from '../fields/hero.ts'
 import { blocks } from '../blocks/index.ts'
 import { generatePreviewPath } from '../utilities/generatePreviewPath.ts'
-import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from '../utilities/cmsRevalidationHooks.ts'
 import { sanitizePageLayout } from '../utilities/sanitizePageLayout.ts'
 
 export const Pages: CollectionConfig = {
@@ -204,18 +207,7 @@ export const Pages: CollectionConfig = {
         return data
       },
     ],
-    afterChange: [
-      ({ doc, previousDoc }) => {
-        const wasPublished = doc._status === 'published'
-        const slugChanged = doc.slug !== previousDoc?.slug
-        if (wasPublished || slugChanged) {
-          revalidateFrontend({ collection: 'pages', slug: doc.slug })
-          if (slugChanged && previousDoc?.slug) {
-            revalidateFrontend({ collection: 'pages', slug: previousDoc.slug })
-          }
-        }
-      },
-    ],
-    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
 }

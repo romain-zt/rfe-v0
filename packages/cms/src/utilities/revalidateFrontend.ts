@@ -1,3 +1,20 @@
+export type RevalidatePayload = {
+  collection?: string
+  slug?: string
+  global?: string
+  /** Purge all CMS-driven routes (works, pages, layout data). */
+  scope?: 'site'
+}
+
+type RevalidatorFn = (body: RevalidatePayload) => Promise<void>
+
+let directRevalidator: RevalidatorFn | null = null
+
+/** Register in-process revalidation (integrated Next.js app — avoids HTTP self-fetch). */
+export function registerRevalidator(fn: RevalidatorFn) {
+  directRevalidator = fn
+}
+
 function getSiteUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')
@@ -10,15 +27,22 @@ function getSiteUrl(): string {
 
 const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET || ''
 
-export type RevalidatePayload = {
-  collection?: string
-  slug?: string
-  global?: string
-  /** Purge all CMS-driven routes (works, pages, layout data). */
-  scope?: 'site'
-}
+/**
+ * Purge Next.js caches after CMS edits. Always performs full-site revalidation so
+ * list pages, layout data, and related media stay in sync.
+ */
+export async function revalidateFrontend(_body: RevalidatePayload = { scope: 'site' }) {
+  const body: RevalidatePayload = { scope: 'site' }
 
-export async function revalidateFrontend(body: RevalidatePayload = { scope: 'site' }) {
+  if (directRevalidator) {
+    try {
+      await directRevalidator(body)
+      return
+    } catch (error) {
+      console.error('[revalidateFrontend] direct revalidation failed:', error)
+    }
+  }
+
   try {
     const siteUrl = getSiteUrl()
     const res = await fetch(`${siteUrl}/next/revalidate`, {
@@ -32,8 +56,7 @@ export async function revalidateFrontend(body: RevalidatePayload = { scope: 'sit
 
     if (!res.ok) {
       console.error(
-        `[revalidateFrontend] ${res.status} ${res.statusText} for`,
-        body,
+        `[revalidateFrontend] ${res.status} ${res.statusText}`,
         `— check NEXT_PUBLIC_SITE_URL (${siteUrl}) and REVALIDATION_SECRET`,
       )
     }

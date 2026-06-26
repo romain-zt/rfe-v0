@@ -1,5 +1,8 @@
 import type { CollectionConfig } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from '../utilities/cmsRevalidationHooks.ts'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -10,8 +13,8 @@ export const Media: CollectionConfig = {
     group: 'Admin',
   },
   hooks: {
-    afterChange: [() => { void revalidateFrontend({ collection: 'media' }) }],
-    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   upload: {
     imageSizes: [

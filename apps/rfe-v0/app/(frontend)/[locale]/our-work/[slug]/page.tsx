@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { SITE_CONFIG, OG_IMAGES } from '@/lib/seo'
 import { getWorks, getWorkBySlug as getCmsWorkBySlug } from '@/lib/cms'
 import { generateWorkKeywords, generateWorkSeoDescription, lexicalToText } from '@/lib/works'
+import { mapSeenOnPlatforms, withMediaVersion } from '@/lib/media-url'
 import { WorkPageJsonLd, BreadcrumbJsonLd } from '@/components/JsonLd'
 import WorkPageContent from './WorkPageContent'
 import type { Language } from '@/lib/i18n/types'
@@ -96,12 +97,14 @@ export default async function WorkPage({ params }: Props) {
 
   if (!cmsWork) notFound()
 
+  const poster = typeof cmsWork.poster === 'object' && cmsWork.poster ? cmsWork.poster : null
+
   const work = {
     id: cmsWork.id,
     title: cmsWork.title,
     slug: cmsWork.slug,
     year: cmsWork.year,
-    src: typeof cmsWork.poster === 'object' && cmsWork.poster ? cmsWork.poster.url : '',
+    src: poster?.url ? withMediaVersion(poster.url, poster.updatedAt) : '',
     tags: cmsWork.tags ?? [],
     description: lexicalToText(cmsWork.description),
     descriptionRich: cmsWork.description ?? undefined,
@@ -110,11 +113,7 @@ export default async function WorkPage({ params }: Props) {
     productionStage: cmsWork.productionStage,
     subcategory: cmsWork.subcategory,
     credits: cmsWork.credits || [],
-    seenOn: (cmsWork.seenOn || []).flatMap((p) => {
-      if (typeof p === 'number') return []
-      const logoUrl = p.logo && typeof p.logo === 'object' ? p.logo.url : undefined
-      return [{ name: p.name, logoUrl }]
-    }),
+    seenOn: mapSeenOnPlatforms(cmsWork.seenOn),
   }
 
   const breadcrumbItems = [

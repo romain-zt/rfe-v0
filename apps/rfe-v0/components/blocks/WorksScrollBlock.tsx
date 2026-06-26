@@ -445,7 +445,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                               <img
                                 src={platform.logoUrl}
                                 alt={platform.name}
-                                className="object-contain h-4 w-auto max-w-[56px]"
+                                className="object-cover h-12 w-auto max-w-[68px]"
                               />
                             ) : (
                               <span className="text-[9px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.6)' }}>

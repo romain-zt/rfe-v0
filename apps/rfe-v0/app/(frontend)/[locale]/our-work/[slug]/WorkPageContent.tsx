@@ -132,43 +132,10 @@ export default function WorkPageContent({ work }: WorkPageContentProps) {
             ))}
           </div>
 
-          {work.description && !work.descriptionRich && (
+          {work.description && (
             <p className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed max-w-3xl">
               {work.description}
             </p>
-          )}
-
-          {work.descriptionRich && (
-            <RichText content={work.descriptionRich} className="max-w-3xl" />
-          )}
-
-          {work.seenOn && work.seenOn.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-2">
-              {work.seenOn.map((platform, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-center px-3 py-1.5"
-                  style={{
-                    background: 'var(--tone-charcoal)',
-                    border: '1px solid rgba(245,240,235,0.1)',
-                  }}
-                  title={platform.name}
-                >
-                  {platform.logoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={platform.logoUrl}
-                      alt={platform.name}
-                      className="object-contain h-5 w-auto max-w-[72px]"
-                    />
-                  ) : (
-                    <span className="text-[10px] uppercase tracking-[0.15em] font-light" style={{ color: 'rgba(245, 240, 235, 0.7)' }}>
-                      {platform.name}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
           )}
 
           {work.credits && work.credits.length > 0 && (

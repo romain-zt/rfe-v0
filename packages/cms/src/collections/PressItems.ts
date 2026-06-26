@@ -1,5 +1,8 @@
 import type { CollectionConfig } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from '../utilities/cmsRevalidationHooks.ts'
 
 export const PressItems: CollectionConfig = {
   slug: 'press-items',
@@ -8,8 +11,8 @@ export const PressItems: CollectionConfig = {
   },
   admin: { useAsTitle: 'title', defaultColumns: ['title', 'source', 'date'], group: 'Content' },
   hooks: {
-    afterChange: [() => { void revalidateFrontend({ collection: 'press-items' }) }],
-    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   fields: [
     { name: 'title', type: 'text', required: true },

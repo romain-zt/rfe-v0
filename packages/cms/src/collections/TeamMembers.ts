@@ -1,5 +1,8 @@
 import type { CollectionConfig } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from '../utilities/cmsRevalidationHooks.ts'
 
 export const TeamMembers: CollectionConfig = {
   slug: 'team-members',
@@ -8,8 +11,8 @@ export const TeamMembers: CollectionConfig = {
   },
   admin: { useAsTitle: 'name', group: 'Content' },
   hooks: {
-    afterChange: [() => { void revalidateFrontend({ collection: 'team-members' }) }],
-    afterDelete: [() => { void revalidateFrontend({ scope: 'site' }) }],
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   fields: [
     { name: 'name', type: 'text', required: true },

@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import { revalidateSiteGlobalAfterChange } from '../utilities/cmsRevalidationHooks.ts'
 
 export const Navigation: GlobalConfig = {
   slug: 'navigation',
@@ -11,9 +11,7 @@ export const Navigation: GlobalConfig = {
     group: 'Settings',
   },
   hooks: {
-    afterChange: [
-      () => { revalidateFrontend({ global: 'navigation' }) },
-    ],
+    afterChange: [revalidateSiteGlobalAfterChange],
   },
   fields: [
     {

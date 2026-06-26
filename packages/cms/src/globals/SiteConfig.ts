@@ -1,5 +1,5 @@
 import type { GlobalConfig, Field } from 'payload'
-import { revalidateFrontend } from '../utilities/revalidateFrontend.ts'
+import { revalidateSiteGlobalAfterChange } from '../utilities/cmsRevalidationHooks.ts'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -86,9 +86,7 @@ export const SiteConfig: GlobalConfig = {
     group: 'Settings',
   },
   hooks: {
-    afterChange: [
-      () => { revalidateFrontend({ global: 'site-config' }) },
-    ],
+    afterChange: [revalidateSiteGlobalAfterChange],
   },
   fields: [
     {

@@ -16,6 +16,10 @@
       "types": "./src/config.ts",
       "default": "./src/config.ts"
     },
+    "./utilities/revalidateFrontend": {
+      "types": "./src/utilities/revalidateFrontend.ts",
+      "default": "./src/utilities/revalidateFrontend.ts"
+    },
     "./client": {
       "types": "./src/client.ts",
       "default": "./src/client.ts"

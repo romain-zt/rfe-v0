@@ -17,6 +17,7 @@ import {
   getPressItems,
 } from '@/lib/cms'
 import { lexicalToText } from '@/lib/works'
+import { mapSeenOnPlatforms, withMediaVersion } from '@/lib/media-url'
 import type { Language } from '@/lib/i18n/types'
 import './globals.css'
 
@@ -93,12 +94,14 @@ export default async function RootLayout({
     getPressItems().catch(() => ({ docs: [] })),
   ])
 
-  const works = worksRes.docs.map((w) => ({
+  const works = worksRes.docs.map((w) => {
+    const poster = typeof w.poster === 'object' && w.poster ? w.poster : null
+    return {
     id: w.id,
     title: w.title,
     slug: w.slug,
     year: w.year,
-    src: typeof w.poster === 'object' && w.poster ? w.poster.url : '',
+    src: poster?.url ? withMediaVersion(poster.url, poster.updatedAt) : '',
     tags: w.tags || [],
     description: lexicalToText(w.description),
     descriptionRich: w.description ?? undefined,
@@ -107,12 +110,9 @@ export default async function RootLayout({
     productionStage: w.productionStage,
     subcategory: w.subcategory,
     credits: w.credits || [],
-    seenOn: (w.seenOn || []).flatMap((p) => {
-      if (typeof p === 'number') return []
-      const logoUrl = p.logo && typeof p.logo === 'object' ? p.logo.url : undefined
-      return [{ name: p.name, logoUrl }]
-    }),
-  }))
+    seenOn: mapSeenOnPlatforms(w.seenOn),
+  }
+  })
 
   const teamMembers = teamRes.docs.map((m) => ({
     id: m.id,

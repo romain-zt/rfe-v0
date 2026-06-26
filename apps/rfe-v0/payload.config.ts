@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 import { buildRfeConfig } from '@rfe/cms/config'
 import { migrations } from './migrations'
+import './lib/register-revalidator'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 

@@ -30,7 +30,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
         "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
       );
-    EXCEPTION WHEN duplicate_table THEN NULL;
+    EXCEPTION WHEN duplicate_table OR unique_violation THEN NULL;
     END
     $$;
   `)
@@ -61,7 +61,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         "path"         varchar NOT NULL,
         "platforms_id" integer
       );
-    EXCEPTION WHEN duplicate_table THEN NULL;
+    EXCEPTION WHEN duplicate_table OR unique_violation THEN NULL;
     END
     $$;
   `)
@@ -252,7 +252,7 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
         "logo_id"    integer,
         "name"       varchar NOT NULL
       );
-    EXCEPTION WHEN duplicate_table THEN NULL;
+    EXCEPTION WHEN duplicate_table OR unique_violation THEN NULL;
     END
     $$;
   `)

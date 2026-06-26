@@ -5,13 +5,14 @@ type SeenOnItem = {
 
 type SeenOnBadgesProps = {
   items: SeenOnItem[]
+  className?: string
 }
 
-export function SeenOnBadges({ items }: SeenOnBadgesProps) {
+export function SeenOnBadges({ items, className }: SeenOnBadgesProps) {
   if (items.length === 0) return null
 
   return (
-    <div className="grid grid-cols-3 gap-1.5 pt-2 pb-1">
+    <div className={`grid grid-cols-3 gap-1.5 pt-2 pb-1 ${className ?? ''}`}>
       {items.map((channel, i) => (
         <div
           key={i}

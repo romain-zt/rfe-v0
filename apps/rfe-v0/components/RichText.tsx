@@ -14,6 +14,11 @@ type LexicalElementNode = {
   tag?: string
   listType?: string
   url?: string
+  fields?: {
+    url?: string
+    newTab?: boolean
+    linkType?: string
+  }
   children?: LexicalAnyNode[]
   direction?: string
   indent?: number
@@ -25,6 +30,13 @@ type LexicalAnyNode = LexicalTextNode | LexicalElementNode
 
 type LexicalRoot = {
   root: LexicalElementNode
+}
+
+function resolveLinkHref(rawUrl?: string): string {
+  const url = (rawUrl || '').trim()
+  if (!url || url === '#') return '#'
+  if (/^(https?:\/\/|mailto:|tel:|\/|#)/.test(url)) return url
+  return `https://${url}`
 }
 
 function renderNode(node: LexicalAnyNode, key: number | string): React.ReactNode {
@@ -76,14 +88,15 @@ function renderNode(node: LexicalAnyNode, key: number | string): React.ReactNode
     case 'listitem':
       return <li key={key}>{children}</li>
 
-    case 'link': {
-      const href = (el as LexicalElementNode & { url?: string }).url ?? '#'
+    case 'link':
+    case 'autolink': {
+      const href = resolveLinkHref(el.fields?.url || el.url)
+      const openInNewTab = el.fields?.newTab ?? true
       return (
         <a
           key={key}
           href={href}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...(openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
           className="underline decoration-foreground/30 underline-offset-4 hover:decoration-foreground/70 transition-colors"
         >
           {children}

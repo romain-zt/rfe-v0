@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useLanguage } from '@/components/LanguageContext'
 import { extractYouTubeId } from '@/lib/works'
 import { RichText } from '@/components/RichText'
+import { SeenOnBadges } from '@/components/SeenOnBadges'
 import type { WorkItem, ProductionStage } from '@/lib/i18n/types'
 import { PRODUCTION_STAGE_LABELS } from '@/lib/i18n/types'
 
@@ -102,6 +103,10 @@ export default function WorkPageContent({ work }: WorkPageContentProps) {
               }}
             />
           </div>
+
+          {work.seenOn && work.seenOn.length > 0 && (
+            <SeenOnBadges items={work.seenOn} className="max-w-xs sm:max-w-sm" />
+          )}
         </div>
 
         <div
@@ -132,11 +137,13 @@ export default function WorkPageContent({ work }: WorkPageContentProps) {
             ))}
           </div>
 
-          {work.description && (
+          {work.descriptionRich ? (
+            <RichText content={work.descriptionRich} className="max-w-3xl" />
+          ) : work.description ? (
             <p className="text-sm sm:text-base text-muted-foreground/80 leading-relaxed max-w-3xl">
               {work.description}
             </p>
-          )}
+          ) : null}
 
           {work.credits && work.credits.length > 0 && (
             <section

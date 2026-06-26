@@ -41,6 +41,39 @@ type WorkSeedItem = {
   seenOnNames?: string[]
 }
 
+function generateWorkSeo(item: WorkSeedItem): { title: string; description: string; keywords: string } {
+  const categoryLabel = item.category === 'series' ? 'Series' : item.category === 'unscripted' ? 'Unscripted' : 'Film'
+  const tagLabel = item.tags[0] || categoryLabel
+  const title = `${item.title} (${item.year}) — ${tagLabel} | RFE`
+
+  const firstParagraph = item.description[0] || `${item.title} — a production by RFE.`
+  let description: string
+  if (firstParagraph.length <= 160) {
+    description = firstParagraph
+  } else {
+    const truncated = firstParagraph.slice(0, 157)
+    const lastSpace = truncated.lastIndexOf(' ')
+    description = truncated.slice(0, lastSpace) + '...'
+  }
+
+  const creditNames = (item.credits || []).slice(0, 3).map(c => c.name)
+  const seenOnLabels = (item.seenOnNames || []).slice(0, 2)
+  const parts: string[] = [
+    item.title,
+    ...item.tags,
+    categoryLabel.toLowerCase(),
+    String(item.year),
+    ...creditNames,
+    ...seenOnLabels,
+    'RFE',
+    'film production',
+    'female-led production',
+  ].filter(Boolean)
+  const keywords = [...new Set(parts)].join(', ')
+
+  return { title, description, keywords }
+}
+
 function paragraphsToLexical(paragraphs: string[]) {
   return {
     root: {
@@ -724,6 +757,7 @@ export async function seedWorks(payload: Payload, mediaMap: Map<string, number>,
       productionStage: item.productionStage || undefined,
       subcategory: item.subcategory || '',
       sortOrder: i,
+      seo: generateWorkSeo(item),
       ...(posterId ? { poster: posterId } : {}),
       ...(seenOn?.length ? { seenOn } : {}),
     }

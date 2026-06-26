@@ -277,18 +277,44 @@ interface WorkPageJsonLdProps {
   slug: string
 }
 
+function resolveWorkSchemaType(work: WorkItem): string {
+  if (work.category === 'series') return 'TVSeries'
+  return 'Movie'
+}
+
+function buildCreditsSchema(credits?: WorkItem['credits']) {
+  if (!credits?.length) return {}
+
+  const personsByRole: Record<string, { '@type': 'Person'; name: string; url?: string }[]> = {}
+
+  for (const c of credits) {
+    const person: { '@type': 'Person'; name: string; url?: string } = {
+      '@type': 'Person',
+      name: c.name,
+      ...(c.imdbUrl ? { url: c.imdbUrl } : {}),
+    }
+
+    const schemaRole =
+      c.role === 'director' ? 'director'
+        : c.role === 'star' ? 'actor'
+          : c.role === 'writer' || c.role === 'creator' ? 'author'
+            : c.role === 'producer' || c.role === 'ep' || c.role === 'co-producer' ? 'producer'
+              : null
+
+    if (schemaRole) {
+      ;(personsByRole[schemaRole] ??= []).push(person)
+    }
+  }
+
+  return personsByRole
+}
+
 export function WorkPageJsonLd({ work, lang, slug }: WorkPageJsonLdProps) {
   const description = generateWorkSeoDescription(work, lang)
   const workUrl = `${SITE_CONFIG.url}/${lang}/our-work/${slug}`
   const youtubeId = work.videoUrl ? extractYouTubeId(work.videoUrl) : null
   const posterUrl = work.src.startsWith('http') ? work.src : `${SITE_CONFIG.url}${work.src}`
-  
-  // Determine if it's a documentary or restoration work
-  const isDocumentary = work.tags.some(tag => 
-    ['Documentary Production', 'Production Documentaire', 'Documentary', 'Documentaire'].includes(tag)
-  )
-  
-  // Build dedicated VideoObject schema when there's a YouTube video
+
   const videoSchema = youtubeId ? {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
@@ -305,16 +331,18 @@ export function WorkPageJsonLd({ work, lang, slug }: WorkPageJsonLdProps) {
       '@id': `${SITE_CONFIG.url}/#organization`,
     },
   } : null
-  
-  // Build the main schema - use Movie for documentaries
+
+  const schemaType = resolveWorkSchemaType(work)
+  const creditsSchema = buildCreditsSchema(work.credits)
+
   const mainSchema = {
     '@context': 'https://schema.org',
-    '@type': isDocumentary ? 'Movie' : 'CreativeWork',
+    '@type': schemaType,
     '@id': `${workUrl}/#work`,
     name: work.title,
     description: description,
     dateCreated: String(work.year),
-    ...(isDocumentary && {
+    ...(work.productionStage === 'produced' && {
       datePublished: String(work.year),
     }),
     image: {
@@ -328,6 +356,7 @@ export function WorkPageJsonLd({ work, lang, slug }: WorkPageJsonLdProps) {
         '@id': `${workUrl}#video`,
       },
     }),
+    ...creditsSchema,
     productionCompany: {
       '@type': 'Organization',
       name: SITE_CONFIG.name,
@@ -336,8 +365,7 @@ export function WorkPageJsonLd({ work, lang, slug }: WorkPageJsonLdProps) {
     inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
     genre: work.tags,
   }
-  
-  // ItemPage schema for the webpage itself
+
   const pageSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemPage',
@@ -356,7 +384,7 @@ export function WorkPageJsonLd({ work, lang, slug }: WorkPageJsonLdProps) {
     },
     inLanguage: lang === 'fr' ? 'fr-FR' : 'en-US',
   }
-  
+
   return (
     <>
       {videoSchema && (

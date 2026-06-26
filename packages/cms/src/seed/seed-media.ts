@@ -88,6 +88,7 @@ const IMAGE_PATHS = [
   '/assets/works/bombsquad.png',
   '/assets/works/the-chase-josephine-wentzel-story.png',
   '/assets/works/nasty-business.png',
+  '/assets/works/flying-sideways.png',
   '/assets/works/blackwater-bayou.png',
   '/assets/works/the-correspondent.png',
   '/assets/works/augusta.jpg',

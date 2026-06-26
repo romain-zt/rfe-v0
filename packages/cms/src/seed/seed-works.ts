@@ -69,7 +69,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   // ═══════════════════════════════════════════════════════════════════════════
   {
     title: 'Husband Father Killer', slug: 'husband-father-killer', year: 2024,
-    src: '/assets/posters/husband-father-killer.png', tags: ['Thriller'], category: 'film', productionStage: 'produced',
+    src: '/assets/posters/HusbandFatherKiller.jpeg', tags: ['Thriller'], category: 'film', productionStage: 'produced',
     seenOnNames: ['Lifetime'],
     description: [
       'Based on the horrific true story of Alyssa Pladl, Elisabeth Rohm directed and executive produced the film alongside Kara Feifer.',
@@ -172,7 +172,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   },
   {
     title: 'Dispatch', slug: 'dispatch', year: 2026,
-    src: '/assets/posters/Dispatch.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development',
+    src: '/assets/posters/dispatch.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development',
     seenOnNames: ['Studio TF1 America'],
     description: [
       'When a late-night call ends in a fiery truck crash, a small-town dispatcher teams up with local police to uncover a deadly cover-up that hits disturbingly close to home — starting with her own family.',
@@ -334,7 +334,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   // ═══════════════════════════════════════════════════════════════════════════
   {
     title: 'Murder-in-Law', slug: 'murder-in-law', year: 2026,
-    src: '/assets/works/murder-in-law.png', tags: ['True Crime'], category: 'film', productionStage: 'movies-development', subcategory: 'true-crime-movies',
+    src: '/assets/posters/murder-in-law.png', tags: ['True Crime'], category: 'film', productionStage: 'movies-development', subcategory: 'true-crime-movies',
     seenOnNames: ['Law & Crime Network'],
     description: [
       "A wealthy Miami matriarch. A bitter custody war. A hitman's bullet in a quiet suburban driveway. What began as the cold-blooded assassination of a Florida law professor spiraled into one of the most shocking family-driven murder plots in America — a decade-long saga of deception, privilege, and revenge that shattered lives.",
@@ -430,7 +430,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   },
   {
     title: 'Relentless', slug: 'relentless', year: 2026,
-    src: '/assets/posters/Relentless.png', tags: ['Thriller'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
+    src: '/assets/posters/relentless.png', tags: ['Thriller'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       '"Fatal Attraction" meets "Cape Fear." A sexy, propulsive thriller where our hero makes one mistake in Mexico that soon spirals out of control. He returns home, mistakenly thinking he\'s free, but his actions follow him to wreak havoc in his family\'s life.',
       'Written by Eddie Gonzalez and Jeremy Haft.',
@@ -479,7 +479,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   },
   {
     title: 'Swap', slug: 'swap', year: 2026,
-    src: '/assets/posters/Swap.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
+    src: '/assets/posters/swap.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       "This is a show about contemporary marriage. It's about love and sex and commitment and trying to make that commitment last. It's about three couples who aren't quite friends, aren't terribly adventurous, and what happens when they get a little drunk and swap.",
       'Pilot written by Jeff Greenstein.',
@@ -613,7 +613,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   // ═══════════════════════════════════════════════════════════════════════════
   {
     title: 'Horseplay', slug: 'horseplay', year: 2026,
-    src: '/assets/posters/Horseplay.png', tags: ['Unscripted'], category: 'unscripted', productionStage: 'movies-development', subcategory: 'comedy-features',
+    src: '/assets/posters/horseplay.png', tags: ['Unscripted'], category: 'unscripted', productionStage: 'movies-development', subcategory: 'comedy-features',
     description: [
       "When a young hobby horse competitor is assaulted, a collegiate athlete hopeful saddles up and goes undercover to solve the case in the comedic and bizarre world of competitive hobby horsing — where the stakes are high, and the horses are, well, not real!",
       'Feature Screenplay by Sarah Adina and Ruby Hanger. Mason Novick to co-produce.',

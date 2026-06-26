@@ -68,7 +68,11 @@ export const Works: CollectionConfig = {
         { label: 'Unscripted', value: 'Unscripted' },
       ],
     },
-    { name: 'description', type: 'textarea' },
+    {
+      name: 'description',
+      type: 'richText',
+      admin: { description: 'Supports bold, italic, links, and multiple paragraphs.' },
+    },
     { name: 'videoUrl', type: 'text', admin: { description: 'YouTube or Vimeo embed URL' } },
     {
       name: 'credits',
@@ -159,25 +163,12 @@ export const Works: CollectionConfig = {
     },
     {
       name: 'seenOn',
-      type: 'array',
+      type: 'relationship',
+      relationTo: 'platforms',
+      hasMany: true,
       admin: {
-        description: 'Broadcast / streaming partners — logo displayed on the poster card.',
+        description: 'Broadcast / streaming partners shown below the poster card.',
       },
-      fields: [
-        {
-          name: 'logo',
-          type: 'upload',
-          relationTo: 'media',
-          required: false,
-          admin: { description: 'Channel / platform logo (transparent PNG preferred)' },
-        },
-        {
-          name: 'name',
-          type: 'text',
-          required: true,
-          admin: { description: 'Short display name — e.g. TF1, CNews, Netflix' },
-        },
-      ],
     },
     {
       name: 'sortOrder',

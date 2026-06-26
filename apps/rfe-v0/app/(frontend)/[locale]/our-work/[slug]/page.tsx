@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { SITE_CONFIG, OG_IMAGES } from '@/lib/seo'
 import { getWorks, getWorkBySlug as getCmsWorkBySlug } from '@/lib/cms'
-import { generateWorkKeywords, generateWorkSeoDescription } from '@/lib/works'
+import { generateWorkKeywords, generateWorkSeoDescription, lexicalToText } from '@/lib/works'
 import { WorkPageJsonLd, BreadcrumbJsonLd } from '@/components/JsonLd'
 import WorkPageContent from './WorkPageContent'
 import type { Language } from '@/lib/i18n/types'
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: cmsWork.title,
     year: cmsWork.year,
     tags: cmsWork.tags ?? [],
-    description: cmsWork.description ?? '',
+    description: lexicalToText(cmsWork.description),
     src,
   }
   const description = (cmsWork.seo?.description ?? '').trim() || generateWorkSeoDescription(workForSeo, locale)
@@ -103,12 +103,18 @@ export default async function WorkPage({ params }: Props) {
     year: cmsWork.year,
     src: typeof cmsWork.poster === 'object' && cmsWork.poster ? cmsWork.poster.url : '',
     tags: cmsWork.tags ?? [],
-    description: cmsWork.description ?? '',
+    description: lexicalToText(cmsWork.description),
+    descriptionRich: cmsWork.description ?? undefined,
     videoUrl: cmsWork.videoUrl,
     category: cmsWork.category,
     productionStage: cmsWork.productionStage,
     subcategory: cmsWork.subcategory,
     credits: cmsWork.credits || [],
+    seenOn: (cmsWork.seenOn || []).flatMap((p) => {
+      if (typeof p === 'number') return []
+      const logoUrl = p.logo && typeof p.logo === 'object' ? p.logo.url : undefined
+      return [{ name: p.name, logoUrl }]
+    }),
   }
 
   const breadcrumbItems = [

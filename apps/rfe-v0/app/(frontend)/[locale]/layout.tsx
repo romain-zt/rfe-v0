@@ -16,6 +16,7 @@ import {
   getNavigation,
   getPressItems,
 } from '@/lib/cms'
+import { lexicalToText } from '@/lib/works'
 import type { Language } from '@/lib/i18n/types'
 import './globals.css'
 
@@ -99,16 +100,18 @@ export default async function RootLayout({
     year: w.year,
     src: typeof w.poster === 'object' && w.poster ? w.poster.url : '',
     tags: w.tags || [],
-    description: w.description || '',
+    description: lexicalToText(w.description),
+    descriptionRich: w.description ?? undefined,
     videoUrl: w.videoUrl || '',
     category: w.category,
     productionStage: w.productionStage,
     subcategory: w.subcategory,
     credits: w.credits || [],
-    seenOn: (w.seenOn || []).map((s) => ({
-      logoUrl: s.logo && typeof s.logo === 'object' ? s.logo.url : undefined,
-      name: s.name,
-    })),
+    seenOn: (w.seenOn || []).flatMap((p) => {
+      if (typeof p === 'number') return []
+      const logoUrl = p.logo && typeof p.logo === 'object' ? p.logo.url : undefined
+      return [{ name: p.name, logoUrl }]
+    }),
   }))
 
   const teamMembers = teamRes.docs.map((m) => ({

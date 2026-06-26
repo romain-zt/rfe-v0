@@ -57,8 +57,25 @@ export function extractYouTubeId(url: string): string | null {
 }
 
 /**
- * Generate SEO keywords from work item
+ * Extract plain text from a Lexical SerializedEditorState JSON.
+ * Used for SEO metadata where only a plain string is needed.
  */
+type LexicalNode = { type?: string; text?: string; children?: LexicalNode[] }
+
+function extractNodeText(node: LexicalNode): string {
+  if (node.type === 'text') return node.text ?? ''
+  if (!node.children?.length) return ''
+  const separator = node.type === 'paragraph' || node.type === 'heading' ? ' ' : ''
+  return node.children.map(extractNodeText).join(separator)
+}
+
+export function lexicalToText(content: unknown): string {
+  if (!content || typeof content !== 'object') return ''
+  const doc = content as { root?: LexicalNode } | LexicalNode
+  const root = ('root' in doc) ? (doc as { root?: LexicalNode }).root : (doc as LexicalNode)
+  if (!root) return ''
+  return extractNodeText(root).replace(/\s+/g, ' ').trim()
+}
 export function generateWorkKeywords(work: WorkItem, locale: Language): string[] {
   const baseKeywords = locale === 'fr'
     ? ['film', 'production cinématographique', 'regard féminin', 'RFE']

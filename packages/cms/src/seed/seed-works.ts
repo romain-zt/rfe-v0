@@ -38,6 +38,7 @@ type WorkSeedItem = {
   subcategory?: string
   productionStage?: ProductionStage
   credits?: WorkSeedCredit[]
+  seenOnNames?: string[]
 }
 
 function generateSlug(title: string): string {
@@ -48,11 +49,44 @@ function generateSlug(title: string): string {
     .replace(/^-|-$/g, '')
 }
 
+/** Wrap a plain-text string as a minimal Lexical editor state (single paragraph). */
+function textToLexical(text: string) {
+  return {
+    root: {
+      type: 'root',
+      format: '',
+      indent: 0,
+      version: 1,
+      direction: 'ltr',
+      children: [
+        {
+          type: 'paragraph',
+          format: '',
+          indent: 0,
+          version: 1,
+          direction: 'ltr',
+          children: [
+            {
+              type: 'text',
+              format: 0,
+              style: '',
+              detail: 0,
+              mode: 'normal',
+              text,
+              version: 1,
+            },
+          ],
+        },
+      ],
+    },
+  }
+}
+
 const WORKS_DATA: WorkSeedItem[] = [
   // === PRODUCED (Michael's "PROJECTS PRODUCED") ===
-  { id: 46, title: 'Husband Father Killer', year: 2024, src: '/assets/posters/HusbandFatherKiller.jpeg', tags: ['Thriller'], category: 'film', productionStage: 'produced', description: 'Based on the horrific true story of Alyssa Pladl. Debuted on Lifetime on October 19, 2024.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }] },
-  { id: 17, title: 'The Dating App Killer', year: 2026, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], category: 'film', productionStage: 'produced', description: 'Based on the true story of Monica White.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }] },
-  { id: 25, title: 'Wife Stalker', year: 2025, src: '/assets/works/wife-stalker.png', tags: ['Thriller'], category: 'film', productionStage: 'produced', description: "Based on Lynne and Valerie Constantine's psychological thriller.", credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }] },
+  { id: 46, title: 'Husband Father Killer', year: 2024, src: '/assets/posters/HusbandFatherKiller.jpeg', tags: ['Thriller'], category: 'film', productionStage: 'produced', description: 'Based on the horrific true story of Alyssa Pladl. Debuted on Lifetime on October 19, 2024.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }], seenOnNames: ['Lifetime'] },
+  { id: 17, title: 'The Dating App Killer', year: 2026, src: '/assets/works/the-dating-app-killer.jpg', tags: ['Thriller'], category: 'film', productionStage: 'produced', description: 'Based on the true story of Monica White.', credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }], seenOnNames: ['Lifetime'] },
+  { id: 25, title: 'Wife Stalker', year: 2025, src: '/assets/works/wife-stalker.png', tags: ['Thriller'], category: 'film', productionStage: 'produced', description: "Based on Lynne and Valerie Constantine's psychological thriller.", credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Kara Feifer', role: 'ep' }], seenOnNames: ['Lifetime'] },
   { id: 4, title: "Sister's Daughter", year: 2026, src: '/assets/works/sisters-daughter.png', tags: ['Drama'], category: 'film', productionStage: 'produced', description: 'Blood ties, buried secrets, and the weight of what was never said.' },
 
   // === IN PRODUCTION (Michael's "IN PRODUCTION") ===
@@ -62,8 +96,8 @@ const WORKS_DATA: WorkSeedItem[] = [
   // === PAID DEVELOPMENT (Michael's "PAID DEVELOPMENT") ===
   // NOTE: Blade, Sick Puppy, Bombsquad, The Chase, Nasty Business not seeded yet — see to-refine.md #5
   { id: 23, title: 'Lie Detector', year: 2025, src: '/assets/works/lie-detector.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development', description: 'When the FBI unveils VERA, a cutting-edge lie detector considered to be infallible, Master Interrogator Kara Voss and her team are tasked with proving it. A Mattel/Lie Detector project.', credits: [{ name: 'Ed Bernero', role: 'showrunner', note: 'creator of Criminal Minds', isHeadline: true }] },
-  { id: 47, title: 'The Highlife', year: 2026, src: '/assets/works/high-life.png', tags: ['Drama'], category: 'series', productionStage: 'paid-development', description: 'A series with TF1 Studios.', credits: [{ name: 'Anne Clements', role: 'producer', note: 'Black Mafia Family', isHeadline: true }, { name: 'Lauralee Bell', role: 'producer', note: 'The Young and the Restless' }] },
-  { id: 42, title: 'Dispatch', year: 2026, src: '/assets/posters/dispatch.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development', description: 'When a late-night call ends in a fiery truck crash, a small-town dispatcher teams up with local police to uncover a deadly cover-up. Co-production with TF1 America.', credits: [{ name: 'Jessica Borsiczky', role: 'producer', isHeadline: true }] },
+  { id: 47, title: 'The Highlife', year: 2026, src: '/assets/works/high-life.png', tags: ['Drama'], category: 'series', productionStage: 'paid-development', description: 'A series with TF1 Studios.', credits: [{ name: 'Anne Clements', role: 'producer', note: 'Black Mafia Family', isHeadline: true }, { name: 'Lauralee Bell', role: 'producer', note: 'The Young and the Restless' }], seenOnNames: ['TF1 Studios'] },
+  { id: 42, title: 'Dispatch', year: 2026, src: '/assets/posters/dispatch.png', tags: ['Thriller'], category: 'series', subcategory: 'dramas-series', productionStage: 'paid-development', description: 'When a late-night call ends in a fiery truck crash, a small-town dispatcher teams up with local police to uncover a deadly cover-up. Co-production with TF1 America.', credits: [{ name: 'Jessica Borsiczky', role: 'producer', isHeadline: true }], seenOnNames: ['TF1'] },
   { id: 49, title: 'Blade', year: 2026, src: '/assets/works/blade.png', tags: ['Drama'], productionStage: 'paid-development', description: 'Project in paid development.' },
   { id: 50, title: 'Sick Puppy', year: 2026, src: '/assets/works/sick-puppy.png', tags: ['Drama'], productionStage: 'paid-development', description: 'Project in paid development.' },
   { id: 51, title: 'Bombsquad', year: 2026, src: '/assets/works/bombsquad.png', tags: ['Drama'], productionStage: 'paid-development', description: 'Project in paid development.' },
@@ -118,7 +152,7 @@ const WORKS_DATA: WorkSeedItem[] = [
   { id: 44, title: 'Nookietown', year: 2026, src: '/assets/posters/Nookietown.jpg', tags: ['Unscripted'], category: 'unscripted', subcategory: 'comedy-features', description: "When an exhausted housewife asks her divorced best friend to sleep with her husband, what starts as a joke becomes an opportunity. Based on V.C. Chickering's novel." },
 ]
 
-export async function seedWorks(payload: Payload, mediaMap: Map<string, number>): Promise<void> {
+export async function seedWorks(payload: Payload, mediaMap: Map<string, number>, platformMap?: Map<string, number>): Promise<void> {
   console.log('[seed-works] Seeding works...')
 
   for (let i = 0; i < WORKS_DATA.length; i++) {
@@ -135,12 +169,16 @@ export async function seedWorks(payload: Payload, mediaMap: Map<string, number>)
       limit: 1,
     })
 
+    const seenOn = item.seenOnNames && platformMap
+      ? item.seenOnNames.map(name => platformMap.get(name)).filter((id): id is number => id !== undefined)
+      : undefined
+
     const data = {
       title: item.title,
       slug,
       year: item.year,
       tags: item.tags,
-      description: item.description || '',
+      description: item.description ? textToLexical(item.description) : undefined,
       videoUrl: item.videoUrl || '',
       category: item.category || undefined,
       credits: item.credits || undefined,
@@ -148,6 +186,7 @@ export async function seedWorks(payload: Payload, mediaMap: Map<string, number>)
       subcategory: item.subcategory || '',
       sortOrder: i,
       ...(posterId ? { poster: posterId } : {}),
+      ...(seenOn?.length ? { seenOn } : {}),
     }
 
     if (existing.docs.length > 0) {

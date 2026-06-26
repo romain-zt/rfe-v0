@@ -166,7 +166,7 @@ function WorkCard({
         aria-label={`${work.title} - ${t.work.view}`}
       >
         <div
-          className="relative overflow-hidden mb-4 poster-preview-frame exhibition-frame cursor-pointer"
+          className="relative overflow-hidden poster-preview-frame exhibition-frame cursor-pointer"
         >
           <div
             className={`absolute inset-0 transition-all duration-[1.2s] ${reveal.isVisible && !isHovered && !showPreview ? 'bw-media-scroll in-view' : isHovered || showPreview ? '' : 'bw-media'}`}
@@ -211,40 +211,6 @@ function WorkCard({
             }}
           />
 
-          {/* Seen on */}
-          {work.seenOn && work.seenOn.length > 0 && (
-            <div className="bg-[rgba(255,255,255,0.8)] backdrop-blur-sm absolute bottom-2.5 right-2.5 z-[4] flex items-center gap-1.5 pointer-events-none">
-              {work.seenOn.slice(0, 3).map((channel, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-center"
-                  style={{
-                    background: 'rgba(7, 7, 8, 0.55)',
-                    backdropFilter: 'blur(6px)',
-                    borderRadius: '2px',
-                    padding: channel.logoUrl ? '4px 6px' : '3px 6px',
-                  }}
-                  title={channel.name}
-                >
-                  {channel.logoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={channel.logoUrl}
-                      alt={channel.name}
-                      width={48}
-                      height={48}
-                      className="object-contain max-h-[64px] w-auto"
-                    />
-                  ) : (
-                    <span className="text-[12px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.7)' }}>
-                      {channel.name}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Hover overlay */}
           <div className={`absolute inset-0 z-[5] bg-background/75 flex items-center justify-center transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'} pointer-events-none`}>
             <span className="text-[10px] tracking-[0.2em] uppercase text-foreground/80 border border-foreground/30 px-5 py-2.5">
@@ -253,7 +219,37 @@ function WorkCard({
           </div>
         </div>
 
-        <div className="space-y-1.5">
+        {/* Seen on — displayed below the poster */}
+        {work.seenOn && work.seenOn.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 pt-2 pb-1">
+            {work.seenOn.map((channel, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-center px-2 py-1"
+                style={{
+                  background: 'var(--tone-charcoal)',
+                  border: '1px solid rgba(245,240,235,0.08)',
+                }}
+                title={channel.name}
+              >
+                {channel.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={channel.logoUrl}
+                    alt={channel.name}
+                    className="object-contain h-4 w-auto max-w-[56px]"
+                  />
+                ) : (
+                  <span className="text-[9px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.6)' }}>
+                    {channel.name}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="space-y-1.5 mt-4">
           <h3 className="font-serif text-sm md:text-base font-light tracking-wide">{work.title}</h3>
           <p className="text-[11px] text-muted-foreground tracking-[0.15em]">{work.year}</p>
           {work.tags.length > 0 && (

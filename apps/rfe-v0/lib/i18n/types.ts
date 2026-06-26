@@ -46,6 +46,7 @@ export type WorkItem = {
   src: string
   tags: string[]
   description?: string
+  descriptionRich?: unknown
   videoUrl?: string
   category?: WorkCategory
   subcategory?: string

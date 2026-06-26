@@ -1,6 +1,7 @@
 import type { Payload } from 'payload'
 import { seedAdmin } from './seed-admin.ts'
 import { seedMedia } from './seed-media.ts'
+import { seedPlatforms } from './seed-platforms.ts'
 import { seedWorks } from './seed-works.ts'
 import { seedWorksGroups } from './seed-works-groups.ts'
 import { seedTeam } from './seed-team.ts'
@@ -54,7 +55,8 @@ export async function runSeed(
   try {
     await seedAdmin(payload)
     const mediaMap = await seedMedia(payload)
-    await seedWorks(payload, mediaMap)
+    const platformMap = await seedPlatforms(payload)
+    await seedWorks(payload, mediaMap, platformMap)
     await seedWorksGroups(payload)
     await seedTeam(payload, mediaMap)
     await seedPress(payload)

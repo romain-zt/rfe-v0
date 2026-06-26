@@ -17,6 +17,14 @@ export type WorkCredit = {
   isHeadline?: boolean
 }
 
+export type Platform = {
+  id: number
+  name: string
+  logo?: { url: string; sizes?: { thumbnail?: { url: string } } } | number | null
+  updatedAt: string
+  createdAt: string
+}
+
 export type Work = {
   id: number
   title: string
@@ -31,16 +39,13 @@ export type Work = {
     }
   } | number
   tags: string[]
-  description: string
+  description: unknown
   videoUrl?: string
   category?: 'film' | 'series' | 'unscripted'
   productionStage?: 'produced' | 'in-production' | 'paid-development' | 'movies-development' | 'series-development'
   subcategory?: string
   credits?: WorkCredit[]
-  seenOn?: {
-    logo?: { url: string; sizes?: { thumbnail?: { url: string } } } | number | null
-    name: string
-  }[]
+  seenOn?: (Platform | number)[]
   sortOrder: number
   seo?: {
     title?: string

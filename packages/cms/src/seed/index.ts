@@ -1,5 +1,6 @@
 export { seedAdmin } from './seed-admin.ts'
 export { seedMedia } from './seed-media.ts'
+export { seedPlatforms } from './seed-platforms.ts'
 export { seedWorks } from './seed-works.ts'
 export { seedWorksGroups } from './seed-works-groups.ts'
 export { seedTeam } from './seed-team.ts'

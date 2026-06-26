@@ -222,9 +222,9 @@ function WorkCard({
 
         {work.seenOn && work.seenOn.length > 0 && <SeenOnBadges items={work.seenOn} />}
 
-        <div className="space-y-1.5 mt-4">
+        <div className="space-y-1 mt-3">
           <h3 className="font-serif text-sm md:text-base font-light tracking-wide">{work.title}</h3>
-          <p className="text-[11px] text-muted-foreground tracking-[0.15em]">{work.year}</p>
+          <p className="text-[10px] text-muted-foreground/70 tracking-[0.2em] uppercase">{work.year}</p>
           {work.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 pt-1">
               {work.tags.map((tag) => (
@@ -441,8 +441,7 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
         </>
       )}
 
-      {/* Uniform A4 portrait poster grid — fewer cols on laptop so 3 seen-on logos fit one row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-8">
         {filteredWorks.map((work, index) => (
           <WorkCard
             key={work.id}

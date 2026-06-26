@@ -12,15 +12,13 @@ export function SeenOnBadges({ items, className }: SeenOnBadgesProps) {
   if (items.length === 0) return null
 
   return (
-    <div className={`grid grid-cols-3 gap-1.5 pt-2 pb-1 ${className ?? ''}`}>
+    <div
+      className={`flex items-center gap-3 pt-3 pb-1 ${className ?? ''}`}
+    >
       {items.map((channel, i) => (
         <div
           key={i}
-          className="flex h-14 w-full items-center justify-center overflow-hidden p-1.5"
-          style={{
-            background: 'var(--tone-charcoal)',
-            border: '1px solid rgba(245,240,235,0.08)',
-          }}
+          className="flex h-7 items-center justify-center overflow-hidden opacity-50 transition-opacity duration-500 group-hover:opacity-70"
           title={channel.name}
         >
           {channel.logoUrl ? (
@@ -28,12 +26,12 @@ export function SeenOnBadges({ items, className }: SeenOnBadgesProps) {
             <img
               src={channel.logoUrl}
               alt={channel.name}
-              className="max-h-full max-w-full object-contain"
+              className="h-full w-auto max-w-[72px] object-contain brightness-90"
             />
           ) : (
             <span
-              className="text-[8px] uppercase tracking-[0.1em] font-light text-center line-clamp-2"
-              style={{ color: 'rgba(245, 240, 235, 0.6)' }}
+              className="text-[8px] uppercase tracking-[0.15em] font-light whitespace-nowrap"
+              style={{ color: 'rgba(245, 240, 235, 0.5)' }}
             >
               {channel.name}
             </span>

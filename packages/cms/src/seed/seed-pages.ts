@@ -101,31 +101,43 @@ const PAGES: PageSeed[] = [
     hero: {
       type: 'cinematic',
       headline: "There's always more to the story.",
-      subtitle: 'True Crime / Real Drama',
+      subtitle: 'True Crime / True Story',
       imageFit: 'cover',
     },
     layout: [
       contentBlock(
         [
           lexicalBlockNode('worksScroll', {
-            title: 'Our Work',
+            title: 'Produced',
             ctaLabel: 'see all',
             ctaUrl: '/our-work',
             sectionTone: 'warm',
-            sourceType: 'pick',
-            // "top 5 Movies" + "top 5 Series" (voir Michael's pool)
-            selectedWorks: [
-              'feather', 
-              '1-better', 
-              'margret-and-stevie', 
-              'murder-in-law', 
-              'flower-girl', 
-              'by-midnight', 
-              'undefeated', 
-              'icky', 
-              'diamonds-and-deadlines', 
-              'twos-company',
-            ],
+            sourceType: 'group',
+            worksGroupSlug: 'home-produced',
+          }),
+          lexicalBlockNode('worksScroll', {
+            title: 'Serials',
+            ctaLabel: 'see all',
+            ctaUrl: '/our-work',
+            sectionTone: 'warm',
+            sourceType: 'group',
+            worksGroupSlug: 'home-serials',
+          }),
+          lexicalBlockNode('worksScroll', {
+            title: 'Films',
+            ctaLabel: 'see all',
+            ctaUrl: '/our-work',
+            sectionTone: 'warm',
+            sourceType: 'group',
+            worksGroupSlug: 'home-films',
+          }),
+          lexicalBlockNode('worksScroll', {
+            title: 'Unscripted',
+            ctaLabel: 'see all',
+            ctaUrl: '/our-work',
+            sectionTone: 'warm',
+            sourceType: 'group',
+            worksGroupSlug: 'home-unscripted',
           }),
         ],
         'warm',
@@ -203,9 +215,9 @@ const PAGES: PageSeed[] = [
     layout: [
       contentBlock(
         [
-          lexicalHeadingNode('Woman-owned. Story-driven. Built for impact.'),
+          lexicalHeadingNode('Woman-owned. International stories.'),
           lexicalParagraphNode(
-            'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
+            'Launched in 2023, RFE is an international woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
           ),
           lexicalParagraphNode(
             'RFE is a production company dedicated to developing bold, elevated content with a focus on empowering voices and complex characters, especially those of women.',
@@ -275,14 +287,13 @@ const PAGES: PageSeed[] = [
             '',
           ),
           lexicalBlockNode('worksGrid', {
+            title: 'Development projects',
             sourceType: 'pick',
-            // "top 5" deterministes (Movies + Series) pour l'ecran Development.
-            // Paid Development est conserve complet pour ne pas supprimer l'onglet associe.
             selectedWorks: [
               // Paid Development
               'lie-detector', 'the-highlife', 'dispatch', 'blade', 'sick-puppy', 'bombsquad', 'the-chase-the-josephine-wentzel-story', 'nasty-business',
               // Top Movies (Michael list)
-              'feather', '1-better', 'margret-and-stevie', 'murder-in-law', 'flower-girl',
+              'feather', '1-better', 'margret-stevie', 'murder-in-law', 'flower-girl',
               // Top Series (Michael list)
               'by-midnight', 'undefeated', 'icky', 'diamonds-and-deadlines', 'twos-company',
             ],
@@ -496,7 +507,7 @@ export async function seedPages(
   async function resolveFeaturedWorkId(): Promise<number | null> {
     const result = await payload.find({
       collection: 'works',
-      where: { slug: { equals: 'margret-and-stevie' } },
+      where: { slug: { equals: 'margret-stevie' } },
       limit: 1,
       depth: 0,
     })
@@ -599,6 +610,85 @@ export async function seedPages(
     return nextLayout
   }
 
+  async function resolveWorksGroupSlugs(layoutBlocks: Record<string, unknown>[]): Promise<Record<string, unknown>[]> {
+    const groupIdBySlug = new Map<string, number>()
+
+    async function getGroupId(slug: string): Promise<number | null> {
+      const cached = groupIdBySlug.get(slug)
+      if (cached != null) return cached
+
+      const result = await payload.find({
+        collection: 'works-groups',
+        where: { slug: { equals: slug } },
+        limit: 1,
+        depth: 0,
+      })
+      const id = result.docs[0] ? (result.docs[0].id as number) : null
+      if (id != null) groupIdBySlug.set(slug, id)
+      return id
+    }
+
+    const nextLayout: Record<string, unknown>[] = []
+    for (const block of layoutBlocks) {
+      if (block.blockType !== 'content') {
+        nextLayout.push(block)
+        continue
+      }
+
+      const columns = (block as { columns?: Array<Record<string, unknown>> }).columns
+      if (!columns) {
+        nextLayout.push(block)
+        continue
+      }
+
+      const nextColumns: Array<Record<string, unknown>> = []
+      for (const col of columns) {
+        const rt = col.richText as { root?: { children?: Array<Record<string, unknown>> } } | undefined
+        if (!rt?.root?.children) {
+          nextColumns.push(col)
+          continue
+        }
+
+        const nextChildren: Array<Record<string, unknown>> = []
+        for (const child of rt.root.children) {
+          if (child.type !== 'block') {
+            nextChildren.push(child)
+            continue
+          }
+
+          const fields = child.fields as { worksGroupSlug?: string; sourceType?: string } | undefined
+          if (!fields?.worksGroupSlug || fields.sourceType !== 'group') {
+            nextChildren.push(child)
+            continue
+          }
+
+          const groupId = await getGroupId(fields.worksGroupSlug)
+          if (groupId != null) {
+            const { worksGroupSlug: _removed, ...restFields } = fields
+            nextChildren.push({
+              ...child,
+              fields: { ...restFields, worksGroup: groupId },
+            })
+          } else {
+            nextChildren.push(child)
+          }
+        }
+
+        nextColumns.push({
+          ...col,
+          richText: {
+            ...rt,
+            root: { ...rt.root, children: nextChildren },
+          },
+        })
+      }
+
+      nextLayout.push({ ...block, columns: nextColumns })
+    }
+
+    return nextLayout
+  }
+
   const featuredWorkId = await resolveFeaturedWorkId()
 
   for (const page of PAGES) {
@@ -632,6 +722,7 @@ export async function seedPages(
     }
 
     layout = await resolveWorkSelections(layout)
+    layout = await resolveWorksGroupSlugs(layout)
 
     const heroWithMedia = await resolveHeroMedia(page.hero, page.slug)
 

@@ -55,7 +55,7 @@ export async function runSeed(
   try {
     await seedAdmin(payload)
     const mediaMap = await seedMedia(payload)
-    const platformMap = await seedPlatforms(payload)
+    const platformMap = await seedPlatforms(payload, mediaMap)
     await seedWorks(payload, mediaMap, platformMap)
     await seedWorksGroups(payload)
     await seedTeam(payload, mediaMap)

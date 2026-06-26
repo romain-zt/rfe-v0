@@ -63,7 +63,7 @@ export async function seedSiteConfig(payload: Payload): Promise<void> {
           { text: 'RFE is a production company dedicated to developing bold, elevated content with a focus on empowering voices and complex characters, especially those of women.' },
         ],
         heroHeadline: "There's always more to the story.",
-        heroSubheadline: 'True Crime / Real Drama',
+        heroSubheadline: 'True Crime / True Story',
         heroParagraph: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.',
       },
       ui: {

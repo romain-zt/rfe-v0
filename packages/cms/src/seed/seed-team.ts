@@ -4,13 +4,13 @@ const TEAM_DATA = [
   {
     name: 'Elisabeth Rohm',
     role: 'Co-Founder, Director & Producer',
-    bio: "Elisabeth Rohm is an acclaimed actress, director, and producer, best known for her role in Law & Order (Emmy and SAG nominee). Her collaboration with David O. Russell in the Oscar-nominated American Hustle earned her a SAG Award for Best Ensemble. She also starred in Russell's Joy as well as Jay Roach's Oscar-nominated Bombshell. Beginning with her directorial debut, Girl In the Basement, inspired by a true story and praised for its unflinching storytelling, Rohm has directed 8 feature-length films including Shopping Cart Killer, Wife Stalker, Husband, Father, Killer, Switched Before Birth, Devil on Campus: The Larry Ray Story, and Girl in Room 13, earning her recognition for her compelling approach to female-led and socially conscious narratives. Episodic directing includes Law & Order and Chicago Med.",
+    bio: "Elisabeth Rohm is an acclaimed actress, director, and producer, best known for her role in Law & Order (Emmy and SAG nominee).\n\nHer collaboration with David O. Russell in the Oscar-nominated American Hustle earned her a SAG Award for Best Ensemble. She also starred in Russell's Joy as well as Jay Roach's Oscar-nominated Bombshell.\n\nBeginning with her directorial debut, Girl In the Basement, inspired by a true story and praised for its unflinching storytelling, Rohm has directed eight feature-length films including Shopping Cart Killer, Wife Stalker, Husband, Father, Killer, Switched Before Birth, Devil on Campus: The Larry Ray Story, and Girl in Room 13, earning her recognition for her compelling approach to female-led and socially conscious narratives.\n\nHer episodic directing credits include Law & Order and Chicago Med.",
     photoPath: '/assets/team/liz-rohm-hero.png',
   },
   {
     name: 'Kara Feifer',
-    role: 'Co-Founder & Executive Producer',
-    bio: 'Feifer has previously exec produced several films for Lifetime including Tempting Fate starring Alyssa Milano, To Have and To Hold, and Family Pictures, on which she and Rohm ignited their friendship and business relationship. Feifer is also the executive producer of the podcast She Wants More at iHeart Podcasts, about women and their stories of infidelity. She currently has a number of scripted and unscripted projects in development, including the Christmas movie Finding Atticus, which she will produce alongside Brad Krevoy, with Lorenzo Nardini exec producing. Boris Kodjoe is attached to direct from a script by Jennifer Maisel, and Nicole Ari Parker is attached to star.',
+    role: 'Co-Founder & Producer',
+    bio: "Feifer began her career in the industry as an actress. She starred in the International series Time Of Your Life which was broadcast throughout the world and in 9 languages.\n\nShe has Executive produced many films at Lifetime including Tempting Fate, To Have and To Hold, and Family Pictures on which she and Rohm ignited their friendship and business relationship.\n\nFeifer is also the Executive Producer of She Wants More, a Webby nominated iHeart Podcast.\n\nFeifer holds both a BFA in acting and a MSW from New York University.\nShe is a licensed clinician in the State of New York.",
     photoPath: '/assets/team/kara.png',
   },
 ]

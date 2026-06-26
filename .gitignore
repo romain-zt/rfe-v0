@@ -30,6 +30,10 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
+# canva export (browser session + scraped deck pages)
+.canva-browser-profile/
+apps/rfe-v0/public/assets/canva-deck/
+
 # ide
 .idea/
 *.swp

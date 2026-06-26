@@ -3,34 +3,34 @@ import type { Payload } from 'payload'
 type WorkLike = {
   category?: string | null
   productionStage?: string | null
+  slug?: string | null
 }
 
 type GroupDef = {
   name: string
   slug: string
-  filter: (w: WorkLike) => boolean
+  filter?: (w: WorkLike) => boolean
+  slugs?: string[]
   limit?: number
 }
 
 const GROUPS: GroupDef[] = [
-  // Legacy groups — kept for backward compatibility with existing pages
   {
     name: 'Our Work',
     slug: 'our-work',
-    filter: (w) => !w.category,
+    filter: (w) => w.productionStage === 'produced',
   },
   {
     name: 'Development',
     slug: 'development',
-    filter: (w) => !!w.category,
+    filter: (w) => !!w.productionStage && w.productionStage !== 'produced',
   },
   {
     name: 'Home Featured',
     slug: 'home-featured',
-    filter: (w) => !w.category,
+    filter: (w) => w.productionStage === 'produced',
     limit: 10,
   },
-  // New production-stage groups (Michael's structure)
   {
     name: 'Produced',
     slug: 'produced',
@@ -56,6 +56,41 @@ const GROUPS: GroupDef[] = [
     slug: 'series-development',
     filter: (w) => w.productionStage === 'series-development',
   },
+
+  // Home page curated strips (matching production)
+  {
+    name: 'Produced (Home page selection)',
+    slug: 'home-produced',
+    slugs: [
+      'sick-puppy', 'the-chase-the-josephine-wentzel-story',
+      'a-dentist-to-die-for', 'husband-father-killer', 'wife-stalker',
+      'the-dating-app-killer', 'dont-trust-the-girls-upstairs', 'our-daughter-has-disappeared',
+    ],
+  },
+  {
+    name: 'Serials (Home page selection)',
+    slug: 'home-serials',
+    slugs: [
+      'lie-detector', 'dispatch', 'bombsquad', 'blade',
+      'sunshine-sisters', 'double-dealer', 'the-highlife',
+    ],
+  },
+  {
+    name: 'Films (Home Page selection)',
+    slug: 'home-films',
+    slugs: [
+      'marrying-a-murderer', 'margret-stevie', 'feather', '1-better',
+      'rescue-of-jerusalem', 'if-you-tell', 'passing-love', 'horseplay',
+    ],
+  },
+  {
+    name: 'Unscripted (Home page selection)',
+    slug: 'home-unscripted',
+    slugs: [
+      'twos-company', 'justice-for-tupac', 'transelectric',
+      'butch-cassidys-millions', 'out-for-love', 'nasty-business',
+    ],
+  },
 ]
 
 export async function seedWorksGroups(payload: Payload): Promise<void> {
@@ -67,12 +102,33 @@ export async function seedWorksGroups(payload: Payload): Promise<void> {
     sort: 'sortOrder',
   })
 
+  const slugToId = new Map<string, number>()
+  for (const w of allWorks.docs) {
+    if (w.slug) slugToId.set(w.slug as string, w.id as number)
+  }
+
   for (const group of GROUPS) {
-    let matchingIds = allWorks.docs
-      .filter((w) => group.filter(w as unknown as WorkLike))
-      .map((w) => w.id)
+    let matchingIds: number[]
+
+    if (group.slugs) {
+      matchingIds = group.slugs
+        .map((s) => slugToId.get(s))
+        .filter((id): id is number => id !== undefined)
+    } else if (group.filter) {
+      matchingIds = allWorks.docs
+        .filter((w) => group.filter!(w as unknown as WorkLike))
+        .map((w) => w.id as number)
+    } else {
+      matchingIds = []
+    }
+
     if (group.limit) {
       matchingIds = matchingIds.slice(0, group.limit)
+    }
+
+    if (matchingIds.length === 0) {
+      console.log(`[seed-works-groups] Skipped (no matching works): ${group.name}`)
+      continue
     }
 
     const existing = await payload.find({

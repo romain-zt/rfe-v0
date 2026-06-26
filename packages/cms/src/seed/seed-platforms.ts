@@ -2,8 +2,13 @@ import type { Payload } from 'payload'
 
 const PLATFORMS_DATA = [
   { name: 'Lifetime' },
-  { name: 'TF1' },
-  { name: 'TF1 Studios' },
+  { name: 'Studio TF1 America' },
+  { name: 'A&E Global Media' },
+  { name: 'FOX' },
+  { name: 'Disney +' },
+  { name: 'Law & Crime Network' },
+  { name: 'Mattel' },
+  { name: 'NBC' },
   { name: 'CNews' },
   { name: 'Netflix' },
   { name: 'Paramount+' },

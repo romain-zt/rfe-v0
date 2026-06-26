@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RFE Back Office — User Guide</title>
+  <style>
+    :root {
+      --bg: #070708;
+      --fg: #F5F0EB;
+      --gold: #B5975A;
+      --rose: #C4A0A0;
+      --red: #8B1A1A;
+      --muted: #888;
+      --card-bg: #111113;
+      --border: #222;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    h1 {
+      font-size: 2.2em;
+      font-weight: 700;
+      margin: 60px 0 12px;
+      color: var(--fg);
+      letter-spacing: -0.02em;
+    }
+    h1:first-child { margin-top: 0; }
+    h2 {
+      font-size: 1.6em;
+      font-weight: 600;
+      margin: 50px 0 12px;
+      color: var(--gold);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 1.2em;
+      font-weight: 600;
+      margin: 30px 0 10px;
+      color: var(--rose);
+    }
+    h4 {
+      font-size: 1.05em;
+      font-weight: 600;
+      margin: 24px 0 8px;
+      color: var(--fg);
+    }
+    p { margin: 10px 0; }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    strong { color: #fff; font-weight: 600; }
+    img {
+      display: block;
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 20px 0;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    blockquote {
+      border-left: 3px solid var(--gold);
+      padding: 12px 20px;
+      margin: 20px 0;
+      background: var(--card-bg);
+      border-radius: 0 8px 8px 0;
+      color: var(--rose);
+      font-style: italic;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.95em;
+    }
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--card-bg);
+      border-bottom: 2px solid var(--gold);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    tr:hover td { background: rgba(181,151,90,0.05); }
+    code {
+      background: var(--card-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--rose);
+    }
+    pre {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+    pre code { background: none; padding: 0; }
+    ol, ul { margin: 10px 0; padding-left: 28px; }
+    li { margin: 6px 0; }
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+    .hero-banner {
+      text-align: center;
+      padding: 60px 20px 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .hero-banner h1 {
+      font-size: 2.8em;
+      margin: 0 0 12px;
+      color: var(--gold);
+    }
+    .hero-banner p { color: var(--muted); font-size: 1.1em; }
+    .hero-banner a { color: var(--rose); }
+    .tip {
+      background: rgba(181,151,90,0.08);
+      border: 1px solid rgba(181,151,90,0.2);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 0.95em;
+    }
+    .tip::before {
+      content: "💡 ";
+    }
+    .warning {
+      background: rgba(139,26,26,0.1);
+      border: 1px solid rgba(139,26,26,0.3);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 0.95em;
+    }
+    .warning::before {
+      content: "⚠️ ";
+    }
+    .toc {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 24px 30px;
+      margin: 30px 0;
+      border: 1px solid var(--border);
+    }
+    .toc h3 { margin-top: 0; color: var(--gold); }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin: 4px 0; }
+    .toc a { color: var(--fg); }
+    .toc a:hover { color: var(--gold); }
+    .section-label {
+      display: inline-block;
+      font-size: 0.75em;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 20px 16px 60px; }
+      h1 { font-size: 1.6em; }
+      h2 { font-size: 1.3em; }
+      .hero-banner h1 { font-size: 2em; }
+      table { font-size: 0.85em; }
+      th, td { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<div class="hero-banner">
+  <h1>RFE Back Office</h1>
+  <p>Your guide to updating everything on <a href="https://www.rohmfeiferentertainment.net/">rohmfeiferentertainment.net</a></p>
+  <p style="margin-top: 8px; font-size: 0.9em;">If something breaks or looks weird, don't panic — you can always <a href="#undo">undo your changes</a>.</p>
+</div>
+
+<h2>What is this?</h2>
+
+<p>The back office is the private area where you control what appears on the public website. Think of it like a control room behind the scenes — you change things here, and the website updates automatically.</p>
+
+<p>When you log in, you'll see the <strong>Dashboard</strong> — your home base:</p>
+
+<img src="screenshots/payload-admin-02-dashboard.png" alt="Dashboard">
+
+<p>The left sidebar is your menu. Everything is organized into groups:</p>
+
+<table>
+  <tr><th>Section</th><th>What's in it</th></tr>
+  <tr><td><strong>Pages</strong></td><td>The actual pages of the website (Home, About, Our Work…)</td></tr>
+  <tr><td><strong>Content</strong></td><td>Your works, team bios, press mentions, and platforms</td></tr>
+  <tr><td><strong>Settings</strong></td><td>Brand identity, colors, contact info, navigation links</td></tr>
+  <tr><td><strong>Admin</strong></td><td>User accounts and the image library</td></tr>
+  <tr><td><strong>Forms</strong></td><td>The contact form and any submissions you've received</td></tr>
+</table>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <p><strong>The stuff you'll use most:</strong></p>
+  <ol>
+    <li><a href="#works">Works — Adding and editing your projects</a></li>
+    <li><a href="#works-groups">Works Groups — Controlling what shows where</a></li>
+    <li><a href="#pages">Pages — Editing your website pages</a></li>
+    <li><a href="#team-members">Team Members — Updating bios and photos</a></li>
+    <li><a href="#press-items">Press Items — Adding press coverage</a></li>
+    <li><a href="#platforms">Platforms — Managing network/streamer logos</a></li>
+  </ol>
+  <p style="margin-top: 12px;"><strong>Things you'll touch less often:</strong></p>
+  <ol start="7">
+    <li><a href="#site-config">Site Configuration — Brand, colors, SEO, contact info</a></li>
+    <li><a href="#navigation">Navigation — Header menu and footer</a></li>
+    <li><a href="#media">Media — Your image library</a></li>
+    <li><a href="#users">Users — Admin accounts</a></li>
+    <li><a href="#forms">Forms &amp; Submissions</a></li>
+  </ol>
+  <p style="margin-top: 12px;"><strong>Help:</strong></p>
+  <ol start="12">
+    <li><a href="#common-tasks">Common tasks step by step</a></li>
+    <li><a href="#undo">How to undo a mistake</a></li>
+    <li><a href="#connections">How everything connects</a></li>
+    <li><a href="#quick-ref">Quick reference</a></li>
+  </ol>
+</div>
+
+<hr>
+
+<h1>The stuff you'll use most</h1>
+
+<!-- ═══════════════════════════════════════════ WORKS ═══════════════════════════════════════════ -->
+
+<h2 id="works">Works</h2>
+
+<p><strong>This is your catalog.</strong> Every film, series, and unscripted project lives here. It's probably the section you'll update the most.</p>
+
+<p>Each work you add here can show up on <a href="https://www.rohmfeiferentertainment.net/our-work">Our Work</a>, <a href="https://www.rohmfeiferentertainment.net/development">Development</a>, and the <a href="https://www.rohmfeiferentertainment.net/">Home</a> page — depending on which <a href="#works-groups">Works Group</a> you put it in.</p>
+
+<img src="screenshots/payload-admin-05-works-list.png" alt="Works list">
+
+<p>You can see all your projects at a glance — title, year, category (Film / Series / Unscripted), and tags. Use the search bar at the top to find something specific.</p>
+
+<h3>What's inside a work</h3>
+
+<p>Click on any title to open it:</p>
+
+<img src="screenshots/payload-admin-06-work-edit.png" alt="Work edit view">
+
+<p>Here's what each field means:</p>
+
+<table>
+  <tr><th>Field</th><th>What to put there</th></tr>
+  <tr><td><strong>Title</strong></td><td>The name of the project (e.g. "Darkness Falls").</td></tr>
+  <tr><td><strong>Poster</strong></td><td>The main image. Click "Choose from existing" to pick one you already uploaded, or upload a new one.</td></tr>
+  <tr><td><strong>Tags</strong></td><td>Pick one or more: Drama, Thriller, True Crime, Unscripted. These show up as labels on the website.</td></tr>
+  <tr><td><strong>Description</strong></td><td>A short description. You can make text <strong>bold</strong> or <em>italic</em>.</td></tr>
+  <tr><td><strong>Video URL</strong></td><td>If you have a YouTube or Vimeo trailer, paste the link here.</td></tr>
+</table>
+
+<h4>Credits</h4>
+
+<img src="screenshots/work-credits-section.png" alt="Credits section">
+
+<p>This is where you list the people involved — directors, writers, producers, stars.</p>
+
+<p>For each person, you fill in:</p>
+<ul>
+  <li><strong>Name</strong> — their full name</li>
+  <li><strong>Role</strong> — pick from the dropdown (Director, Writer, Executive Producer, Producer, Star, Showrunner, etc.)</li>
+  <li><strong>IMDb link</strong> — optional, paste their IMDb profile URL</li>
+  <li><strong>Note</strong> — optional, a short note like "Academy Award winner"</li>
+  <li><strong>Headline credit</strong> — check this box if you want this person to show up on the project card (the small tile on the website). If unchecked, they only appear when someone clicks into the project detail.</li>
+</ul>
+
+<p>Click <strong>Add Credit</strong> to add more people.</p>
+
+<h4>SEO (search engine stuff)</h4>
+
+<p>You usually don't need to touch this — it gets filled in automatically. But if you want to control what Google shows:</p>
+<ul>
+  <li><strong>Title</strong> — what appears in the browser tab and Google results</li>
+  <li><strong>Description</strong> — the snippet Google shows under the title</li>
+  <li><strong>Keywords</strong> — words people might search for to find this project</li>
+</ul>
+
+<h4>The sidebar (right side)</h4>
+
+<table>
+  <tr><th>Field</th><th>What it means</th></tr>
+  <tr><td><strong>Year</strong></td><td>The production year.</td></tr>
+  <tr><td><strong>Category</strong></td><td>Film, Series, or Unscripted. Determines which sections of the website it can appear in.</td></tr>
+  <tr><td><strong>Production Stage</strong></td><td>Where this project is in the pipeline: Produced, In Production, Paid Development, etc. Used to sort things on the <a href="https://www.rohmfeiferentertainment.net/development">Development</a> page.</td></tr>
+  <tr><td><strong>Sort Order</strong></td><td>A number that controls the order. Lower numbers come first.</td></tr>
+  <tr><td><strong>Seen On</strong></td><td>Which networks or streamers carry this project. Click to add platforms like Netflix, CBS, Lifetime, etc.</td></tr>
+</table>
+
+<h3>Adding a new work</h3>
+
+<ol>
+  <li>Go to <strong>Content → Works</strong></li>
+  <li>Click <strong>Create New</strong> (top right)</li>
+  <li>Fill in at least the <strong>Title</strong> and <strong>Year</strong></li>
+  <li>Add a <strong>Poster</strong> image</li>
+  <li>Set the <strong>Category</strong> (Film, Series, or Unscripted) in the sidebar</li>
+  <li>Add credits if you have them</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<div class="warning">After saving, the work exists in the system but won't show up on any page yet. You need to add it to a <a href="#works-groups">Works Group</a> — that's how you control where it appears.</div>
+
+<!-- ═══════════════════════════════════════════ WORKS GROUPS ═══════════════════════════════════════════ -->
+
+<h2 id="works-groups">Works Groups</h2>
+
+<p><strong>Think of these as playlists.</strong> A Works Group is just a list of works in a specific order. Each group powers a different section of the website.</p>
+
+<img src="screenshots/payload-admin-07-works-groups.png" alt="Works Groups list">
+
+<p>For example:</p>
+<ul>
+  <li>The <strong>"Our Work"</strong> group controls what shows on the <a href="https://www.rohmfeiferentertainment.net/our-work">Our Work</a> page</li>
+  <li>The <strong>"Home Featured"</strong> group controls what's highlighted on the <a href="https://www.rohmfeiferentertainment.net/">Home</a> page</li>
+  <li>The <strong>"In Development — Series"</strong> group controls the series tab on the <a href="https://www.rohmfeiferentertainment.net/development">Development</a> page</li>
+</ul>
+
+<h3>How to add a work to a group</h3>
+<ol>
+  <li>Click on the group name (e.g. "Our Work")</li>
+  <li>Scroll down to the <strong>Items</strong> list</li>
+  <li>Click <strong>Add Work</strong></li>
+  <li>Search for and select the work you want to add</li>
+  <li><strong>Drag it</strong> up or down to set the order (top = first on the page)</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<h3>How to remove a work from a group</h3>
+<ol>
+  <li>Open the group</li>
+  <li>Find the work in the list</li>
+  <li>Click the <strong>⋯</strong> menu next to it and choose <strong>Remove</strong></li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<h3>How to reorder works in a group</h3>
+<ol>
+  <li>Open the group</li>
+  <li>Grab the <strong>drag handle</strong> (the lines icon ☰) on the left of any work</li>
+  <li>Drag it to the new position</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<!-- ═══════════════════════════════════════════ PAGES ═══════════════════════════════════════════ -->
+
+<h2 id="pages">Pages</h2>
+
+<p><strong>These are the actual pages of your website.</strong> Each one corresponds to a URL that people visit.</p>
+
+<img src="screenshots/payload-admin-03-pages-list.png" alt="Pages list">
+
+<table>
+  <tr><th>Page</th><th>What people see at</th></tr>
+  <tr><td>Home</td><td><a href="https://www.rohmfeiferentertainment.net/">rohmfeiferentertainment.net</a></td></tr>
+  <tr><td>About</td><td><a href="https://www.rohmfeiferentertainment.net/about">rohmfeiferentertainment.net/about</a></td></tr>
+  <tr><td>Our Work</td><td><a href="https://www.rohmfeiferentertainment.net/our-work">rohmfeiferentertainment.net/our-work</a></td></tr>
+  <tr><td>Development</td><td><a href="https://www.rohmfeiferentertainment.net/development">rohmfeiferentertainment.net/development</a></td></tr>
+  <tr><td>Press</td><td><a href="https://www.rohmfeiferentertainment.net/press">rohmfeiferentertainment.net/press</a></td></tr>
+  <tr><td>Contact</td><td><a href="https://www.rohmfeiferentertainment.net/contact">rohmfeiferentertainment.net/contact</a></td></tr>
+  <tr><td>Legal notice</td><td><a href="https://www.rohmfeiferentertainment.net/legal">rohmfeiferentertainment.net/legal</a></td></tr>
+</table>
+
+<h3>Editing a page</h3>
+
+<p>Click on any page name to open it:</p>
+
+<img src="screenshots/payload-admin-04-page-edit.png" alt="Page edit view">
+
+<p>Each page has <strong>three tabs</strong> at the top:</p>
+
+<h4>Hero (the big image at the top of the page)</h4>
+
+<p>This is the first thing visitors see. You can change:</p>
+<ul>
+  <li><strong>Headline</strong> — the main text</li>
+  <li><strong>Subtitle</strong> — smaller text underneath</li>
+  <li><strong>Image</strong> — the background photo</li>
+  <li><strong>Type</strong> — "Cinematic" for a dramatic full-screen look, "Page" for a simpler header, "Minimal" for text only</li>
+</ul>
+
+<p>You can also set a <strong>different image for mobile phones</strong> (in the "Mobile override" section) — useful when a landscape photo doesn't look good on a vertical screen.</p>
+
+<h4>Content (the body of the page)</h4>
+
+<img src="screenshots/page-layout-blocks.png" alt="Layout blocks">
+
+<p>The page content is built with <strong>blocks</strong> — like building blocks you can stack. Each block is a section of the page. They start collapsed (folded up) to keep things tidy — click on one to open it.</p>
+
+<p>The blocks you'll see most:</p>
+
+<table>
+  <tr><th>Block</th><th>What it does</th></tr>
+  <tr><td><strong>Content</strong></td><td>A text section — the most common one</td></tr>
+  <tr><td><strong>Works Grid</strong></td><td>Shows a grid of project posters (like on <a href="https://www.rohmfeiferentertainment.net/our-work">Our Work</a>)</td></tr>
+  <tr><td><strong>Works Scroll</strong></td><td>A horizontal scroll strip of projects (like on <a href="https://www.rohmfeiferentertainment.net/">Home</a>)</td></tr>
+  <tr><td><strong>Featured Work</strong></td><td>Spotlights one project with a quote</td></tr>
+  <tr><td><strong>Team Showcase</strong></td><td>Shows team members with photos and bios</td></tr>
+  <tr><td><strong>Press List</strong></td><td>Lists your press coverage</td></tr>
+  <tr><td><strong>Contact Info</strong></td><td>Shows your email, address, and social links</td></tr>
+  <tr><td><strong>Contact Form</strong></td><td>The form visitors fill out to reach you</td></tr>
+</table>
+
+<div class="tip">Most of the time, you won't need to add or remove blocks — the pages are already set up. You can edit the content <em>inside</em> any block by clicking on it.</div>
+
+<h4>SEO (search engine stuff)</h4>
+
+<p>Controls what Google shows. Usually auto-generated — only change this if you need to.</p>
+
+<h3>Publishing and drafts</h3>
+
+<p>On the right side of the page editor, you'll see:</p>
+<ul>
+  <li><strong>Publish changes</strong> — saves your edits AND makes them live immediately</li>
+  <li>Click the dropdown arrow next to it → <strong>Save draft</strong> — saves your work but does NOT make it live. The old version stays visible to visitors until you're ready to publish.</li>
+</ul>
+
+<div class="tip">Pages have a <strong>live preview</strong> on the right sidebar — you can toggle between Mobile and Desktop to see what your changes look like before publishing.</div>
+
+<!-- ═══════════════════════════════════════════ TEAM MEMBERS ═══════════════════════════════════════════ -->
+
+<h2 id="team-members">Team Members</h2>
+
+<p><strong>Your team page.</strong> Currently Kara and Elisabeth.</p>
+
+<img src="screenshots/payload-admin-08-team-members.png" alt="Team Members list">
+
+<h3>Editing a team member</h3>
+
+<p>Click on a name:</p>
+
+<img src="screenshots/team-member-edit.png" alt="Team member edit">
+
+<table>
+  <tr><th>Field</th><th>What to put there</th></tr>
+  <tr><td><strong>Name</strong></td><td>Full name</td></tr>
+  <tr><td><strong>Role</strong></td><td>Title (e.g. "Co-Founder &amp; Producer")</td></tr>
+  <tr><td><strong>Bio</strong></td><td>Biography text</td></tr>
+  <tr><td><strong>Photo</strong></td><td>Headshot image</td></tr>
+  <tr><td><strong>Sort Order</strong></td><td>Who shows first (lower number = first)</td></tr>
+</table>
+
+<p>Update what you need, click <strong>Save</strong>, done. Changes appear automatically on the <a href="https://www.rohmfeiferentertainment.net/about">About</a> page.</p>
+
+<!-- ═══════════════════════════════════════════ PRESS ITEMS ═══════════════════════════════════════════ -->
+
+<h2 id="press-items">Press Items</h2>
+
+<p><strong>Press coverage and media mentions.</strong> Each entry is one article or interview.</p>
+
+<img src="screenshots/payload-admin-09-press-items.png" alt="Press Items list">
+
+<h3>Editing a press item</h3>
+
+<p>Click on any title:</p>
+
+<img src="screenshots/press-item-edit.png" alt="Press item edit">
+
+<table>
+  <tr><th>Field</th><th>What to put there</th></tr>
+  <tr><td><strong>Title</strong></td><td>The article headline</td></tr>
+  <tr><td><strong>Source</strong></td><td>Where it was published (e.g. Deadline, People, NY Post)</td></tr>
+  <tr><td><strong>Date</strong></td><td>When it was published</td></tr>
+  <tr><td><strong>URL</strong></td><td>Link to the full article</td></tr>
+  <tr><td><strong>Description</strong></td><td>Optional — a one-line summary</td></tr>
+</table>
+
+<h3>Adding a new press mention</h3>
+<ol>
+  <li>Go to <strong>Content → Press Items</strong> → <strong>Create New</strong></li>
+  <li>Fill in the title, source, date, and URL</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<p>It shows up automatically on the <a href="https://www.rohmfeiferentertainment.net/press">Press</a> page.</p>
+
+<!-- ═══════════════════════════════════════════ PLATFORMS ═══════════════════════════════════════════ -->
+
+<h2 id="platforms">Platforms</h2>
+
+<p><strong>Networks and streaming services</strong> — CBS, Netflix, Lifetime, Disney+, etc. These are used to show "Seen On" logos on your project pages.</p>
+
+<img src="screenshots/payload-admin-10-platforms.png" alt="Platforms list">
+
+<h3>Editing a platform</h3>
+
+<p>Click on any name:</p>
+
+<img src="screenshots/platform-edit.png" alt="Platform edit">
+
+<p>Just two fields:</p>
+<ul>
+  <li><strong>Name</strong> — the platform name</li>
+  <li><strong>Logo</strong> — the logo image (transparent background works best on the dark site)</li>
+</ul>
+
+<h3>Adding a new platform</h3>
+<ol>
+  <li>Go to <strong>Content → Platforms</strong> → <strong>Create New</strong></li>
+  <li>Type the name</li>
+  <li>Upload the logo</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<p>After that, you can assign this platform to any work (in the work's "Seen On" field).</p>
+
+<hr>
+
+<h1>Things you'll touch less often</h1>
+
+<!-- ═══════════════════════════════════════════ SITE CONFIG ═══════════════════════════════════════════ -->
+
+<h2 id="site-config">Site Configuration</h2>
+
+<p><strong>The central control panel for your brand.</strong> Colors, tagline, contact details, SEO defaults — it's all here.</p>
+
+<p>Go to <strong>Settings → Site Configuration</strong> in the sidebar. There are four tabs:</p>
+
+<h3>Brand</h3>
+
+<img src="screenshots/site-config-brand-loaded.png" alt="Site Config — Brand">
+
+<table>
+  <tr><th>Field</th><th>What it does</th></tr>
+  <tr><td><strong>Name</strong></td><td>Your brand name. Currently "RFE".</td></tr>
+  <tr><td><strong>Tagline</strong></td><td>Currently "True Crime. Real Drama."</td></tr>
+  <tr><td><strong>Logo</strong></td><td>Your site logo.</td></tr>
+  <tr><td><strong>Favicon</strong></td><td>The tiny icon in the browser tab.</td></tr>
+</table>
+
+<h3>Design</h3>
+
+<img src="screenshots/site-config-design.png" alt="Site Config — Design">
+
+<p>This controls the colors and fonts across the entire website. The current palette was carefully designed for that dark, cinematic look.</p>
+
+<div class="tip">You probably don't need to change any of this. But if you want to tweak a color, just edit the code next to it (the # followed by letters and numbers). Each color has a small preview square.</div>
+
+<h3>Content</h3>
+
+<img src="screenshots/site-config-content-loaded.png" alt="Site Config — Content">
+
+<p>Text that's used in specific places:</p>
+<ul>
+  <li><strong>About section</strong> — the headline, subheadline, and paragraphs for the <a href="https://www.rohmfeiferentertainment.net/about">About</a> page</li>
+  <li><strong>UI Labels</strong> — button text like "View", "Films", "Series"</li>
+  <li><strong>Legal sections</strong> — the text on the <a href="https://www.rohmfeiferentertainment.net/legal">Legal</a> page</li>
+</ul>
+
+<h3>SEO &amp; Contact</h3>
+
+<img src="screenshots/site-config-seo-contact-top.png" alt="Site Config — SEO &amp; Contact">
+
+<p><strong>SEO</strong> controls how your site appears on Google. The defaults are already set up.</p>
+
+<p><strong>Contact</strong> is where you set your email addresses, phone, and address. These show up on the <a href="https://www.rohmfeiferentertainment.net/contact">Contact</a> page and in the footer.</p>
+
+<p><strong>Social links</strong> — your Instagram, IMDb, LinkedIn, etc.</p>
+
+<!-- ═══════════════════════════════════════════ NAVIGATION ═══════════════════════════════════════════ -->
+
+<h2 id="navigation">Navigation</h2>
+
+<p><strong>Controls the menu at the top of the website and the footer text.</strong></p>
+
+<img src="screenshots/navigation-page.png" alt="Navigation">
+
+<h3>Header menu</h3>
+
+<p>Each menu item has:</p>
+<ul>
+  <li><strong>Label</strong> — the text people see (e.g. "About Us", "Our Work")</li>
+  <li><strong>Link</strong> — where it goes (e.g. /about, /our-work)</li>
+  <li><strong>External</strong> — check this if the link goes to a different website</li>
+</ul>
+
+<p>You can <strong>drag items</strong> to reorder them. The order here = the order in the menu.</p>
+
+<h3>Footer</h3>
+<ul>
+  <li><strong>Legal Label</strong> — the text for the legal notice link</li>
+  <li><strong>Copyright Text</strong> — the copyright line at the bottom of every page</li>
+</ul>
+
+<!-- ═══════════════════════════════════════════ MEDIA ═══════════════════════════════════════════ -->
+
+<h2 id="media">Media</h2>
+
+<p><strong>Your image library.</strong> Every image used on the website is stored here — posters, headshots, logos, hero images, everything.</p>
+
+<img src="screenshots/media-collection.png" alt="Media library">
+
+<p>When you upload an image, the system automatically creates several sizes (small for grids, medium for detail pages, large for hero sections). You don't need to worry about resizing.</p>
+
+<h3>Uploading images</h3>
+<ul>
+  <li>Click <strong>Create New</strong> to upload one image</li>
+  <li>Click <strong>Bulk Upload</strong> to upload several at once</li>
+  <li>Fill in the <strong>Alt text</strong> — a short description of the image (e.g. "Darkness Falls movie poster"). This helps with accessibility and Google search.</li>
+</ul>
+
+<div class="warning">If you delete an image from the library, it will disappear everywhere it's used on the website. If you just want to swap an image, go to the place where it's used (e.g. the work entry) and change it there instead.</div>
+
+<!-- ═══════════════════════════════════════════ USERS ═══════════════════════════════════════════ -->
+
+<h2 id="users">Users</h2>
+
+<p><strong>Admin accounts</strong> — people who can log into this back office.</p>
+
+<img src="screenshots/users-collection.png" alt="Users">
+
+<p>To add a new admin, click <strong>Create New</strong> and enter their email + password.</p>
+
+<!-- ═══════════════════════════════════════════ FORMS ═══════════════════════════════════════════ -->
+
+<h2 id="forms">Forms &amp; Submissions</h2>
+
+<p><strong>Forms</strong> — currently there's one: the "RFE Contact" form on the <a href="https://www.rohmfeiferentertainment.net/contact">Contact</a> page. It has Name, Email, and Message fields.</p>
+
+<img src="screenshots/forms-collection.png" alt="Forms">
+
+<p><strong>Form Submissions</strong> — every time someone fills out the contact form, their message is saved here. Check this to see who's reaching out.</p>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ COMMON TASKS ═══════════════════════════════════════════ -->
+
+<h1 id="common-tasks">Common Tasks</h1>
+
+<h3>"I have a new project to add to the website"</h3>
+<ol>
+  <li><strong>Upload the poster:</strong> Go to <strong>Admin → Media</strong> → <strong>Create New</strong> → upload the image → fill in alt text → <strong>Save</strong></li>
+  <li><strong>Create the work:</strong> Go to <strong>Content → Works</strong> → <strong>Create New</strong> → fill in title, year, poster, category, tags, credits → <strong>Save</strong></li>
+  <li><strong>Add it to the right group:</strong> Go to <strong>Content → Works Groups</strong> → open the group where it should appear (e.g. "Our Work") → <strong>Add Work</strong> → select your project → drag to position → <strong>Save</strong></li>
+</ol>
+
+<h3>"I need to update a project's description or poster"</h3>
+<ol>
+  <li>Go to <strong>Content → Works</strong></li>
+  <li>Click on the project name</li>
+  <li>Edit what you need</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<h3>"We got new press coverage"</h3>
+<ol>
+  <li>Go to <strong>Content → Press Items</strong> → <strong>Create New</strong></li>
+  <li>Fill in the headline, source (e.g. "Deadline"), date, and URL</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<h3>"I want to change the order of projects on a page"</h3>
+<ol>
+  <li>Go to <strong>Content → Works Groups</strong></li>
+  <li>Open the group that controls the page you want to change</li>
+  <li>Drag projects up or down</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<h3>"I want to update our contact email"</h3>
+<ol>
+  <li>Go to <strong>Settings → Site Configuration</strong></li>
+  <li>Click the <strong>SEO &amp; Contact</strong> tab</li>
+  <li>Update the email address</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<h3>"I want to add a link to the header menu"</h3>
+<ol>
+  <li>Go to <strong>Settings → Navigation</strong></li>
+  <li>Click <strong>Add Item</strong> at the bottom of the Header section</li>
+  <li>Fill in the label and link</li>
+  <li>Drag it to the right position</li>
+  <li>Click <strong>Save</strong></li>
+</ol>
+
+<h3>"I want to change the hero image on a page"</h3>
+<ol>
+  <li>Go to <strong>Pages</strong></li>
+  <li>Click on the page</li>
+  <li>In the <strong>Hero</strong> tab, click the <strong>✕</strong> next to the current image</li>
+  <li>Click <strong>Choose from existing</strong> to pick a new one, or upload a fresh image</li>
+  <li>Click <strong>Publish changes</strong></li>
+</ol>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ UNDO ═══════════════════════════════════════════ -->
+
+<h2 id="undo">How to Undo a Mistake</h2>
+
+<h3>On a page (Home, About, Our Work, etc.)</h3>
+
+<p>Pages keep a history of every change. If you mess something up:</p>
+<ol>
+  <li>Open the page</li>
+  <li>Click <strong>Versions</strong> (top right, next to "Edit")</li>
+  <li>You'll see a list of every saved version with dates</li>
+  <li>Click on a previous version to preview it</li>
+  <li>Click <strong>Restore this version</strong> to go back to it</li>
+</ol>
+
+<h3>On other content (Works, Team Members, Press Items, etc.)</h3>
+
+<p>These don't have version history, but changes are simple to undo — just edit the field back to what it was and click <strong>Save</strong>.</p>
+
+<h3>"I accidentally deleted something"</h3>
+
+<p>If you deleted a work, team member, or press item, you'll need to recreate it. There's no trash or recycle bin — so be careful with the delete button!</p>
+
+<div class="tip">If the website looks completely wrong, there's a <strong>Content Reset</strong> button on the Dashboard that resets everything to the default content. Use this as a last resort only.</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ CONNECTIONS ═══════════════════════════════════════════ -->
+
+<h2 id="connections">How Everything Connects</h2>
+
+<pre><code>You upload IMAGES to the Media library
+        ↓
+You create WORKS (with posters, credits, descriptions)
+        ↓
+You organize works into WORKS GROUPS (like playlists)
+        ↓
+PAGES use those groups to display works in grids and scroll strips
+        ↓
+The public WEBSITE shows it all at rohmfeiferentertainment.net</code></pre>
+
+<p>Other pieces:</p>
+<ul>
+  <li><strong>Team Members</strong> automatically appear on the About page</li>
+  <li><strong>Press Items</strong> automatically appear on the Press page</li>
+  <li><strong>Platforms</strong> show up as "Seen On" logos on individual works</li>
+  <li><strong>Site Configuration</strong> controls the brand, colors, and contact info everywhere</li>
+  <li><strong>Navigation</strong> controls the header menu on every page</li>
+</ul>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════ QUICK REF ═══════════════════════════════════════════ -->
+
+<h2 id="quick-ref">Quick Reference</h2>
+
+<table>
+  <tr><th>I want to…</th><th>Go to…</th></tr>
+  <tr><td>Add a new project</td><td>Content → Works → Create New</td></tr>
+  <tr><td>Put a project on a page</td><td>Content → Works Groups → open the right group → Add Work</td></tr>
+  <tr><td>Change project order</td><td>Content → Works Groups → drag items</td></tr>
+  <tr><td>Add press coverage</td><td>Content → Press Items → Create New</td></tr>
+  <tr><td>Update a team bio</td><td>Content → Team Members → click the name</td></tr>
+  <tr><td>Add a network logo</td><td>Content → Platforms → Create New</td></tr>
+  <tr><td>Upload images</td><td>Admin → Media → Create New</td></tr>
+  <tr><td>Change contact info</td><td>Settings → Site Configuration → SEO &amp; Contact tab</td></tr>
+  <tr><td>Edit the menu</td><td>Settings → Navigation</td></tr>
+  <tr><td>Edit a page</td><td>Pages → click the page name</td></tr>
+  <tr><td>Undo a page change</td><td>Pages → click the page → Versions → Restore</td></tr>
+  <tr><td>See contact form messages</td><td>Forms → Form Submissions</td></tr>
+</table>
+
+<hr>
+
+<p style="text-align: center; color: var(--muted); margin-top: 40px;">
+  <em>Questions? Reach out to your developer.</em><br>
+  <em>Last updated: June 2026</em>
+</p>
+
+</div>
+</body>
+</html>

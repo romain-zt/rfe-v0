@@ -74,6 +74,37 @@ function generateWorkSeo(item: WorkSeedItem): { title: string; description: stri
   return { title, description, keywords }
 }
 
+function parseInlineContent(text: string): unknown[] {
+  const nodes: unknown[] = []
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      const before = text.slice(lastIndex, match.index)
+      if (before) nodes.push({ type: 'text', format: 0, style: '', detail: 0, mode: 'normal', text: before, version: 1 })
+    }
+    nodes.push({
+      type: 'link',
+      format: '',
+      indent: 0,
+      version: 3,
+      direction: 'ltr',
+      fields: { url: match[2], newTab: true, linkType: 'custom' },
+      children: [{ type: 'text', format: 0, style: '', detail: 0, mode: 'normal', text: match[1], version: 1 }],
+    })
+    lastIndex = match.index + match[0].length
+  }
+
+  if (lastIndex < text.length) {
+    const remaining = text.slice(lastIndex)
+    if (remaining) nodes.push({ type: 'text', format: 0, style: '', detail: 0, mode: 'normal', text: remaining, version: 1 })
+  }
+
+  return nodes
+}
+
 function paragraphsToLexical(paragraphs: string[]) {
   return {
     root: {
@@ -88,9 +119,7 @@ function paragraphsToLexical(paragraphs: string[]) {
         indent: 0,
         version: 1,
         direction: 'ltr',
-        children: text.trim()
-          ? [{ type: 'text', format: 0, style: '', detail: 0, mode: 'normal', text: text.trim(), version: 1 }]
-          : [],
+        children: text.trim() ? parseInlineContent(text.trim()) : [],
       })),
     },
   }
@@ -164,20 +193,20 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['A&E Global Media'],
     description: [
       'Dental surgeon Dr. James Ryan (50s), a respected figure in his Maryland community, becomes dangerously obsessed with beauty queen Sarah Harris (25) after she visits his office, manipulating her with surgical-grade narcotics to gain control over her. When Sarah is found dead and the police rule it a suicide, her grieving mother Tina—convinced Ryan is responsible—teams up with daughter Rachel to uncover the truth, ultimately unearthing damning evidence that leads to explosive criminal charges.',
-      'Written by Barbara Marshall.',
-      'Directed by Siobhan Devine.',
+      'Written by [Barbara Marshall](https://www.imdb.com/name/nm3011547/).',
+      'Directed by [Siobhan Devine](https://www.imdb.com/name/nm0222668/).',
     ],
-    credits: [{ name: 'Siobhan Devine', role: 'director', isHeadline: true }, { name: 'Barbara Marshall', role: 'writer' }],
+    credits: [{ name: 'Siobhan Devine', role: 'director', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0222668/' }, { name: 'Barbara Marshall', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm3011547/' }],
   },
   {
     title: 'Our Daughter Has Disappeared', slug: 'our-daughter-has-disappeared', year: 2026,
     src: '/assets/posters/SusanPowell.jpg', tags: ['True Crime'], category: 'film', productionStage: 'in-production',
     description: [
       "When Susan Powell goes missing in December of 2009, the media is swept up into the story. Her husband Josh claims he has no idea what happened to his young wife, yet over the next three years, the evidence will reveal that he committed the ultimate horrific crime when he blew up him and his children in their home. Susan's body was never found.",
-      'Written by Waneta Storms.',
+      'Written by [Waneta Storms](https://www.imdb.com/name/nm0832660/).',
       'Directed by Elisabeth Rohm.',
     ],
-    credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Waneta Storms', role: 'writer' }],
+    credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }, { name: 'Waneta Storms', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm0832660/' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -189,9 +218,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['Mattel'],
     description: [
       'When the FBI unveils VERA, a cutting-edge lie detector considered to be infallible, Master Interrogator, Kara Voss and her team are tasked with proving it. But as they probe deeper, they discover that truth is not always black and white—and some truths are more dangerous than any lie.',
-      'A character driven procedural series conceived of by the creator of Criminal Minds, Ed Bernero.',
+      'A character driven procedural series conceived of by the creator of Criminal Minds, [Ed Bernero.](https://www.imdb.com/name/nm0076708/)',
     ],
-    credits: [{ name: 'Ed Bernero', role: 'creator', note: 'creator of Criminal Minds', isHeadline: true }],
+    credits: [{ name: 'Ed Bernero', role: 'creator', note: 'creator of Criminal Minds', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0076708/' }],
   },
   {
     title: 'High Life', slug: 'the-highlife', year: 2026,
@@ -199,9 +228,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['Studio TF1 America', 'A&E Global Media'],
     description: [
       "At the world's most exclusive ski resorts, Whistler, the elite descend for indulgence and excess, leaving local ski instructors and staff to clean up the mess – both on and off the slopes. But as tensions build between wealth and those who serve it, not everyone will make it to the season's final run.",
-      'Created by Lauralee Bell, TF1 to co-produce, Ken Girotti and Wendy Coulas set to showrun.',
+      'Created by [Lauralee Bell](https://www.imdb.com/name/nm0004739/), TF1 to co-produce, Ken Girotti and Wendy Coulas set to showrun.',
     ],
-    credits: [{ name: 'Lauralee Bell', role: 'creator', isHeadline: true }, { name: 'Ken Girotti', role: 'showrunner' }, { name: 'Wendy Coulas', role: 'showrunner' }],
+    credits: [{ name: 'Lauralee Bell', role: 'creator', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0004739/' }, { name: 'Ken Girotti', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm0320987/' }, { name: 'Wendy Coulas', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm0183385/' }],
   },
   {
     title: 'Dispatch', slug: 'dispatch', year: 2026,
@@ -209,9 +238,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['Studio TF1 America'],
     description: [
       'When a late-night call ends in a fiery truck crash, a small-town dispatcher teams up with local police to uncover a deadly cover-up that hits disturbingly close to home — starting with her own family.',
-      'Pilot written by David Barett. Co-production with TF1 America. Jessika Borsiczky is showrunning.',
+      'Pilot written by [David Barett](https://www.imdb.com/name/nm0057106/). Co-production with TF1 America. [Jessika Borsiczky](https://www.imdb.com/name/nm1121978/) is showrunning.',
     ],
-    credits: [{ name: 'Jessika Borsiczky', role: 'showrunner', isHeadline: true }, { name: 'David Barett', role: 'writer' }],
+    credits: [{ name: 'Jessika Borsiczky', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1121978/' }, { name: 'David Barett', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm0057106/' }],
   },
   {
     title: 'The Palace', slug: 'blade', year: 2026,
@@ -219,9 +248,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['A&E Global Media'],
     description: [
       "When a hardened New York defense attorney returns to her former elite skating academy to defend a teenage prodigy accused of murder, she's forced to confront the abusive system and buried crimes that shaped her past before it destroys another girl.",
-      'Ben York Jones set to showrun, based on the novel by Wendy Walker.',
+      '[Ben York Jones](https://www.imdb.com/name/nm1726378/) set to showrun, based on the novel by [Wendy Walker](https://www.wendywalkerbooks.com).',
     ],
-    credits: [{ name: 'Ben York Jones', role: 'showrunner', isHeadline: true }],
+    credits: [{ name: 'Ben York Jones', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1726378/' }],
   },
   {
     title: 'Sick Puppy', slug: 'sick-puppy', year: 2026,
@@ -229,19 +258,19 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['NBC'],
     description: [
       'A brilliant but sociopathic psychologist joins an FBI task force to track and dismantle criminalized brainwashing systems, using her unsettling insights to outwit fellow manipulators as she grapples with her own strange and devious impulses.',
-      'Ben York Jones is set as showrunner.',
+      '[Ben York Jones](https://www.imdb.com/name/nm1726378/) is set as showrunner.',
     ],
-    credits: [{ name: 'Ben York Jones', role: 'showrunner', isHeadline: true }],
+    credits: [{ name: 'Ben York Jones', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1726378/' }],
   },
   {
     title: 'Bomb Squad', slug: 'bombsquad', year: 2026,
     src: '/assets/works/bombsquad.png', tags: ['Drama'], category: 'series', productionStage: 'paid-development',
     description: [
-      'Based on the true-life story of Jackie Hickey, BOMB SQUAD is a one-hour dramatic series following the elite unit of EOD technicians.',
+      'Based on the true-life story of [Jackie Hickey](https://www.imdb.com/name/nm6835279/), BOMB SQUAD is a one-hour dramatic series following the elite unit of EOD technicians.',
       'Beneath the neon lights of Las Vegas, an elite bomb squad team confronts deadly bombs, hidden conspiracies, and the personal demons that threaten to detonate their lives.',
-      'Onalee Hunter Hughes set to showrun Bombsquad: Las Vegas. Julian Simpson set to showrun Bombsquad: London. Andrew Bampfield and Louis Coquette set to showrun Bombsquad: Paris.',
+      '[Onalee Hunter Hughes](https://www.imdb.com/name/nm1370980/) set to showrun Bombsquad: Las Vegas. [Julian Simpson](https://www.imdb.com/name/nm0801065/) set to showrun Bombsquad: London. [Andrew Bampfield](https://www.imdb.com/name/nm1240855/) and [Louis Coquette](https://www.imdb.com/name/nm1068868/) set to showrun Bombsquad: Paris.',
     ],
-    credits: [{ name: 'Onalee Hunter Hughes', role: 'showrunner', isHeadline: true }, { name: 'Julian Simpson', role: 'showrunner' }, { name: 'Andrew Bampfield', role: 'showrunner' }, { name: 'Louis Coquette', role: 'showrunner' }],
+    credits: [{ name: 'Onalee Hunter Hughes', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1370980/' }, { name: 'Julian Simpson', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm0801065/' }, { name: 'Andrew Bampfield', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm1240855/' }, { name: 'Louis Coquette', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm1068868/' }],
   },
   {
     title: 'The Chase: The Josephine Wentzel Story', slug: 'the-chase-the-josephine-wentzel-story', year: 2026,
@@ -250,16 +279,16 @@ const WORKS_DATA: WorkSeedItem[] = [
     description: [
       "THE CHASE follows one mother's attempt to hunt down her daughter's killer, no matter the cost. When her daughter's murder case starts to cool, Josephine takes it into her own hands partnering with the US Marshalls and the FBI to track down her daughter Krystal's killer. She ultimately succeeds in extraditing him from El Salvador to the United States.",
       'Happening in real time, Josephine awaits the trial.',
-      "Based on Josephine Wentzel's harrowing memoir of the same name, Jessica Mecklenberg attached to write.",
+      "Based on [Josephine Wentzel's harrowing memoir](https://www.amazon.com/Chase-hot-pursuit-daughters-killer/dp/B09JVJ2F49) of the same name, [Jessica Mecklenberg](https://www.imdb.com/name/nm1618266/) attached to write.",
     ],
-    credits: [{ name: 'Jessica Mecklenberg', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Jessica Mecklenberg', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1618266/' }],
   },
   {
     title: 'Nasty Business', slug: 'nasty-business', year: 2026,
     src: '/assets/works/nasty-business.png', tags: ['Drama'], category: 'film', productionStage: 'paid-development',
     seenOnNames: ['Disney +'],
     description: [
-      'A documentary that depicts the horrifying true story currently making its way through the Canadian legal system.',
+      'A documentary that depicts the horrifying [true story](https://www.cbc.ca/news/canada/montreal/robert-miller-court-1.7253165) currently making its way through the Canadian legal system.',
       "NASTY BUSINESS tells the story of how Robert G. Miller, a reclusive Montréal billionaire, allegedly paid more than 50 young girls for sexual favors from 1996 to 2006. Canada's answer to Jeffery Epstein.",
     ],
   },
@@ -269,9 +298,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['A&E Global Media'],
     description: [
       "Grief-stricken after her first child dies of a rare immune disorder, Chloe becomes obsessed with protecting her second child, Lily, from the same fate, to the point of sealing her away in a glass chamber. Her father Dan has found a way to make the ongoing streaming story of Lily's life within the bubble lucrative, and when tests reveal that Lily does not in fact have the syndrome that took her brother, Dan buries the results. When Lily makes contact with Kyle, a boy her age out in the wide world she is forbidden to experience, the walls of her perfect world begin to crack.",
-      'Stephen Tolkin to pen the script.',
+      '[Stephen Tolkin](https://www.imdb.com/name/nm0006809/) to pen the script.',
     ],
-    credits: [{ name: 'Stephen Tolkin', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Stephen Tolkin', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0006809/' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -282,45 +311,45 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/works/margret-stevie.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'true-stories-features',
     description: [
       "Publishers are circling, eager to rewrite Curious George's co-creator Margret Rey's legacy—but as they close in, so do the memories of the war she survived decades earlier. In her chain-smoking, foul mouthed dog walker Stevie, Margret finds an unlikely friend—and a spark of renewed hope to fight back.",
-      'Matthew Weiner, creator of Mad Men, set to direct. Stephenie Gillis to pen the script. Shirley MacLaine attached to star.',
+      '[Matthew Weiner](https://www.imdb.com/name/nm1980806/), creator of Mad Men, set to direct. [Stephenie Gillis](https://www.imdb.com/name/nm2796389/) to pen the script. [Shirley MacLaine attached to star](https://deadline.com/2026/02/shirley-maclaine-margret-and-stevie-matthew-weiner-1236729698/).',
     ],
-    credits: [{ name: 'Matthew Weiner', role: 'director', note: 'creator of Mad Men', isHeadline: true }, { name: 'Stephenie Gillis', role: 'writer' }, { name: 'Shirley MacLaine', role: 'star' }],
+    credits: [{ name: 'Matthew Weiner', role: 'director', note: 'creator of Mad Men', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1980806/' }, { name: 'Stephenie Gillis', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm2796389/' }, { name: 'Shirley MacLaine', role: 'star' }],
   },
   {
     title: 'Feather', slug: 'feather', year: 2026,
     src: '/assets/works/feather.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'true-stories-features',
     description: [
       "This never before told story takes you into the dynamic drama of Farrah Fawcett's life and legacy.",
-      'Written by Vernon Scott and co-produced by Latigo Films, to be directed by Destry Allyn Spielberg.',
+      'Written by [Vernon Scott](https://www.imdb.com/name/nm4738105/) and co-produced by [Latigo Films](https://www.latigofilms.com), to be directed by [Destry Allyn Spielberg](https://www.imdb.com/name/nm8792057/).',
     ],
-    credits: [{ name: 'Vernon Scott', role: 'writer', isHeadline: true }, { name: 'Latigo Films', role: 'co-producer' }, { name: 'Destry Allyn Spielberg', role: 'director' }],
+    credits: [{ name: 'Vernon Scott', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm4738105/' }, { name: 'Latigo Films', role: 'co-producer' }, { name: 'Destry Allyn Spielberg', role: 'director', imdbUrl: 'https://www.imdb.com/name/nm8792057/' }],
   },
   {
     title: 'An Iron Man', slug: 'iron-man', year: 2025,
     src: '/assets/works/iron-man.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'true-stories-features',
     description: [
       'AN IRON MAN is the true story of the first ever Ironman champion with Down Syndrome and the father who would do anything to give his special-needs son a chance to achieve his dreams against all odds.',
-      "Based on Chris and Nik Nikic's memoir. Bobby Hanaford to pen the script. Josh Bachove, producer of Minari, attached to co-produce.",
+      "Based on [Chris and Nik Nikic's memoir](https://chrisnikic.com/books/). [Bobby Hanaford](https://www.bobbyhanaford.com) to pen the script. [Josh Bachove](https://www.imdb.com/name/nm2923107/), producer of Minari, attached to co-produce.",
     ],
-    credits: [{ name: 'Bobby Hanaford', role: 'writer', isHeadline: true }, { name: 'Josh Bachove', role: 'co-producer', note: 'producer of Minari' }],
+    credits: [{ name: 'Bobby Hanaford', role: 'writer', isHeadline: true }, { name: 'Josh Bachove', role: 'co-producer', note: 'producer of Minari', imdbUrl: 'https://www.imdb.com/name/nm2923107/' }],
   },
   {
     title: 'Flying Sideways', slug: 'flying-sideways', year: 2026,
     src: '/assets/works/flying-sideways.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'true-stories-features',
     description: [
       'A visceral, adrenaline-fueled, and intimate feature film. Think Top Gun meets The Motorcycle Diaries, blending high-stakes action with emotional introspection.',
-      'Memoir by Frédéric North, with Simon Uttley to pen the script.',
+      'Memoir by [Frédéric North](https://www.imdb.com/name/nm0636005/), with [Simon Uttley](https://www.imdb.com/name/nm3221038/) to pen the script.',
     ],
-    credits: [{ name: 'Simon Uttley', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Simon Uttley', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm3221038/' }],
   },
   {
     title: 'Rescue of Jerusalem', slug: 'rescue-of-jerusalem', year: 2026,
     src: '/assets/works/rescue-of-jerusalem.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'true-stories-features',
     description: [
       "In 701 BCE, as the mighty Assyrian Empire marches toward Jerusalem's destruction, an unlikely alliance between the vulnerable kingdom of Judah and the powerful but overlooked Kushite-Egyptian empire mounts a daring resistance that alters the course of world history and saves the roots of three major religions from extinction. Mad Max meets The Old Testament.",
-      'Ben Ross, producer & director Testament of Moses, and Jerome Hairston attached to write with Benjamin Ross directing. Based on the book The Rescue of Jerusalem by Henry T. Aubin.',
+      '[Ben Ross](https://www.imdb.com/name/nm0743239/), producer & director Testament of Moses, and [Jerome Hairston](https://www.imdb.com/name/nm2842577/) attached to write with [Benjamin Ross](https://www.imdb.com/name/nm0743239/) directing. Based on the book The Rescue of Jerusalem by Henry T. Aubin.',
     ],
-    credits: [{ name: 'Benjamin Ross', role: 'director', isHeadline: true }, { name: 'Jerome Hairston', role: 'writer' }],
+    credits: [{ name: 'Benjamin Ross', role: 'director', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0743239/' }, { name: 'Jerome Hairston', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm2842577/' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -331,9 +360,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/posters/Undefeated.jpg', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'true-stories-series',
     description: [
       "UNDEFEATED is a series about the Miami Dolphins' 1972 comeback from three straight championship losses to an undefeated season. It is the story of how Head Coach Don Shula broke through the racial divides of the time and unified not only a divided team but a divided city as players journey towards owning their own power.",
-      "Based on Mike Freeman's book. JC Coto to showrun.",
+      "Based on [Mike Freeman's book](https://www.harpercollins.com/products/undefeated-mike-freeman?variant=32206400618530). [JC Coto](https://www.imdb.com/name/nm0182871/) to showrun.",
     ],
-    credits: [{ name: 'JC Coto', role: 'showrunner', isHeadline: true }],
+    credits: [{ name: 'JC Coto', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0182871/' }],
   },
   {
     title: 'Diamonds and Deadlines', slug: 'diamonds-and-deadlines', year: 2026,
@@ -341,18 +370,18 @@ const WORKS_DATA: WorkSeedItem[] = [
     description: [
       'This is the true story of Miriam Leslie. The product of her father and one of his slaves. A true renaissance woman, Miriam made her way to the top of the publishing world, a male-dominated industry, becoming one of the wealthiest women in the United States in the late 1800s.',
       'Upon her death she left her multi-million-dollar estate (roughly 50 million dollars today) to the suffragists — a contribution that would ensure the passage of the Nineteenth Amendment.',
-      'Nicole Ari Parker attached to star, Susan Fales-Hill attached to showrun.',
+      '[Nicole Ari Parker](https://www.imdb.com/name/nm0662519/) attached to star, [Susan Fales-Hill](https://www.imdb.com/name/nm0266088/) attached to showrun.',
     ],
-    credits: [{ name: 'Nicole Ari Parker', role: 'star', isHeadline: true }, { name: 'Susan Fales-Hill', role: 'showrunner' }],
+    credits: [{ name: 'Nicole Ari Parker', role: 'star', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0662519/' }, { name: 'Susan Fales-Hill', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm0266088/' }],
   },
   {
     title: "Two's Company", slug: 'twos-company', year: 2025,
     src: '/assets/works/twos-company.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'true-stories-series',
     description: [
       'From a shattered childhood to the heights of fame and reinvention, Suzanne Somers fights to own her voice and her legacy, guided always by the man who saw her before the world ever did.',
-      'Alan Hamel to co-produce.',
+      '[Alan Hamel](https://www.imdb.com/name/nm0357519/) to co-produce.',
     ],
-    credits: [{ name: 'Alan Hamel', role: 'co-producer', isHeadline: true }],
+    credits: [{ name: 'Alan Hamel', role: 'co-producer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0357519/' }],
   },
   {
     title: 'Matador', slug: 'matador', year: 2025,
@@ -371,18 +400,18 @@ const WORKS_DATA: WorkSeedItem[] = [
     seenOnNames: ['Law & Crime Network'],
     description: [
       "A wealthy Miami matriarch. A bitter custody war. A hitman's bullet in a quiet suburban driveway. What began as the cold-blooded assassination of a Florida law professor spiraled into one of the most shocking family-driven murder plots in America — a decade-long saga of deception, privilege, and revenge that shattered lives.",
-      'Stephen Tolkin to pen.',
+      '[Stephen Tolkin](https://www.imdb.com/name/nm0006809/) to pen.',
     ],
-    credits: [{ name: 'Stephen Tolkin', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Stephen Tolkin', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0006809/' }],
   },
   {
     title: 'If You Tell', slug: 'if-you-tell', year: 2026,
     src: '/assets/works/if-you-tell.png', tags: ['True Crime'], category: 'film', productionStage: 'movies-development', subcategory: 'true-crime-movies',
     description: [
       "A shocking and empowering true-crime story of three sisters who are forced to make the most difficult decision of their lives: to turn their murderous mother into the police. Determined to survive their mother's house of horrors, If You Tell is a survivor's story of absolute evil—and the freedom and justice that Nikki, Sami, and Tori risked their lives to fight for.",
-      "Barbara Marshall is set to write the script based on New York Times bestselling author Gregg Olsen's nonfiction book.",
+      "[Barbara Marshall](https://www.imdb.com/name/nm3011547/) is set to write the script based on New York Times bestselling author [Gregg Olsen's nonfiction book](https://www.goodreads.com/en/book/show/45299992-if-you-tell).",
     ],
-    credits: [{ name: 'Barbara Marshall', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Barbara Marshall', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm3011547/' }],
   },
   {
     title: 'Blackwater Bayou', slug: 'blackwater-bayou', year: 2026,
@@ -400,6 +429,7 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/works/the-lobotomists-wife.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'true-crime-series',
     description: [
       'A devoted mental health advocate, Ruth Emeraldine, falls for brilliant but radical lobotomy pioneer Dr. Robert Apter, only to discover his "miracle cure" is leading to horrific results, forcing her to fight against her husband and the medical establishment to save a vulnerable mother from becoming his next victim.',
+      'Written by [Craig Wallace](https://www.imdb.com/name/nm0908587/). Based on the novel by [Samantha Greene Woodruff](https://www.goodreads.com/book/show/57827618-the-lobotomist-s-wife).',
     ],
   },
   {
@@ -407,17 +437,17 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/works/double-dealer.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'true-crime-series',
     description: [
       'DOUBLE DEALER is a fun, twisted, and twisty two-hander about the dark side of the American dream.',
-      'Based on the shocking true story of Rita Crundwell, a small-town Illinois comptroller who created a million-dollar equine empire and stole $54 million in the largest municipal fraud case in US history.',
-      'Karen Croner set to write.',
+      'Based on the shocking true story of [Rita Crundwell](https://www.chicagomag.com/chicago-magazine/december-2012/rita-crundwell-and-the-dixon-embezzlement/), a small-town Illinois comptroller who created a million-dollar equine empire and stole $54 million in the largest municipal fraud case in US history.',
+      '[Karen Croner](https://www.imdb.com/name/nm0188733/) set to write.',
     ],
-    credits: [{ name: 'Karen Croner', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Karen Croner', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0188733/' }],
   },
   {
     title: 'The Correspondent', slug: 'the-correspondent', year: 2026,
     src: '/assets/works/the-correspondent.png', tags: ['True Crime'], category: 'series', productionStage: 'series-development', subcategory: 'true-crime-series',
     description: [
       'The Correspondent is a character-led true-crime thriller, told through the perspective of Rianna Croxford — a journalist whose reporting combines forensic tenacity with profound empathy. Each season follows Rianna as she enters a closed world, earns the trust of its most vulnerable people, and exposes the systems that protect the powerful.',
-      'By Christina Sweeney-Baird & James Mitchell.',
+      'By [Christina Sweeney-Baird](https://www.curtisbrown.co.uk/client/christina-sweeney-baird-1) & James Mitchell.',
     ],
     credits: [{ name: 'Christina Sweeney-Baird', role: 'writer', isHeadline: true }, { name: 'James Mitchell', role: 'writer' }],
   },
@@ -430,7 +460,7 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/posters/GirlsCantPlayPool.jpg', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       "Heather is a gifted young pool hustler who lives on the edge of chaos. Sam is a no-nonsense former tournament player who is desperate to regain custody of her son. When the two women decide to go on the road together, their lucrative partnership leads to a deep bond. But personal differences and the dangers of the road threaten to tear them apart.",
-      'Elisabeth Rohm to direct.',
+      '[Elisabeth Rohm](https://portfolio.buchwald.com/portfolios/10708) to direct.',
     ],
     credits: [{ name: 'Elisabeth Rohm', role: 'director', isHeadline: true }],
   },
@@ -438,64 +468,64 @@ const WORKS_DATA: WorkSeedItem[] = [
     title: 'The Weekend Guests', slug: 'weekend-guests', year: 2025,
     src: '/assets/works/weekend-guests.png', tags: ['Thriller'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
-      "In Liza North's psychological thriller, five old college friends reunite at a secluded Dorset cliffside mansion for a weekend that turns deadly. After receiving chilling postcards, they must confront a dark, shared crime from their past, leading to betrayal and murder when they realize one of them is blackmailing the rest.",
-      'Catherine Hardwicke to direct, Ben Milliken set to write.',
+      "In [Liza North's](https://www.harpercollins.com/products/the-weekend-guests-liza-north) psychological thriller, five old college friends reunite at a secluded Dorset cliffside mansion for a weekend that turns deadly. After receiving chilling postcards, they must confront a dark, shared crime from their past, leading to betrayal and murder when they realize one of them is blackmailing the rest.",
+      '[Catherine Hardwicke](https://www.imdb.com/name/nm0362566/) to direct, [Ben Milliken](https://www.imdb.com/name/nm2843290/) set to write.',
     ],
-    credits: [{ name: 'Catherine Hardwicke', role: 'director', isHeadline: true }, { name: 'Ben Milliken', role: 'writer' }],
+    credits: [{ name: 'Catherine Hardwicke', role: 'director', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0362566/' }, { name: 'Ben Milliken', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm2843290/' }],
   },
   {
     title: 'A Love Like the Sun', slug: 'a-love-like-the-sun', year: 2026,
     src: '/assets/works/a-love-like-the-sun.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       "When a guarded haircare entrepreneur and her longtime best friend—a rising actor—fake a relationship to save her struggling business, their lifelong bond is tested as real feelings, hidden health battles, and the fear of loss force them to confront what love truly means.",
-      'Based on the book by Riss M. Neilson. Cam Roberts set to write.',
+      'Based on the book by [Riss M. Neilson](https://www.rissmneilson.com). [Cam Roberts](https://www.imdb.com/name/nm11567086/) set to write.',
     ],
-    credits: [{ name: 'Cam Roberts', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Cam Roberts', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm11567086/' }],
   },
   {
     title: 'Passing Love', slug: 'passing-love', year: 2026,
     src: '/assets/works/passing-love.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       'When a woman accidentally discovers her mother has kept the truth of her birth a secret, she travels to Paris to search for the woman who abandoned her and finds an unexpected truth.',
-      'Based on the book by Jacqueline E. Luckett. Producing partners — Antoine Fuqua and Lela Rochon.',
+      'Based on the book by [Jacqueline E. Luckett](https://www.jacquelineluckett.com). Producing partners — [Antoine Fuqua](https://www.imdb.com/name/nm0298807/) and [Lela Rochon](https://www.imdb.com/name/nm0005375/).',
     ],
-    credits: [{ name: 'Antoine Fuqua', role: 'producer', isHeadline: true }, { name: 'Lela Rochon', role: 'producer' }],
+    credits: [{ name: 'Antoine Fuqua', role: 'producer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0298807/' }, { name: 'Lela Rochon', role: 'producer', imdbUrl: 'https://www.imdb.com/name/nm0005375/' }],
   },
   {
     title: 'Relentless', slug: 'relentless', year: 2026,
     src: '/assets/posters/relentless.png', tags: ['Thriller'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       '"Fatal Attraction" meets "Cape Fear." A sexy, propulsive thriller where our hero makes one mistake in Mexico that soon spirals out of control. He returns home, mistakenly thinking he\'s free, but his actions follow him to wreak havoc in his family\'s life.',
-      'Written by Eddie Gonzalez and Jeremy Haft.',
+      'Written by [Eddie Gonzalez](https://www.imdb.com/name/nm0327659/) and [Jeremy Haft](https://www.imdb.com/name/nm0353183/).',
     ],
-    credits: [{ name: 'Eddie Gonzalez', role: 'writer', isHeadline: true }, { name: 'Jeremy Haft', role: 'writer' }],
+    credits: [{ name: 'Eddie Gonzalez', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0327659/' }, { name: 'Jeremy Haft', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm0353183/' }],
   },
   {
     title: 'Silent Echo', slug: 'silent-echo', year: 2025,
     src: '/assets/works/silent-echo.png', tags: ['Thriller'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       "A year after the death of her four-year-old son, Charlotte Fleming is sleepwalking through life. Then she sees something that jolts her awake: Sebastion, alive and well in a stranger's social media post. As Charlotte obsessively searches for further indication that her son's accident was not what it seemed, she begins to suspect not only didn't he die—he was taken.",
-      'Based on the novella by Liv Constantine, to be written by Rhonda Baraka.',
+      'Based on the novella by [Liv Constantine](https://www.imdb.com/name/nm12977727/), to be written by [Rhonda Baraka](https://www.imdb.com/name/nm2985554/).',
     ],
-    credits: [{ name: 'Rhonda Baraka', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Rhonda Baraka', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm2985554/' }],
   },
   {
     title: 'Ruby Falls', slug: 'ruby-falls', year: 2026,
     src: '/assets/works/ruby-falls.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       'A young actress comes to Los Angeles hoping to uncover the secrets of the father who abandoned her in a cave when she was a child. However, when she locates a half-sister she never knew about, her curiosity turns into an obsession that threatens to shatter her carefully constructed reality.',
-      "Deborah Goodrich Royce's novel is being adapted for the screen by Amy Fox.",
+      "[Deborah Goodrich Royce's novel](https://www.goodreads.com/book/show/58624622-ruby-falls) is being adapted for the screen by [Amy Fox](https://www.imdb.com/name/nm1470084/).",
     ],
-    credits: [{ name: 'Amy Fox', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Amy Fox', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1470084/' }],
   },
   {
     title: 'Augusta', slug: 'augusta', year: 2026,
     src: '/assets/works/augusta.jpg', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'dramas-feature',
     description: [
       "At her wit's end in New York City, struggling artist Augusta Mackay flees home to the crumbling castle in Scotland she had abandoned, only to discover the power to rebuild her family legacy, her own life and art, and her ability to truly love.",
-      "Gregory W. Jordan has adapted Elisabeth Rohm's novel, Nerissa, into a feature with Rohm directing.",
+      "[Gregory W. Jordan](https://www.imdb.com/name/nm11213799/) has adapted Elisabeth Rohm's novel, [Nerissa](https://www.amazon.com/Nerissa-Elisabeth-Rohm/dp/1453740066), into a feature with Rohm directing.",
     ],
-    credits: [{ name: 'Gregory W. Jordan', role: 'writer', isHeadline: true }, { name: 'Elisabeth Rohm', role: 'director' }],
+    credits: [{ name: 'Gregory W. Jordan', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm11213799/' }, { name: 'Elisabeth Rohm', role: 'director' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -506,43 +536,43 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/posters/LastDay_ReidBrothers.webp', tags: ['Thriller'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       'State Police detective Conor Reid and Coast Guard Commander Tom Reid, team up to track down a murderer in the seductive and wealthy enclave of the Hamptons. Dark secrets, broken relationships, and the hidden world of Blue Blood money, challenge two brothers to come together and track down killers in the midst of people with seemingly perfect lives...',
-      'Based on the Luanne Rice books, LAST DAY, SHADOW BOX, and LAST NIGHT, Jonathan Feldman is set to write this television series with Brian Burns to showrun.',
+      'Based on the Luanne Rice books, LAST DAY, SHADOW BOX, and LAST NIGHT, [Jonathan Feldman](https://www.imdb.com/name/nm0271061/) is set to write this television series with [Brian Burns](https://www.imdb.com/name/nm0122602/) to showrun.',
     ],
-    credits: [{ name: 'Jonathan Feldman', role: 'writer', isHeadline: true }, { name: 'Brian Burns', role: 'showrunner' }],
+    credits: [{ name: 'Jonathan Feldman', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0271061/' }, { name: 'Brian Burns', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm0122602/' }],
   },
   {
     title: 'Swap', slug: 'swap', year: 2026,
     src: '/assets/posters/swap.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       "This is a show about contemporary marriage. It's about love and sex and commitment and trying to make that commitment last. It's about three couples who aren't quite friends, aren't terribly adventurous, and what happens when they get a little drunk and swap.",
-      'Pilot written by Jeff Greenstein.',
+      'Pilot written by [Jeff Greenstein](https://www.imdb.com/name/nm0339211/).',
     ],
-    credits: [{ name: 'Jeff Greenstein', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Jeff Greenstein', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0339211/' }],
   },
   {
     title: 'Cuesta', slug: 'cuesta', year: 2026,
     src: '/assets/works/cuesta.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       "A Latino ex-cop becomes Miami's go-to private eye for clients who have been denied justice by the current legal system. Also specializing in cases for those who cannot turn to the police, Willie Cuesta is a human lie detector.",
-      'Based on the series of books by John Lantigua, co-produced with Addiction House Productions, starring Sebastian and Emiliano Zurita.',
+      'Based on the series of books by John Lantigua, co-produced with [Addiction House Productions](https://addictionhouse.com), starring [Sebastian](https://www.imdb.com/name/nm0958790/) and [Emiliano Zurita](https://www.imdb.com/name/nm2800364/).',
     ],
-    credits: [{ name: 'John Lantigua', role: 'writer', isHeadline: true }, { name: 'Sebastian Zurita', role: 'star' }, { name: 'Emiliano Zurita', role: 'star' }],
+    credits: [{ name: 'John Lantigua', role: 'writer', isHeadline: true }, { name: 'Sebastian Zurita', role: 'star', imdbUrl: 'https://www.imdb.com/name/nm0958790/' }, { name: 'Emiliano Zurita', role: 'star', imdbUrl: 'https://www.imdb.com/name/nm2800364/' }],
   },
   {
     title: 'Ravenwood', slug: 'ravenwood', year: 2026,
     src: '/assets/works/ravenwood.png', tags: ['Thriller'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       'After moving to an elite London school, a teenage girl uncovers a string of murders tied to a secret vampire society and discovers she may be the only one who can stop them.',
-      'Based on the Ravenwood mystery series by Mia James. Kat Rose Martin attached to write.',
+      'Based on the Ravenwood mystery series by [Mia James](https://www.amazon.com/stores/author/B0055DUL7O). [Kat Rose Martin](https://www.imdb.com/name/nm7515065/) attached to write.',
     ],
-    credits: [{ name: 'Kat Rose Martin', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Kat Rose Martin', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm7515065/' }],
   },
   {
     title: 'Rabbit Hole', slug: 'rabbit-hole', year: 2026,
     src: '/assets/works/murder-your-darlings.jpg', tags: ['Thriller'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       "When a novelist falls for a celebrated author, her life feels newly inspired and full of promise. But as a stalker's threats close in, she becomes entangled in a dangerous web of obsession, stalkers, and possible murder, forcing her to question what's real.",
-      'Inspired by the novel "Murder Your Darlings" by Jenna Blum.',
+      'Inspired by the novel ["Murder Your Darlings"](https://deadline.com/2026/01/murder-your-darlings-adaptation-rohm-feifer-entertainment-1236685535/) by Jenna Blum.',
     ],
   },
   {
@@ -550,45 +580,45 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/works/icky.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       'I Could Kill You ("ICKY") is a dark comedy about a suburban mom, Helena Lepinski, who navigates a police investigation, invasive siblings, and her own escalating paranoia as she tries to determine whether she was justified in killing her abusive, narcissistic father — or if she\'s a psychopath like him. ICKY poses the question: are all parents worthy of love and compassion?',
-      'To be showrun by Ken Girotti & Wendy Coulas.',
+      'To be showrun by [Ken Girotti](https://www.imdb.com/name/nm0320987/) & [Wendy Coulas](https://www.imdb.com/name/nm0183385/).',
     ],
-    credits: [{ name: 'Ken Girotti', role: 'showrunner', isHeadline: true }, { name: 'Wendy Coulas', role: 'showrunner' }],
+    credits: [{ name: 'Ken Girotti', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0320987/' }, { name: 'Wendy Coulas', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm0183385/' }],
   },
   {
     title: 'Intent', slug: 'intent', year: 2026,
     src: '/assets/works/intent.png', tags: ['Thriller'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       "When a brilliant Boston prosecutor wakes up in Miami beside a dead man and no memory of the night before, she must return home to her high-stakes courtroom life while secretly investigating whether she's the killer.",
-      'Michael Chernuchin and Allison Intrieri to showrun.',
+      '[Michael Chernuchin](https://www.imdb.com/name/nm0155961/) and [Allison Intrieri](https://www.imdb.com/name/nm2383893/) to showrun.',
     ],
-    credits: [{ name: 'Michael Chernuchin', role: 'showrunner', isHeadline: true }, { name: 'Allison Intrieri', role: 'showrunner' }],
+    credits: [{ name: 'Michael Chernuchin', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0155961/' }, { name: 'Allison Intrieri', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm2383893/' }],
   },
   {
     title: 'American Serial', slug: 'american-serial', year: 2026,
     src: '/assets/works/american-serial.png', tags: ['True Crime'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       "A reclusive novelist is tasked with writing the tell-all story about her former best friend – the only problem? Her former best friend is serial killer Ted Bundy.",
-      'Created by Cameron Dupuy and Alexander Cadiff.',
+      'Created by [Cameron Dupuy](https://www.imdb.com/name/nm8636228/) and [Alexander Cadiff](https://www.imdb.com/name/nm9861036/).',
     ],
-    credits: [{ name: 'Cameron Dupuy', role: 'creator', isHeadline: true }, { name: 'Alexander Cadiff', role: 'creator' }],
+    credits: [{ name: 'Cameron Dupuy', role: 'creator', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm8636228/' }, { name: 'Alexander Cadiff', role: 'creator', imdbUrl: 'https://www.imdb.com/name/nm9861036/' }],
   },
   {
     title: 'Play Dead', slug: 'play-dead', year: 2025,
     src: '/assets/works/play-dead.png', tags: ['Thriller'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       'PLAY DEAD is a paranormal thriller set in Savannah, Georgia, where the supernatural and homicide meet when a series of bizarre murders connected to root magic terrorize the city.',
-      "Based on Anne Frasier's hit ELISE SANDBURG mystery novels. Adapted by Barbara Marshall.",
+      "Based on [Anne Frasier's hit ELISE SANDBURG mystery novels](https://www.annefrasier.com/elise-sandburg-mysteries). Adapted by [Barbara Marshall](https://www.imdb.com/name/nm3011547/).",
     ],
-    credits: [{ name: 'Barbara Marshall', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Barbara Marshall', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm3011547/' }],
   },
   {
     title: 'Booth P.I.', slug: 'booth-p-i', year: 2025,
     src: '/assets/works/booth-pi.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'dramas-series',
     description: [
       'A recovering Southern belle and struggling New York actress returns home to save her family plantation from foreclosure and accidentally becomes a small-town sleuth, joined by her over-the-top, wealthy childhood best friend and her new roommate — a flamboyant, opinionated ghost.',
-      'Co-Produced with Bobby Salomon, written by Carolyn Haines, Andrew Orenstein to showrun.',
+      'Co-Produced with [Bobby Salomon](https://www.imdb.com/name/nm1038447/), written by [Carolyn Haines](https://carolynhaines.com), [Andrew Orenstein](https://www.imdb.com/name/nm0649699/) to showrun.',
     ],
-    credits: [{ name: 'Andrew Orenstein', role: 'showrunner', isHeadline: true }, { name: 'Carolyn Haines', role: 'writer' }, { name: 'Bobby Salomon', role: 'co-producer' }],
+    credits: [{ name: 'Andrew Orenstein', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0649699/' }, { name: 'Carolyn Haines', role: 'writer' }, { name: 'Bobby Salomon', role: 'co-producer', imdbUrl: 'https://www.imdb.com/name/nm1038447/' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -618,27 +648,27 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'holiday-features',
     description: [
       "Legendary rock singer Roxy Knight is a brash whirlwind of energy who has always put her career first. Unfortunately for her daughter Calista, who always knew that she came second, her resentment towards her mother is palpable as an adult. When Roxy injures herself during a performance, she must convalesce at Calista's home over Christmas.",
-      'Screenplay by Penelope Koechl and Juliet Law Packer.',
+      'Screenplay by [Penelope Koechl](https://www.imdb.com/name/nm1779986/) and [Juliet Law Packer](https://www.imdb.com/name/nm0655491/).',
     ],
-    credits: [{ name: 'Penelope Koechl', role: 'writer', isHeadline: true }, { name: 'Juliet Law Packer', role: 'writer' }],
+    credits: [{ name: 'Penelope Koechl', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1779986/' }, { name: 'Juliet Law Packer', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm0655491/' }],
   },
   {
     title: 'Mistletoe and Holly', slug: 'mistletoe-and-holly', year: 2026,
     src: '', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'holiday-features',
     description: [
       "Holly's dream of a picture-perfect Christmas with her new boyfriend Jason turns chaotic when her family's holiday spirit fizzles, but with the help of her overbearing best friend Isaac, she orchestrates a festive celebration that leaves her questioning if she's with the right guy under the mistletoe.",
-      'Charlie Shahnaian and Shari Simpson to pen the script.',
+      '[Charlie Shahnaian](https://www.imdb.com/name/nm1553888/) and [Shari Simpson](https://www.imdb.com/name/nm6530315/) to pen the script.',
     ],
-    credits: [{ name: 'Charlie Shahnaian', role: 'writer', isHeadline: true }, { name: 'Shari Simpson', role: 'writer' }],
+    credits: [{ name: 'Charlie Shahnaian', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1553888/' }, { name: 'Shari Simpson', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm6530315/' }],
   },
   {
     title: '25 to Life', slug: '25-to-life', year: 2026,
     src: '', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'holiday-features',
     description: [
       "A love-obsessed New York influencer who's tired of being ghosted agrees to ditch her impossible dating checklist and go on 25 dates in 25 days—only to discover that the connection she's been searching for might have been right in front of her all along.",
-      'Screenplay by Ben Milliken.',
+      'Screenplay by [Ben Milliken](https://www.imdb.com/name/nm2843290/).',
     ],
-    credits: [{ name: 'Ben Milliken', role: 'writer', isHeadline: true }],
+    credits: [{ name: 'Ben Milliken', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm2843290/' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -649,16 +679,16 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/posters/horseplay.png', tags: ['Unscripted'], category: 'unscripted', productionStage: 'movies-development', subcategory: 'comedy-features',
     description: [
       "When a young hobby horse competitor is assaulted, a collegiate athlete hopeful saddles up and goes undercover to solve the case in the comedic and bizarre world of competitive hobby horsing — where the stakes are high, and the horses are, well, not real!",
-      'Feature Screenplay by Sarah Adina and Ruby Hanger. Mason Novick to co-produce.',
+      'Feature Screenplay by [Sarah Adina](https://www.imdb.com/name/nm1379098/) and [Ruby Hanger](https://www.imdb.com/name/nm5413322/). [Mason Novick](https://www.imdb.com/name/nm1259504/) to co-produce.',
     ],
-    credits: [{ name: 'Sarah Adina', role: 'writer', isHeadline: true }, { name: 'Ruby Hanger', role: 'writer' }, { name: 'Mason Novick', role: 'co-producer' }],
+    credits: [{ name: 'Sarah Adina', role: 'writer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1379098/' }, { name: 'Ruby Hanger', role: 'writer', imdbUrl: 'https://www.imdb.com/name/nm5413322/' }, { name: 'Mason Novick', role: 'co-producer', imdbUrl: 'https://www.imdb.com/name/nm1259504/' }],
   },
   {
     title: 'Nookietown', slug: 'nookietown', year: 2026,
     src: '/assets/posters/Nookietown.jpg', tags: ['Unscripted'], category: 'unscripted', productionStage: 'movies-development', subcategory: 'comedy-features',
     description: [
       'When an exhausted housewife asks her divorced best friend to sleep with her husband, what starts out as a joke becomes an opportunity. After the success of their experiment they start "The Program" where married women choose single women to sleep with their husbands on their own terms. What could go wrong?',
-      "Based on V.C. Chickering's hit novel.",
+      "Based on [V.C. Chickering's hit novel](https://www.vcchickering.com).",
     ],
   },
 
@@ -670,9 +700,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/works/sunshine-sisters.png', tags: ['Drama'], category: 'series', productionStage: 'series-development', subcategory: 'comedy-series',
     description: [
       'SUNSHINE SISTERS tells the story of Ronni Sunshine, an aging film star, who receives a devastating medical diagnosis. Ronni hires a documentarian to chronicle her life, bringing her three daughters back together to confront their collective estrangement.',
-      "Based on New York Times bestselling author Jane Greene's novel. Claudia Lonow and Heather Hach Hearn set as showrunners.",
+      "Based on New York Times bestselling author [Jane Greene's novel](https://www.goodreads.com/en/book/show/32570473-the-sunshine-sisters). [Claudia Lonow](https://www.imdb.com/name/nm0519550/) and [Heather Hach Hearn](https://www.imdb.com/name/nm0352320/) set as showrunners.",
     ],
-    credits: [{ name: 'Claudia Lonow', role: 'showrunner', isHeadline: true }, { name: 'Heather Hach Hearn', role: 'showrunner' }],
+    credits: [{ name: 'Claudia Lonow', role: 'showrunner', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm0519550/' }, { name: 'Heather Hach Hearn', role: 'showrunner', imdbUrl: 'https://www.imdb.com/name/nm0352320/' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -682,9 +712,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     title: 'Justice For Tupac', slug: 'justice-for-tupac', year: 2026,
     src: '/assets/works/justice-for-tupac.png', tags: ['Drama'], category: 'film', productionStage: 'movies-development', subcategory: 'documentary',
     description: [
-      "Nominated for an Oscar for her film TUPAC RESURRECTION, director Lauren Lazin will document the aftermath of a shocking arrest in the murder of a beloved artist after almost 30 years of silence, with unprecedented access inside the biggest trial in Hip-Hop history – told through the never-before seen POV of Tupac's sister, Sekyiwa.",
+      "Nominated for an Oscar for her film TUPAC RESURRECTION, director [Lauren Lazin](https://www.imdb.com/name/nm1020749/) will document the aftermath of a shocking arrest in the murder of a beloved artist after almost 30 years of silence, with unprecedented access inside the biggest trial in Hip-Hop history – told through the never-before seen POV of Tupac's sister, Sekyiwa.",
     ],
-    credits: [{ name: 'Lauren Lazin', role: 'director', isHeadline: true }],
+    credits: [{ name: 'Lauren Lazin', role: 'director', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1020749/' }],
   },
   {
     title: 'TransElectric', slug: 'transelectric', year: 2026,
@@ -702,9 +732,9 @@ const WORKS_DATA: WorkSeedItem[] = [
     src: '/assets/works/out-for-love.png', tags: ['Unscripted'], category: 'unscripted', productionStage: 'series-development', subcategory: 'unscripted',
     description: [
       'Recently released convicts step back into the real world—and straight into the unpredictable world of dating—in OUT FOR LOVE, a provocative reality series where former inmates search for romance with partners drawn to their raw honesty, complicated pasts, and second chances at love.',
-      'Co-production with Hillary Heath and Andrew Adolphus.',
+      'Co-production with [Hillary Heath](https://www.imdb.com/name/nm1852213/) and [Andrew Adolphus](https://www.imdb.com/name/nm0012360/).',
     ],
-    credits: [{ name: 'Hillary Heath', role: 'co-producer', isHeadline: true }, { name: 'Andrew Adolphus', role: 'co-producer' }],
+    credits: [{ name: 'Hillary Heath', role: 'co-producer', isHeadline: true, imdbUrl: 'https://www.imdb.com/name/nm1852213/' }, { name: 'Andrew Adolphus', role: 'co-producer', imdbUrl: 'https://www.imdb.com/name/nm0012360/' }],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════

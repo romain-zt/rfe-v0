@@ -2,6 +2,14 @@ import type { Payload } from 'payload'
 
 const PRESS_DATA = [
   {
+    title: "Elisabeth Röhm on Twisty New Lifetime Movie & 'Iconic' 'Law & Order' Exit",
+    source: 'TV Insider',
+    date: '2026-06-01',
+    url: 'https://www.tvinsider.com/1270680/elisabeth-rohm-on-twisty-new-lifetime-movie-iconic-law-order-exit/',
+    description:
+      'Elisabeth Röhm discusses her twisty new Lifetime movie and reflects on her iconic Law & Order exit.',
+  },
+  {
     title: "Shirley MacLaine To Star In Matthew Weiner's 'Margret and Stevie'",
     source: 'Deadline',
     date: '2026-02-01',

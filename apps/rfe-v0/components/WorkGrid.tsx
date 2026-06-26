@@ -10,6 +10,7 @@ import { PRODUCTION_STAGE_TAB_LABELS } from '@/lib/i18n/types'
 import type { ProductionStage } from '@/lib/i18n/types'
 import { useReveal, useStaggeredReveal } from '@/hooks/useReveal'
 import { getWorkSlug } from '@/lib/works'
+import { SeenOnBadges } from '@/components/SeenOnBadges'
 
 export type WorkGridProps = {
   works: WorkItem[]
@@ -184,7 +185,7 @@ function WorkCard({
                 alt={work.title}
                 fill
                 className="object-cover transition-transform duration-[1.2s] group-hover:scale-[1.03]"
-                sizes="(max-width: 639px) 85vw, (max-width: 1280px) 50vw, 25vw"
+                sizes="(max-width: 639px) 85vw, (max-width: 1279px) 50vw, (max-width: 1535px) 33vw, 25vw"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'var(--tone-charcoal)' }}>
@@ -219,35 +220,7 @@ function WorkCard({
           </div>
         </div>
 
-        {/* Seen on — displayed below the poster */}
-        {work.seenOn && work.seenOn.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-2 pb-1">
-            {work.seenOn.map((channel, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-center px-2 py-1"
-                style={{
-                  background: 'var(--tone-charcoal)',
-                  border: '1px solid rgba(245,240,235,0.08)',
-                }}
-                title={channel.name}
-              >
-                {channel.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={channel.logoUrl}
-                    alt={channel.name}
-                    className="object-cover h-12 w-auto max-w-[68px]"
-                  />
-                ) : (
-                  <span className="text-[9px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.6)' }}>
-                    {channel.name}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+        {work.seenOn && work.seenOn.length > 0 && <SeenOnBadges items={work.seenOn} />}
 
         <div className="space-y-1.5 mt-4">
           <h3 className="font-serif text-sm md:text-base font-light tracking-wide">{work.title}</h3>
@@ -468,8 +441,8 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
         </>
       )}
 
-      {/* Uniform A4 portrait poster grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-10">
+      {/* Uniform A4 portrait poster grid — fewer cols on laptop so 3 seen-on logos fit one row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-10">
         {filteredWorks.map((work, index) => (
           <WorkCard
             key={work.id}

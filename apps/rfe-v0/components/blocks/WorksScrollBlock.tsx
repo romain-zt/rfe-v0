@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
 import { useRef, useEffect, useState, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
-import { posterPreviewWidth } from '@rfe/design-tokens'
+import { posterPreviewWidth, posterPreviewWidthMd } from '@rfe/design-tokens'
 import { getWorkSlug } from '@/lib/works'
+import { SeenOnBadges } from '@/components/SeenOnBadges'
 import type { WorkItem } from '@/lib/i18n/types'
 
 type ScrollItem = {
@@ -346,7 +347,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
           &lt;
         </span>
       </button> */}
-      <section data-ai-element="works-scroll" className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`}>
+      <section data-ai-element="works-scroll" className={`relative py-20 lg:py-32 overflow-hidden ${toneClass} section-bleed-top section-bleed-bottom`} style={{ ['--poster-preview-width-md' as string]: posterPreviewWidthMd }}>
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 50%, rgba(139, 26, 26, 0.035) 0%, transparent 60%)' }} aria-hidden="true" />
 
         <div className="relative">
@@ -399,7 +400,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                           alt={itemTitle}
                           fill
                           className="object-cover transition-all duration-[1.5s] group-hover:scale-[1.04]"
-                          sizes="(max-width: 768px) 70vw, 360px"
+                          sizes="(max-width: 768px) 70vw, 400px"
                           style={{ filter: 'grayscale(0.35) brightness(0.88)' }}
                         />
                       )}
@@ -428,34 +429,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                         </span>
                       )}
                     </div>
-                    {seenOn.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-2 pb-1">
-                        {seenOn.map((platform, pi) => (
-                          <div
-                            key={pi}
-                            className="flex items-center justify-center px-2 py-1"
-                            style={{
-                              background: 'var(--tone-charcoal)',
-                              border: '1px solid rgba(245,240,235,0.08)',
-                            }}
-                            title={platform.name}
-                          >
-                            {platform.logoUrl ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={platform.logoUrl}
-                                alt={platform.name}
-                                className="object-cover h-12 w-auto max-w-[68px]"
-                              />
-                            ) : (
-                              <span className="text-[9px] uppercase tracking-[0.12em] font-light" style={{ color: 'rgba(245, 240, 235, 0.6)' }}>
-                                {platform.name}
-                              </span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    {seenOn.length > 0 && <SeenOnBadges items={seenOn} />}
                     <div className="mt-3">
                       <p className="font-serif text-base md:text-lg font-light tracking-wide transition-colors duration-500 group-hover:text-[rgba(245,240,235,0.65)]" style={{ color: 'rgba(245, 240, 235, 0.38)' }}>
                         {itemTitle}
@@ -469,7 +443,7 @@ export function WorksScrollComponent({ title, sourceType, selectedWorks, worksGr
                   <div
                     key={i}
                     data-works-scroll-item="true"
-                    className={`relative shrink-0 snap-start group ${i === displayItems.length - 1 ? 'pr-2' : ''}`}
+                    className={`relative shrink-0 snap-start group md:!w-[var(--poster-preview-width-md)] ${i === displayItems.length - 1 ? 'pr-2' : ''}`}
                     style={{ width: posterPreviewWidth }}
                   >
                     {href ? (

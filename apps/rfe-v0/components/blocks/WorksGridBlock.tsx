@@ -79,7 +79,7 @@ export function WorksGridComponent(props: Props) {
   }, [allWorks, curatedIds, props.showSubcategoryTabs, props.category, props.limit])
 
   return (
-    <section data-ai-element="works-grid" className={`relative px-6 lg:px-16 xl:px-24 py-12 lg:py-20 ${toneClass}`}>
+    <section data-ai-element="works-grid" className={`relative px-6 lg:px-16 xl:px-24 py-12 lg:py-20  ${toneClass}`}>
       {props.title && (
         <div
           ref={ref}

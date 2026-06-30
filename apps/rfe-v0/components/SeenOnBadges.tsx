@@ -18,7 +18,7 @@ export function SeenOnBadges({ items, className }: SeenOnBadgesProps) {
       {items.map((channel, i) => (
         <div
           key={i}
-          className="flex h-7 items-center justify-center overflow-hidden opacity-50 transition-opacity duration-500 group-hover:opacity-70"
+          className="flex h-12 items-center justify-center overflow-hidden opacity-50 transition-opacity duration-500 group-hover:opacity-70"
           title={channel.name}
         >
           {channel.logoUrl ? (

@@ -87,7 +87,7 @@ export type SiteConfig = {
   typography: { brandFont: string; sansFont: string; serifFont: string; radiusBase: string }
   easings: { emerge: string; quiet: string; sharp: string }
   seo: { titleTemplate: string; defaultTitle: string; defaultDescription: string; keywords: string; siteUrl: string; ogImage?: { url: string } }
-  contact: { email: string; phone?: string; address: string }
+  contact: { email: string; secondaryEmail?: string; phone?: string; address: string }
   social: { instagram?: string; linkedin?: string; vimeo?: string; tiktok?: string; imdb?: string }
   about: {
     paragraphs: { text: string }[]

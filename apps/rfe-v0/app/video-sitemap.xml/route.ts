@@ -29,7 +29,10 @@ export async function GET() {
       const posterUrl =
         typeof work.poster === 'object' && work.poster?.url ? work.poster.url : ''
       const thumb = posterUrl.startsWith('http') ? posterUrl : `${base}${posterUrl}`
-      const description = work.description || work.title || ''
+      const description =
+        typeof work.description === 'string'
+          ? work.description
+          : work.title || ''
       
       urls.push(`  <url>
     <loc>${esc(loc)}</loc>

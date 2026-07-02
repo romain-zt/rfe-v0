@@ -31,8 +31,8 @@ export function generatePageMeta(
     if (page.meta?.image && typeof page.meta.image === 'object' && page.meta.image.url) {
       return page.meta.image.url
     }
-    if (siteConfig?.seo?.ogImage && typeof siteConfig.seo.ogImage === 'object') {
-      return (siteConfig.seo.ogImage as any).url
+    if (siteConfig?.seo?.ogImage && typeof siteConfig.seo.ogImage === 'object' && siteConfig.seo.ogImage.url) {
+      return siteConfig.seo.ogImage.url
     }
     return `${siteUrl}/logo-rfe.svg`
   })()
@@ -87,7 +87,6 @@ export function generatePageJsonLd(
   siteConfig: SiteConfig | null,
 ): React.ReactNode {
   const siteUrl = getSiteUrl(siteConfig)
-  const siteName = getSiteName(siteConfig)
   const pathSlug = page.slug === 'home' ? '' : `/${page.slug}`
   const pageUrl = `${siteUrl}/${locale}${pathSlug}`
   const jsonLdType = page.meta?.jsonLdType || 'WebPage'

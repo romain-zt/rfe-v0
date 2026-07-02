@@ -76,6 +76,7 @@
     "lucide-react": "catalog:",
     "next": "catalog:",
     "next-themes": "^0.4.6",
+    "nodemailer": "^9.0.3",
     "payload": "catalog:",
     "react": "catalog:",
     "react-day-picker": "9.8.0",
@@ -93,9 +94,12 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@rfe/eslint-config": "workspace:*",
     "@rfe/tsconfig": "workspace:*",
+    "eslint": "^9.28.0",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "cross-env": "^7.0.3",

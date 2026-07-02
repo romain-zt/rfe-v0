@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { FieldLabel, useField } from '@payloadcms/ui'
+import { PasswordVisibilityToggle } from '../PasswordVisibilityToggle/index.tsx'
 
 export const SecretTextField: React.FC<any> = () => {
   const {
@@ -15,11 +16,11 @@ export const SecretTextField: React.FC<any> = () => {
   const text = typeof value === 'string' ? value : ''
 
   return (
-    <div style={{ marginBottom: 20 }}>
+    <div style={{ marginBottom: 20, width: '100%' }}>
       <div style={{ marginBottom: 6 }}>
         {Label ?? <FieldLabel path={path} />}
       </div>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'stretch' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: 8, alignItems: 'stretch', width: '100%' }}>
         <input
           id={`field-${path}`}
           type={visible ? 'text' : 'password'}
@@ -28,9 +29,10 @@ export const SecretTextField: React.FC<any> = () => {
           placeholder="Leave empty to use environment variable"
           autoComplete="off"
           style={{
-            flex: 1,
+            width: '100%',
             minWidth: 0,
-            padding: '8px 10px',
+            minHeight: 40,
+            padding: '10px 12px',
             fontSize: '0.8125rem',
             fontFamily: 'var(--font-mono, monospace)',
             border: '1px solid var(--theme-elevation-150)',
@@ -40,25 +42,10 @@ export const SecretTextField: React.FC<any> = () => {
             outline: 'none',
           }}
         />
-        <button
-          type="button"
-          onClick={() => setVisible(!visible)}
-          style={{
-            padding: '8px 12px',
-            border: '1px solid var(--theme-elevation-150)',
-            borderRadius: 'var(--style-radius-s, 4px)',
-            background: 'var(--theme-elevation-50)',
-            color: 'var(--theme-elevation-500)',
-            cursor: 'pointer',
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            letterSpacing: '0.02em',
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-          }}
-        >
-          {visible ? 'Hide' : 'Show'}
-        </button>
+        <PasswordVisibilityToggle
+          visible={visible}
+          onToggle={() => setVisible((current) => !current)}
+        />
       </div>
     </div>
   )

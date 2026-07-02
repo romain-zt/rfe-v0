@@ -34,8 +34,7 @@ const SHEET_ID_EN = '1R9ytGgCmDzcwsTfbbNcx_ZEybSFh9CjNcPcb4wsG5VQ'
 const SHEET_ID_FR = '1JTjO89LlNpiW0R0_l362JDmHIbNxjAcPqAQOD43JXj4'
 
 // Tab names
-const TABS = ['strings', 'about', 'team', 'awardsNews', 'contact', 'ourWork'] as const
-type TabName = (typeof TABS)[number]
+type TabName = 'strings' | 'about' | 'team' | 'awardsNews' | 'contact' | 'ourWork'
 
 /**
  * Build CSV export URL for a Google Sheet tab

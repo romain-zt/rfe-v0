@@ -38,3 +38,6 @@ apps/rfe-v0/public/assets/canva-deck/
 .idea/
 *.swp
 *.swo
+
+# npm
+.npmrc

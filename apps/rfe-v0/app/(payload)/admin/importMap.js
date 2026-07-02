@@ -30,6 +30,7 @@ import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 }
 import { CustomLivePreview as CustomLivePreview_0570d7a137ba4b854d50588a1e1ee968 } from '@rfe/cms/components/LivePreview'
 import { SlugField as SlugField_20048c6163b175d3db4ad5fb0a36a7e8 } from '@rfe/cms/components/SlugField'
 import { ColorPickerField as ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac } from '@rfe/cms/fields/client'
+import { EmailSettingsField as EmailSettingsField_8d4da62047c18b0137f0bdcce2056cc9 } from '@rfe/cms/components/EmailSettingsField'
 import { Icon as Icon_30f9b97464cd6aed523463ee2909896b } from '@rfe/cms/components/Icon'
 import { Logo as Logo_3ca2ef1bfffa22c2c98fe79e696bd43a } from '@rfe/cms/components/Logo'
 import { ResetContentButton as ResetContentButton_6d7f831c498f5cf69f683793a423ac96 } from '@rfe/cms/components/ResetContentButton'
@@ -70,6 +71,7 @@ export const importMap = {
   "@rfe/cms/components/LivePreview#CustomLivePreview": CustomLivePreview_0570d7a137ba4b854d50588a1e1ee968,
   "@rfe/cms/components/SlugField#SlugField": SlugField_20048c6163b175d3db4ad5fb0a36a7e8,
   "@rfe/cms/fields/client#ColorPickerField": ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac,
+  "@rfe/cms/components/EmailSettingsField#EmailSettingsField": EmailSettingsField_8d4da62047c18b0137f0bdcce2056cc9,
   "@rfe/cms/components/Icon#Icon": Icon_30f9b97464cd6aed523463ee2909896b,
   "@rfe/cms/components/Logo#Logo": Logo_3ca2ef1bfffa22c2c98fe79e696bd43a,
   "@rfe/cms/components/ResetContentButton#ResetContentButton": ResetContentButton_6d7f831c498f5cf69f683793a423ac96,

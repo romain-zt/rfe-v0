@@ -1,18 +1,20 @@
 'use client'
 
+import type { LexicalNode, LexicalRichText } from '@/lib/lexical-types'
+import { isLexicalElementNode, isLexicalTextNode } from '@/lib/lexical-types'
+
 type LegalSection = {
   title: string
-  content?: { root: { children: any[] } }
+  content?: LexicalRichText
 }
 
 type Props = {
   sections?: LegalSection[]
 }
 
-function extractText(node: any): string {
-  if (!node) return ''
-  if (node.type === 'text') return node.text || ''
-  if (node.children) return node.children.map(extractText).join('')
+function extractText(node: LexicalNode): string {
+  if (isLexicalTextNode(node)) return node.text || ''
+  if (isLexicalElementNode(node) && node.children) return node.children.map(extractText).join('')
   return ''
 }
 
@@ -27,7 +29,7 @@ export function LegalSectionsComponent({ sections }: Props) {
             <h2 data-ai-field={`legalSections.sections.${i}.title`} className="text-xs sm:text-sm tracking-[0.2em] uppercase text-foreground/60">
               {section.title}
             </h2>
-            {section.content?.root?.children?.map((node: any, j: number) => {
+            {section.content?.root?.children?.map((node, j) => {
               const text = extractText(node)
               if (!text) return null
               return <p key={j}>{text}</p>

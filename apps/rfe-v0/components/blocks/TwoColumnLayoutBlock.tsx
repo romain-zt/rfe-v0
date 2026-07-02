@@ -1,34 +1,50 @@
 'use client'
 
+import React from 'react'
 import Image from 'next/image'
 import { useReveal } from '@/hooks/useReveal'
+import type { LexicalNode, LexicalRichText } from '@/lib/lexical-types'
+import { isLexicalElementNode, isLexicalTextNode } from '@/lib/lexical-types'
+
+type MediaValue = { url?: string; alt?: string } | number | null | undefined
 
 type Props = {
-  leftColumn?: { root: { children: any[] } }
-  leftMedia?: { url?: string; alt?: string } | number | null
-  rightColumn?: { root: { children: any[] } }
-  rightMedia?: { url?: string; alt?: string } | number | null
+  leftColumn?: LexicalRichText
+  leftMedia?: MediaValue
+  rightColumn?: LexicalRichText
+  rightMedia?: MediaValue
   reverseOnMobile?: boolean
   sectionTone?: string
 }
 
-function renderSimpleText(node: any): React.ReactNode {
-  if (!node) return null
-  if (node.type === 'text') return node.text
-  const children = node.children?.map((c: any, i: number) => <span key={i}>{renderSimpleText(c)}</span>)
-  if (node.type === 'paragraph') return <p className="text-sm leading-[2.1] font-light mb-4" style={{ color: 'rgba(245, 240, 235, 0.5)' }}>{children}</p>
+function renderSimpleText(node: LexicalNode): React.ReactNode {
+  if (isLexicalTextNode(node)) return node.text
+  if (!isLexicalElementNode(node)) return null
+
+  const children = node.children?.map((child, i) => <span key={i}>{renderSimpleText(child)}</span>)
+  if (node.type === 'paragraph') {
+    return (
+      <p className="text-sm leading-[2.1] font-light mb-4" style={{ color: 'rgba(245, 240, 235, 0.5)' }}>
+        {children}
+      </p>
+    )
+  }
   if (node.type === 'heading') {
-    return <h3 className="font-serif font-light mb-4" style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', color: 'var(--foreground)' }}>{children}</h3>
+    return (
+      <h3 className="font-serif font-light mb-4" style={{ fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', color: 'var(--foreground)' }}>
+        {children}
+      </h3>
+    )
   }
   return <>{children}</>
 }
 
-function getMediaUrl(media: Props['leftMedia']): string | null {
+function getMediaUrl(media: MediaValue): string | null {
   if (!media || typeof media === 'number') return null
   return media.url || null
 }
 
-function ColumnContent({ richText, media }: { richText?: any; media?: any }) {
+function ColumnContent({ richText, media }: { richText?: LexicalRichText; media?: MediaValue }) {
   const mediaUrl = getMediaUrl(media)
 
   return (
@@ -37,7 +53,7 @@ function ColumnContent({ richText, media }: { richText?: any; media?: any }) {
         <div className="relative aspect-[3/4] overflow-hidden mb-6">
           <Image
             src={mediaUrl}
-            alt={typeof media === 'object' ? media?.alt || '' : ''}
+            alt={typeof media === 'object' && media ? media.alt || '' : ''}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"

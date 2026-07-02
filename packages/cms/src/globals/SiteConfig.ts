@@ -1,12 +1,105 @@
-import type { GlobalConfig, Field } from 'payload'
+import type { Field, GlobalBeforeChangeHook, GlobalConfig } from 'payload'
+import { isAuthenticatedAdmin } from '../access/isAuthenticatedAdmin.ts'
+import { isSmtpConfigComplete } from '../utilities/emailConfig.ts'
 import { revalidateSiteGlobalAfterChange } from '../utilities/cmsRevalidationHooks.ts'
+import { normalizeOptionalEmail, optionalEmail } from '../utilities/validators.ts'
+import {
+  EMAIL_PROVIDER_PRESETS,
+  isPresetEmailProvider,
+  type EmailProvider,
+} from '../utilities/emailProviderPresets.ts'
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
 const COLOR_FIELD_COMPONENT = '@rfe/cms/fields/client#ColorPickerField'
-const SECRET_FIELD_COMPONENT = '@rfe/cms/fields/client#SecretTextField'
+const EMAIL_SETTINGS_FIELD = '@rfe/cms/components/EmailSettingsField#EmailSettingsField'
+
+type EmailSettingsData = {
+  email?: {
+    provider?: EmailProvider
+    smtpHost?: string
+    smtpPort?: number
+    secure?: boolean
+    recipientEmail?: string
+    username?: string
+    smtpPassword?: string
+    fromEmail?: string
+    fromName?: string
+    replyTo?: string
+    enabled?: boolean
+  }
+  contact?: {
+    email?: string
+  }
+}
+
+const applyEmailProviderDefaults: GlobalBeforeChangeHook = ({ data, originalDoc }) => {
+  const nextData = data as EmailSettingsData
+  const email = nextData.email
+  const previousEmail =
+    originalDoc && typeof originalDoc === 'object' && 'email' in originalDoc
+      ? (originalDoc.email as EmailSettingsData['email'])
+      : undefined
+
+  if (!email) return nextData
+
+  const provider = email.provider
+
+  if (!provider || provider === 'none') {
+    return {
+      ...nextData,
+      email: {
+        ...email,
+        enabled: false,
+      },
+    }
+  }
+
+  let nextEmail = { ...email }
+
+  const trimmedPassword = email.smtpPassword?.trim()
+  const preservedPassword = previousEmail?.smtpPassword?.trim()
+
+  nextEmail = {
+    ...nextEmail,
+    recipientEmail: normalizeOptionalEmail(nextEmail.recipientEmail),
+    fromEmail: normalizeOptionalEmail(nextEmail.fromEmail),
+    replyTo: normalizeOptionalEmail(nextEmail.replyTo),
+    username: nextEmail.username?.trim() || undefined,
+    smtpPassword: trimmedPassword || preservedPassword || undefined,
+  }
+
+  if (provider === 'custom') {
+    nextEmail = {
+      ...nextEmail,
+      enabled: isSmtpConfigComplete(nextEmail, nextData.contact?.email),
+    }
+  } else if (isPresetEmailProvider(provider)) {
+    const preset = EMAIL_PROVIDER_PRESETS[provider]
+    nextEmail = {
+      ...nextEmail,
+      smtpHost: preset.smtpHost,
+      smtpPort: preset.smtpPort,
+      secure: preset.secure,
+      enabled: isSmtpConfigComplete(
+        {
+          ...nextEmail,
+          smtpHost: preset.smtpHost,
+          smtpPort: preset.smtpPort,
+          secure: preset.secure,
+        },
+        nextData.contact?.email,
+      ),
+    }
+  }
+
+  return {
+    ...nextData,
+    email: nextEmail,
+  }
+}
 
 function colorField(name: string, label: string, defaultValue: string, width?: string): Field {
   return {
@@ -81,11 +174,13 @@ export const SiteConfig: GlobalConfig = {
   label: 'Site Configuration',
   access: {
     read: () => true,
+    update: isAuthenticatedAdmin,
   },
   admin: {
     group: 'Settings',
   },
   hooks: {
+    beforeChange: [applyEmailProviderDefaults],
     afterChange: [revalidateSiteGlobalAfterChange],
   },
   fields: [
@@ -295,6 +390,62 @@ export const SiteConfig: GlobalConfig = {
                     },
                   ],
                 },
+              ],
+            },
+          ],
+        },
+
+        // ---------------------------------------------------------------
+        // TAB: Email
+        // ---------------------------------------------------------------
+        {
+          label: 'Email',
+          description: 'Configure contact form email delivery with provider presets.',
+          fields: [
+            {
+              name: 'email',
+              type: 'group',
+              fields: [
+                {
+                  name: 'emailSettingsUi',
+                  type: 'ui',
+                  admin: {
+                    components: {
+                      Field: EMAIL_SETTINGS_FIELD,
+                    },
+                  },
+                },
+                { name: 'enabled', type: 'checkbox', defaultValue: false, admin: { hidden: true } },
+                {
+                  name: 'provider',
+                  type: 'select',
+                  defaultValue: 'none',
+                  options: [
+                    { label: 'Mailto only', value: 'none' },
+                    { label: 'Google / Gmail', value: 'gmail' },
+                    { label: 'Google Workspace', value: 'google-workspace' },
+                    { label: 'Outlook / Microsoft 365', value: 'outlook' },
+                    { label: 'Brevo', value: 'brevo' },
+                    { label: 'SendGrid', value: 'sendgrid' },
+                    { label: 'Mailgun', value: 'mailgun' },
+                    { label: 'Custom SMTP', value: 'custom' },
+                  ],
+                  admin: { hidden: true },
+                },
+                { name: 'smtpHost', type: 'text', defaultValue: 'smtp.gmail.com', admin: { hidden: true } },
+                { name: 'smtpPort', type: 'number', defaultValue: 465, admin: { hidden: true } },
+                { name: 'secure', type: 'checkbox', defaultValue: true, admin: { hidden: true } },
+                { name: 'recipientEmail', type: 'text', validate: optionalEmail, admin: { hidden: true } },
+                { name: 'username', type: 'text', admin: { hidden: true } },
+                {
+                  name: 'smtpPassword',
+                  type: 'text',
+                  access: { read: isAuthenticatedAdmin },
+                  admin: { hidden: true },
+                },
+                { name: 'fromEmail', type: 'text', validate: optionalEmail, admin: { hidden: true } },
+                { name: 'fromName', type: 'text', defaultValue: 'RFE', admin: { hidden: true } },
+                { name: 'replyTo', type: 'text', validate: optionalEmail, admin: { hidden: true } },
               ],
             },
           ],

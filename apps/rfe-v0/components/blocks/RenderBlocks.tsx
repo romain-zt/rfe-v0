@@ -13,7 +13,9 @@ import { ContactFormComponent } from './ContactFormBlock'
 import { EmbeddedFormBlock } from './EmbeddedFormBlock'
 import { LegalSectionsComponent } from './LegalSectionsBlock'
 
-const blockComponents: Record<string, React.ComponentType<any>> = {
+import type { BlockComponentProps } from '@/lib/lexical-types'
+
+const blockComponents: Record<string, React.ComponentType<BlockComponentProps>> = {
   content: ContentBlockComponent,
   mediaBlock: MediaBlockComponent,
   cta: CTABlockComponent,

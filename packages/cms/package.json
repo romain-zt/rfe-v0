@@ -20,6 +20,10 @@
       "types": "./src/utilities/revalidateFrontend.ts",
       "default": "./src/utilities/revalidateFrontend.ts"
     },
+    "./utilities/emailConfig": {
+      "types": "./src/utilities/emailConfig.ts",
+      "default": "./src/utilities/emailConfig.ts"
+    },
     "./client": {
       "types": "./src/client.ts",
       "default": "./src/client.ts"
@@ -51,6 +55,10 @@
     "./components/SlugField": {
       "types": "./src/components/SlugField/index.tsx",
       "default": "./src/components/SlugField/index.tsx"
+    },
+    "./components/EmailSettingsField": {
+      "types": "./src/components/EmailSettingsField/index.tsx",
+      "default": "./src/components/EmailSettingsField/index.tsx"
     },
     "./fields/client": {
       "types": "./src/fields/client.ts",

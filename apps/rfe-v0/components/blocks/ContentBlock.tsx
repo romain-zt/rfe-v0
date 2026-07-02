@@ -15,7 +15,10 @@ import { LegalSectionsComponent } from './LegalSectionsBlock'
 import { MediaBlockComponent } from './MediaBlockComponent'
 import { TwoColumnLayoutComponent } from './TwoColumnLayoutBlock'
 
-const embeddedBlockComponents: Record<string, React.ComponentType<any>> = {
+import type { BlockComponentProps, LexicalNode, LexicalRichText } from '@/lib/lexical-types'
+import { isLexicalTextNode } from '@/lib/lexical-types'
+
+const embeddedBlockComponents: Record<string, React.ComponentType<BlockComponentProps>> = {
   cta: CTABlockComponent,
   worksGrid: WorksGridComponent,
   worksScroll: WorksScrollComponent,
@@ -32,7 +35,7 @@ const embeddedBlockComponents: Record<string, React.ComponentType<any>> = {
 
 type Column = {
   size: 'full' | 'half' | 'oneThird' | 'twoThirds'
-  richText: { root: { children: any[] } }
+  richText: LexicalRichText
 }
 
 type Props = {
@@ -40,13 +43,14 @@ type Props = {
   sectionTone?: string
 }
 
-export function renderLexicalNode(node: any): React.ReactNode {
+export function renderLexicalNode(node: LexicalNode): React.ReactNode {
   if (!node) return null
 
-  if (node.type === 'text') {
+  if (isLexicalTextNode(node)) {
     let text: React.ReactNode = node.text
-    if (node.format & 1) text = <strong key="b">{text}</strong>
-    if (node.format & 2) text = <em key="i">{text}</em>
+    const format = typeof node.format === 'number' ? node.format : 0
+    if (format & 1) text = <strong key="b">{text}</strong>
+    if (format & 2) text = <em key="i">{text}</em>
     return text
   }
 
@@ -58,7 +62,7 @@ export function renderLexicalNode(node: any): React.ReactNode {
     return <BlockComp key={fields.id} {...fields} />
   }
 
-  const children = node.children?.map((child: any, i: number) => {
+  const children = node.children?.map((child: LexicalNode, i: number) => {
     const rendered = renderLexicalNode(child)
     if (child.type === 'text' || child.type === 'linebreak') return <React.Fragment key={i}>{rendered}</React.Fragment>
     return <React.Fragment key={i}>{rendered}</React.Fragment>
@@ -102,7 +106,7 @@ export function ContentBlockComponent({ columns, sectionTone }: Props) {
   const gridCols = columns && columns.length > 1 ? 'lg:grid-cols-2' : ''
 
   const hasEmbeddedBlocks = columns?.some((col) =>
-    col.richText?.root?.children?.some((child: any) => child.type === 'block')
+    col.richText?.root?.children?.some((child) => child.type === 'block')
   )
 
   if (hasEmbeddedBlocks) {
@@ -110,7 +114,7 @@ export function ContentBlockComponent({ columns, sectionTone }: Props) {
       <div className={toneClass}>
         {columns?.map((col, i) => (
           <div key={i}>
-            {col.richText?.root?.children?.map((child: any, j: number) => (
+            {col.richText?.root?.children?.map((child, j) => (
               <React.Fragment key={j}>{renderLexicalNode(child)}</React.Fragment>
             ))}
           </div>

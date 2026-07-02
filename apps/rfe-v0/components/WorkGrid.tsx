@@ -20,7 +20,7 @@ export type WorkGridProps = {
 function extractYouTubeId(url: string): string | null {
   if (!url) return null
   const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?\/\s]+)/,
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?/\s]+)/,
     /^([a-zA-Z0-9_-]{11})$/,
   ]
   for (const pattern of patterns) {
@@ -268,7 +268,7 @@ function WorkCard({
 }
 
 export function WorkGrid({ works, tabField }: WorkGridProps) {
-  const { lang, t } = useLanguage()
+  const { t } = useLanguage()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -317,7 +317,6 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
   const showFilters = filterOptions.length >= 2
 
   const [activePreviewId, setActivePreviewId] = useState<number | null>(null)
-  const [hoveredId, setHoveredId] = useState<number | null>(null)
 
   const currentFilter = useMemo(() => {
     if (!showFilters) return ''
@@ -386,13 +385,11 @@ export function WorkGrid({ works, tabField }: WorkGridProps) {
   }, [])
 
   const handlePreviewActivate = useCallback((workId: number) => {
-    setHoveredId(workId)
     setActivePreviewId(workId)
   }, [])
 
   const handlePreviewDeactivate = useCallback((workId: number) => {
-    setHoveredId((prev) => prev === workId ? null : prev)
-    setActivePreviewId((prev) => prev === workId ? null : prev)
+    setActivePreviewId((prev) => (prev === workId ? null : prev))
   }, [])
 
   const handleFilterClick = useCallback((nextFilter: string) => {

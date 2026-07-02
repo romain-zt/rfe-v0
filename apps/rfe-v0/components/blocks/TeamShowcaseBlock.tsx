@@ -6,9 +6,12 @@ import { useReveal } from '@/hooks/useReveal'
 import { useLanguage } from '@/components/LanguageContext'
 import { renderLexicalNode } from '@/components/blocks/ContentBlock'
 
+import type { LexicalRichText } from '@/lib/lexical-types'
+import type { TeamMember } from '@/lib/i18n/types'
+
 type Props = {
   title?: string
-  introText?: { root: { children: any[] } }
+  introText?: LexicalRichText
   showBios?: boolean
   showPhotos?: boolean
   sectionTone?: string
@@ -37,7 +40,7 @@ export function TeamShowcaseComponent({ title, introText, showBios = true, showP
         )}
 
         <div className="space-y-12">
-          {teamMembers.map((member: any) => (
+          {teamMembers.map((member: TeamMember) => (
             <div key={member.id || member.name} data-ai-element="team-member" data-ai-member-id={member.id} className="border-t pt-8" style={{ borderColor: 'rgba(245, 240, 235, 0.05)' }}>
               <div className={showPhotos && member.photo ? 'flex gap-6 items-start' : undefined}>
                 {showPhotos && member.photo && (

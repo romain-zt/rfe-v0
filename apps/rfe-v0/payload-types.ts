@@ -1936,6 +1936,19 @@ export interface SiteConfig {
         }[]
       | null;
   };
+  email?: {
+    enabled?: boolean | null;
+    provider?: ('none' | 'gmail' | 'google-workspace' | 'outlook' | 'brevo' | 'sendgrid' | 'mailgun' | 'custom') | null;
+    smtpHost?: string | null;
+    smtpPort?: number | null;
+    secure?: boolean | null;
+    recipientEmail?: string | null;
+    username?: string | null;
+    smtpPassword?: string | null;
+    fromEmail?: string | null;
+    fromName?: string | null;
+    replyTo?: string | null;
+  };
   seo?: {
     titleTemplate?: string | null;
     defaultTitle?: string | null;
@@ -2069,6 +2082,21 @@ export interface SiteConfigSelect<T extends boolean = true> {
                   };
               id?: T;
             };
+      };
+  email?:
+    | T
+    | {
+        enabled?: T;
+        provider?: T;
+        smtpHost?: T;
+        smtpPort?: T;
+        secure?: T;
+        recipientEmail?: T;
+        username?: T;
+        smtpPassword?: T;
+        fromEmail?: T;
+        fromName?: T;
+        replyTo?: T;
       };
   seo?:
     | T

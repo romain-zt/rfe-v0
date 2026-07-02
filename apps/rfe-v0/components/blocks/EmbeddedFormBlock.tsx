@@ -17,10 +17,19 @@ type FormDoc = {
   fields?: FormFieldRow[] | null
 }
 
+type ContactDeliveryResponse =
+  | { delivery: 'smtp'; message: string }
+  | { delivery: 'mailto'; mailtoUrl: string }
+
 type Props = {
   title?: string
   subtitle?: string
   form?: number | FormDoc | null
+}
+
+function isContactForm(fields: FormFieldRow[]): boolean {
+  const names = new Set(fields.map((field) => field.name).filter(Boolean))
+  return names.has('name') && names.has('email') && names.has('message')
 }
 
 export function EmbeddedFormBlock({ title, subtitle, form }: Props) {
@@ -44,11 +53,48 @@ export function EmbeddedFormBlock({ title, subtitle, form }: Props) {
 
   const formId = resolved.id
   const buttonLabel = resolved.submitButtonLabel?.trim() || 'Send'
+  const usesContactDelivery = isContactForm(resolved.fields)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('submitting')
     setErrorMessage('')
+
+    if (usesContactDelivery) {
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: values.name ?? '',
+            email: values.email ?? '',
+            message: values.message ?? '',
+          }),
+        })
+
+        const result = (await response.json().catch(() => null)) as ContactDeliveryResponse | { error: string } | null
+
+        if (!response.ok || !result) {
+          throw new Error(result && 'error' in result ? result.error : 'Unable to send the message.')
+        }
+
+        if ('error' in result) {
+          throw new Error(result.error)
+        }
+
+        if (result.delivery === 'mailto') {
+          window.location.href = result.mailtoUrl
+          setStatus('idle')
+          return
+        }
+
+        setStatus('success')
+      } catch (err) {
+        setErrorMessage(err instanceof Error ? err.message : 'Submission failed')
+        setStatus('error')
+      }
+      return
+    }
 
     const submissionData = resolved.fields!
       .filter((f) => f.name && ['text', 'email', 'textarea', 'checkbox', 'number'].includes(f.blockType || ''))
@@ -161,6 +207,12 @@ export function EmbeddedFormBlock({ title, subtitle, form }: Props) {
         })}
 
         {status === 'error' && <p className="text-sm text-red-400">{errorMessage}</p>}
+
+        {usesContactDelivery && (
+          <p className="text-xs leading-5 text-muted-foreground">
+            If SMTP is fully configured in Site Config, this form sends directly. Otherwise it opens your email app.
+          </p>
+        )}
 
         <button
           type="submit"

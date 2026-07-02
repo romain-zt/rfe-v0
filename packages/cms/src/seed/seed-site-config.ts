@@ -57,6 +57,19 @@ export async function seedSiteConfig(payload: Payload): Promise<void> {
         tiktok: '',
         imdb: 'https://www.imdb.com/name/nm0738400/',
       },
+      email: {
+        enabled: false,
+        provider: 'none',
+        smtpHost: 'smtp.gmail.com',
+        smtpPort: 465,
+        secure: true,
+        recipientEmail: 'elisabeth@rohmfeiferentertainment.com',
+        username: '',
+        smtpPassword: '',
+        fromEmail: '',
+        fromName: 'RFE',
+        replyTo: '',
+      },
       about: {
         paragraphs: [
           { text: 'Launched in 2023, RFE is a woman-owned film and television production company committed to telling inspirational, empowering stories steeped in true crime and true stories that resonate with audiences of all kinds.' },

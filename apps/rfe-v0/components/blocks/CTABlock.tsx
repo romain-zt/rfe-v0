@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { useReveal } from '@/hooks/useReveal'
+import type { LexicalNode, LexicalRichText } from '@/lib/lexical-types'
+import { isLexicalElementNode, isLexicalTextNode } from '@/lib/lexical-types'
 
 type CTALink = {
   label: string
@@ -11,9 +13,17 @@ type CTALink = {
 }
 
 type Props = {
-  richText?: { root: { children: any[] } }
+  richText?: LexicalRichText
   links?: CTALink[]
   sectionTone?: string
+}
+
+function lexicalParagraphText(node: LexicalNode): string {
+  if (isLexicalTextNode(node)) return node.text
+  if (isLexicalElementNode(node) && node.children) {
+    return node.children.map(lexicalParagraphText).join('')
+  }
+  return ''
 }
 
 export function CTABlockComponent({ richText, links, sectionTone }: Props) {
@@ -31,9 +41,9 @@ export function CTABlockComponent({ richText, links, sectionTone }: Props) {
           transition: 'opacity 2s var(--ease-quiet), transform 2s var(--ease-quiet)',
         }}
       >
-        {richText?.root?.children?.map((node: any, i: number) => {
+        {richText?.root?.children?.map((node, i) => {
           if (node.type === 'paragraph') {
-            const text = node.children?.map((c: any) => c.text).join('') || ''
+            const text = lexicalParagraphText(node)
             return (
               <p key={i} data-ai-field="cta.richText" className="font-serif font-light mb-6" style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', color: 'rgba(245, 240, 235, 0.55)', lineHeight: 1.55 }}>
                 {text}

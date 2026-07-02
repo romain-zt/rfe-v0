@@ -110,7 +110,6 @@ export const ResponsiveHeroPicture = forwardRef<HTMLImageElement, Props>(
           srcSet={mobileSrcSet}
           sizes={mobile.sizes}
         />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={ref}
           {...mobile}

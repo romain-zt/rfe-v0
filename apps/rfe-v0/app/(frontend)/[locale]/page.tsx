@@ -3,6 +3,7 @@ import type { Language } from '@/lib/i18n/types'
 import { draftMode } from 'next/headers'
 import { getPageBySlug, getSiteConfig } from '@/lib/cms'
 import { generatePageMeta, generatePageJsonLd } from '@/lib/generate-meta'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PageContent } from '@/components/PageContent'
 
 /** Home is not in `[slug]` static params; avoid caching an empty page before seed runs. */
@@ -39,6 +40,7 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <main className="relative">
+      {draft.isEnabled && <LivePreviewListener />}
       <PageContent initialData={page} />
       {generatePageJsonLd(page, locale, siteConfig)}
     </main>

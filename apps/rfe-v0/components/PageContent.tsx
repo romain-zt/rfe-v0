@@ -10,7 +10,11 @@ type Props = {
 }
 
 export function PageContent({ initialData }: Props) {
-  const serverURL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  // Origin match for postMessage — must not include a trailing slash.
+  const serverURL = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(
+    /\/$/,
+    '',
+  )
 
   const { data: page } = useLivePreview<PageData>({
     initialData,

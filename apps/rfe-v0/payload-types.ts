@@ -253,6 +253,10 @@ export interface Page {
  */
 export interface Media {
   id: number;
+  /**
+   * Display name in the admin panel. Does not change the stored filename.
+   */
+  title?: string | null;
   alt?: string | null;
   prefix?: string | null;
   updatedAt: string;
@@ -1578,6 +1582,7 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  title?: T;
   alt?: T;
   prefix?: T;
   updatedAt?: T;

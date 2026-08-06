@@ -81,13 +81,20 @@ export const CustomLivePreview: React.FC = () => {
   } = useLivePreviewContext()
 
   const url = urlRaw ?? ''
+  // postMessage targetOrigin must be an origin (or URL whose origin is used).
+  // Preview URLs go through /next/preview?... — extract origin so draft redirects still match.
+  let targetOrigin = url
+  try {
+    if (url) targetOrigin = new URL(url).origin
+  } catch {
+    targetOrigin = url
+  }
 
   const locale = useLocale()
   const { mostRecentUpdate } = useDocumentEvents()
   const [formState] = useAllFormFields()
   const { id, collectionSlug, globalSlug } = useDocumentInfo()
 
- 
   // ─── postMessage bridge (mirrors LivePreviewWindow exactly) ───────────────
   useEffect(() => {
     if (!isLivePreviewing || !appIsReady || !formState || !url) return
@@ -105,14 +112,15 @@ export const CustomLivePreview: React.FC = () => {
     }
 
     if (previewWindowType === 'popup' && popupRef?.current) {
-      popupRef.current.postMessage(message, url)
+      popupRef.current.postMessage(message, targetOrigin)
     }
     if (previewWindowType === 'iframe' && iframeRef.current) {
-      iframeRef.current.contentWindow?.postMessage(message, url)
+      iframeRef.current.contentWindow?.postMessage(message, targetOrigin)
     }
   }, [
     formState,
     url,
+    targetOrigin,
     collectionSlug,
     globalSlug,
     id,
@@ -126,17 +134,26 @@ export const CustomLivePreview: React.FC = () => {
     loadedURL,
   ])
 
-  // SSR refresh event
+  // SSR refresh on draft save / autosave / publish (via reportUpdate → mostRecentUpdate)
   useEffect(() => {
-    if (!isLivePreviewing || !appIsReady || !url) return
+    if (!isLivePreviewing || !appIsReady || !url || !mostRecentUpdate) return
     const message = { type: 'payload-document-event' }
     if (previewWindowType === 'popup' && popupRef?.current) {
-      popupRef.current.postMessage(message, url)
+      popupRef.current.postMessage(message, targetOrigin)
     }
     if (previewWindowType === 'iframe' && iframeRef.current) {
-      iframeRef.current.contentWindow?.postMessage(message, url)
+      iframeRef.current.contentWindow?.postMessage(message, targetOrigin)
     }
-  }, [mostRecentUpdate, iframeRef, popupRef, previewWindowType, url, isLivePreviewing, appIsReady])
+  }, [
+    mostRecentUpdate,
+    iframeRef,
+    popupRef,
+    previewWindowType,
+    url,
+    targetOrigin,
+    isLivePreviewing,
+    appIsReady,
+  ])
 
   // ─── Panel width + drag-to-resize ─────────────────────────────────────────
   const panelRef = useRef<HTMLDivElement>(null)

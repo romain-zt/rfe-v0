@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import type { Language } from '@/lib/i18n/types'
 import { getPageBySlug, getAllPages, getSiteConfig } from '@/lib/cms'
 import { generatePageMeta, generatePageJsonLd } from '@/lib/generate-meta'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PageContent } from '@/components/PageContent'
 
 type Props = {
@@ -43,6 +44,7 @@ export default async function DynamicPage({ params }: Props) {
 
   return (
     <main className="relative">
+      {draft.isEnabled && <LivePreviewListener />}
       <PageContent initialData={page} />
       {generatePageJsonLd(page, locale, siteConfig)}
     </main>

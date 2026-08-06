@@ -6,7 +6,7 @@ const collectionPrefixMap: Partial<Record<CollectionSlug, string>> = {
 
 type Props = {
   collection: keyof typeof collectionPrefixMap
-  slug: string
+  slug: string | null | undefined
   req: PayloadRequest
   siteUrl?: string
 }
@@ -14,7 +14,7 @@ type Props = {
 export const generatePreviewPath = ({ collection, slug, req, siteUrl }: Props): string | null => {
   const { locale } = req
 
-  if (slug === undefined || slug === null) {
+  if (slug === undefined || slug === null || slug === '') {
     return null
   }
 

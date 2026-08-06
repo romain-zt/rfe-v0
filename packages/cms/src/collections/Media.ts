@@ -4,6 +4,11 @@ import {
   revalidateSiteAfterDelete,
 } from '../utilities/cmsRevalidationHooks.ts'
 
+function titleFromFilename(filename: unknown): string | undefined {
+  if (typeof filename !== 'string' || !filename.trim()) return undefined
+  return filename.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim()
+}
+
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
@@ -11,8 +16,25 @@ export const Media: CollectionConfig = {
   },
   admin: {
     group: 'Admin',
+    useAsTitle: 'title',
+    defaultColumns: ['filename', 'title', 'alt', 'updatedAt'],
   },
   hooks: {
+    beforeChange: [
+      ({ data, originalDoc }) => {
+        if (!data) return data
+        // Keep an editable display name in sync when empty (create or legacy docs).
+        if (!data.title) {
+          data.title =
+            titleFromFilename(data.filename) ||
+            titleFromFilename(originalDoc?.filename) ||
+            data.alt ||
+            originalDoc?.alt ||
+            data.title
+        }
+        return data
+      },
+    ],
     afterChange: [revalidateSiteAfterChange],
     afterDelete: [revalidateSiteAfterDelete],
   },
@@ -46,6 +68,14 @@ export const Media: CollectionConfig = {
     mimeTypes: ['image/*'],
   },
   fields: [
+    {
+      name: 'title',
+      type: 'text',
+      label: 'Name',
+      admin: {
+        description: 'Display name in the admin panel. Does not change the stored filename.',
+      },
+    },
     {
       name: 'alt',
       type: 'text',

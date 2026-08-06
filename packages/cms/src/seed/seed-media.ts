@@ -150,16 +150,27 @@ export async function seedMedia(payload: Payload): Promise<Map<string, number>> 
     if (existing.docs.length > 0) {
       const doc = existing.docs[0]!
       mediaMap.set(imgPath, doc.id as number)
+      // Backfill display name when missing (safe to re-run).
+      if (!(doc as { title?: string | null }).title) {
+        const displayName = filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ')
+        await payload.update({
+          collection: 'media',
+          id: doc.id,
+          data: { title: displayName },
+        })
+      }
       console.log(`[seed-media] Already exists: ${filename}`)
       continue
     }
 
     const fileBuffer = fs.readFileSync(fullPath)
     try {
+      const displayName = filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ')
       const doc = await payload.create({
         collection: 'media',
         data: {
-          alt: filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+          title: displayName,
+          alt: displayName,
         },
         file: {
           data: fileBuffer,

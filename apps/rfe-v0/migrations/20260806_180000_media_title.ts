@@ -6,15 +6,24 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
       ADD COLUMN IF NOT EXISTS "title" varchar;
   `)
 
-  // Backfill display names from existing filenames for admin usability.
+  // `alt` is localized on media_locales — not a column on media.
   await db.execute(sql`
-    UPDATE "media"
+    UPDATE "media" AS m
     SET "title" = COALESCE(
-      NULLIF(trim(both FROM regexp_replace(regexp_replace("filename", '\\.[^.]+$', ''), '[-_]+', ' ', 'g')), ''),
-      "alt",
-      "filename"
+      NULLIF(
+        trim(both FROM regexp_replace(regexp_replace(COALESCE(m."filename", ''), '\\.[^.]+$', ''), '[-_]+', ' ', 'g')),
+        ''
+      ),
+      (
+        SELECT ml."alt"
+        FROM "media_locales" AS ml
+        WHERE ml."_parent_id" = m."id"
+        ORDER BY ml."_locale" ASC
+        LIMIT 1
+      ),
+      m."filename"
     )
-    WHERE "title" IS NULL;
+    WHERE m."title" IS NULL;
   `)
 }
 

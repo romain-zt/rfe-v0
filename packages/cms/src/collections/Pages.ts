@@ -28,12 +28,14 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     useAsTitle: 'title',
     livePreview: {
-      url: ({ data, req }) => {
-        const base = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-        const locale = req.locale || 'en'
-        const slug = typeof data?.slug === 'string' ? data.slug : ''
-        return slug === 'home' ? `${base}/${locale}` : `${base}/${locale}/${slug}`
-      },
+      // Route through /next/preview so draft mode is enabled — required for
+      // RefreshRouteOnSave to show unpublished (draft) changes in the iframe.
+      url: ({ data, req }) =>
+        generatePreviewPath({
+          slug: typeof data?.slug === 'string' ? data.slug : '',
+          collection: 'pages',
+          req,
+        }),
     },
     components: {
       views: {

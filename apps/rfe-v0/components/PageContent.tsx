@@ -3,6 +3,7 @@
 import { useLivePreview } from '@payloadcms/live-preview-react'
 import { RenderHero } from '@/components/blocks/RenderHero'
 import { RenderBlocks } from '@/components/blocks/RenderBlocks'
+import { getLivePreviewServerURL } from '@/lib/live-preview'
 import type { PageData } from '@/lib/cms'
 
 type Props = {
@@ -10,15 +11,9 @@ type Props = {
 }
 
 export function PageContent({ initialData }: Props) {
-  // Origin match for postMessage — must not include a trailing slash.
-  const serverURL = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(
-    /\/$/,
-    '',
-  )
-
   const { data: page } = useLivePreview<PageData>({
     initialData,
-    serverURL,
+    serverURL: getLivePreviewServerURL(),
     depth: 2,
   })
 

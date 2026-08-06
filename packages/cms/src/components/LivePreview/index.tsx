@@ -6,7 +6,7 @@ import { useDocumentInfo } from '@payloadcms/ui'
 import { useLivePreviewContext } from '@payloadcms/ui'
 import { useLocale } from '@payloadcms/ui'
 import { reduceFieldsToValues } from 'payload/shared'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const INSET_PX = 16
 const HANDLE_PX = 6
@@ -14,15 +14,28 @@ const MIN_PANEL_PX = 300
 const MIN_FORM_PX = 280
 const DEFAULT_PANEL_PX = 500
 
+function getPostMessageTargetOrigin(previewURL: string): string {
+  // Always prefer the admin's own origin so iframe messaging stays same-origin,
+  // even if the configured preview URL was built with a different SITE_URL host.
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin
+  }
+  try {
+    if (previewURL) return new URL(previewURL, 'http://localhost').origin
+  } catch {
+    // fall through
+  }
+  return previewURL || '*'
+}
+
 // ─── Breakpoint selector ─────────────────────────────────────────────────────
 
 const BreakpointBar: React.FC = () => {
   const { breakpoint, breakpoints, setBreakpoint } = useLivePreviewContext()
 
-
   useEffect(() => {
     setBreakpoint('mobile')
-  }, [])
+  }, [setBreakpoint])
 
   const allBreakpoints = [
     { label: 'Responsive', name: 'responsive' },
@@ -81,79 +94,60 @@ export const CustomLivePreview: React.FC = () => {
   } = useLivePreviewContext()
 
   const url = urlRaw ?? ''
-  // postMessage targetOrigin must be an origin (or URL whose origin is used).
-  // Preview URLs go through /next/preview?... — extract origin so draft redirects still match.
-  let targetOrigin = url
-  try {
-    if (url) targetOrigin = new URL(url).origin
-  } catch {
-    targetOrigin = url
-  }
+  const targetOrigin = useMemo(() => getPostMessageTargetOrigin(url), [url])
 
   const locale = useLocale()
   const { mostRecentUpdate } = useDocumentEvents()
   const [formState] = useAllFormFields()
   const { id, collectionSlug, globalSlug } = useDocumentInfo()
 
-  // ─── postMessage bridge (mirrors LivePreviewWindow exactly) ───────────────
+  const postToPreview = useCallback(
+    (message: Record<string, unknown>) => {
+      if (!url) return
+      if (previewWindowType === 'popup' && popupRef?.current) {
+        popupRef.current.postMessage(message, targetOrigin)
+      }
+      if (previewWindowType === 'iframe' && iframeRef.current?.contentWindow) {
+        iframeRef.current.contentWindow.postMessage(message, targetOrigin)
+      }
+    },
+    [url, previewWindowType, popupRef, iframeRef, targetOrigin],
+  )
+
+  // ─── postMessage bridge (mirrors LivePreviewWindow) ───────────────────────
   useEffect(() => {
     if (!isLivePreviewing || !appIsReady || !formState || !url) return
 
     const values = reduceFieldsToValues(formState, true)
     if (!values.id) values.id = id
 
-    const message = {
+    postToPreview({
       collectionSlug,
       data: values,
       externallyUpdatedRelationship: mostRecentUpdate,
       globalSlug,
       locale: locale.code,
       type: 'payload-live-preview',
-    }
-
-    if (previewWindowType === 'popup' && popupRef?.current) {
-      popupRef.current.postMessage(message, targetOrigin)
-    }
-    if (previewWindowType === 'iframe' && iframeRef.current) {
-      iframeRef.current.contentWindow?.postMessage(message, targetOrigin)
-    }
+    })
   }, [
     formState,
     url,
-    targetOrigin,
     collectionSlug,
     globalSlug,
     id,
-    previewWindowType,
-    popupRef,
     appIsReady,
-    iframeRef,
     mostRecentUpdate,
     locale,
     isLivePreviewing,
     loadedURL,
+    postToPreview,
   ])
 
-  // SSR refresh on draft save / autosave / publish (via reportUpdate → mostRecentUpdate)
+  // SSR refresh on draft save / autosave / publish (reportUpdate → mostRecentUpdate)
   useEffect(() => {
     if (!isLivePreviewing || !appIsReady || !url || !mostRecentUpdate) return
-    const message = { type: 'payload-document-event' }
-    if (previewWindowType === 'popup' && popupRef?.current) {
-      popupRef.current.postMessage(message, targetOrigin)
-    }
-    if (previewWindowType === 'iframe' && iframeRef.current) {
-      iframeRef.current.contentWindow?.postMessage(message, targetOrigin)
-    }
-  }, [
-    mostRecentUpdate,
-    iframeRef,
-    popupRef,
-    previewWindowType,
-    url,
-    targetOrigin,
-    isLivePreviewing,
-    appIsReady,
-  ])
+    postToPreview({ type: 'payload-document-event' })
+  }, [mostRecentUpdate, url, isLivePreviewing, appIsReady, postToPreview])
 
   // ─── Panel width + drag-to-resize ─────────────────────────────────────────
   const panelRef = useRef<HTMLDivElement>(null)
@@ -178,7 +172,6 @@ export const CustomLivePreview: React.FC = () => {
     setPanelWidth(Math.max(MIN_PANEL_PX, ideal))
   }, [deviceW])
 
-  // Drag handle mouse events
   const onHandleMouseDown = useCallback((e: React.MouseEvent) => {
     isDragging.current = true
     dragStartX.current = e.clientX
@@ -193,7 +186,6 @@ export const CustomLivePreview: React.FC = () => {
       if (!isDragging.current || !panelRef.current) return
       const parent = panelRef.current.parentElement
       const maxW = parent ? parent.clientWidth - MIN_FORM_PX - HANDLE_PX : 1200
-      // dragging left (lower clientX) → panel grows
       const delta = dragStartX.current - e.clientX
       const newWidth = Math.max(MIN_PANEL_PX, Math.min(dragStartWidth.current + delta, maxW))
       setPanelWidth(newWidth)
@@ -271,7 +263,6 @@ export const CustomLivePreview: React.FC = () => {
         width: panelWidth,
       }}
     >
-      {/* Drag handle on the left edge */}
       <div
         onMouseDown={onHandleMouseDown}
         style={{
@@ -293,7 +284,6 @@ export const CustomLivePreview: React.FC = () => {
         }}
       />
 
-      {/* Content offset by handle width */}
       <div style={{ display: 'flex', flex: 1, flexDirection: 'column', overflow: 'hidden', paddingLeft: HANDLE_PX }}>
         <BreakpointBar />
 

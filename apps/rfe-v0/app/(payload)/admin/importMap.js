@@ -29,6 +29,7 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { CustomLivePreview as CustomLivePreview_0570d7a137ba4b854d50588a1e1ee968 } from '@rfe/cms/components/LivePreview'
 import { SlugField as SlugField_20048c6163b175d3db4ad5fb0a36a7e8 } from '@rfe/cms/components/SlugField'
+import { MediaTitleCell as MediaTitleCell_5cfb0885778deefed5fb899582dd4970 } from '@rfe/cms/components/MediaTitleCell'
 import { ColorPickerField as ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac } from '@rfe/cms/fields/client'
 import { Icon as Icon_30f9b97464cd6aed523463ee2909896b } from '@rfe/cms/components/Icon'
 import { Logo as Logo_3ca2ef1bfffa22c2c98fe79e696bd43a } from '@rfe/cms/components/Logo'
@@ -69,6 +70,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@rfe/cms/components/LivePreview#CustomLivePreview": CustomLivePreview_0570d7a137ba4b854d50588a1e1ee968,
   "@rfe/cms/components/SlugField#SlugField": SlugField_20048c6163b175d3db4ad5fb0a36a7e8,
+  "@rfe/cms/components/MediaTitleCell#MediaTitleCell": MediaTitleCell_5cfb0885778deefed5fb899582dd4970,
   "@rfe/cms/fields/client#ColorPickerField": ColorPickerField_aa22b64f10c5e420411c7f67ce2bd4ac,
   "@rfe/cms/components/Icon#Icon": Icon_30f9b97464cd6aed523463ee2909896b,
   "@rfe/cms/components/Logo#Logo": Logo_3ca2ef1bfffa22c2c98fe79e696bd43a,

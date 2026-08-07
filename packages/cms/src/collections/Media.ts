@@ -17,7 +17,9 @@ export const Media: CollectionConfig = {
   admin: {
     group: 'Admin',
     useAsTitle: 'title',
-    defaultColumns: ['filename', 'title', 'alt', 'updatedAt'],
+    // Thumbnail + Name first; File Name available via Columns picker.
+    defaultColumns: ['title', 'alt', 'updatedAt'],
+    listSearchableFields: ['title', 'filename', 'alt'],
   },
   hooks: {
     beforeChange: [
@@ -39,6 +41,7 @@ export const Media: CollectionConfig = {
     afterDelete: [revalidateSiteAfterDelete],
   },
   upload: {
+    adminThumbnail: 'thumbnail',
     imageSizes: [
       {
         name: 'thumbnail',
@@ -74,6 +77,9 @@ export const Media: CollectionConfig = {
       label: 'Name',
       admin: {
         description: 'Display name in the admin panel. Does not change the stored filename.',
+        components: {
+          Cell: '@rfe/cms/components/MediaTitleCell#MediaTitleCell',
+        },
       },
     },
     {
